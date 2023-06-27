@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "LightManager.h"
 #include "EffectManager.h"
+#include "Collision.h"
 #include "Input/Input.h"
 
 //-------------------------------------------------------------------------------------------------------
@@ -65,6 +66,9 @@ void SceneGame::Initialize()
 	// カメラコントローラーの初期化
 	cameraController = new CameraController();
 
+	// ヒットエフェクト読み込み
+	hitEffect = new Effect("Data/Effect/Hit.efk");
+
 
 	//-------------------------------------------------------------------------------------------------------
 	// ↓　この下はシェーダー関連
@@ -123,12 +127,21 @@ void SceneGame::Update(float elapsedTime)
 	//プレイヤー更新処理
 	player->Update(elapsedTime);
 
+	CollisionPlayerVsObs();
+
 	//ステージ更新処理
 	stageManager->Update(player, elapsedTime);
 
 	//空更新処理
 	sky->Update(elapsedTime);
 	sky->SetPosition({ player->GetPosition().x,player->GetPosition().y,player->GetPosition().z + 510 });
+
+	// エフェクトの更新処理
+	EffectManager::Instance().Update(elapsedTime);
+
+	//-------------------------------------------------------------------------------------------------------
+	// ↓　この下はシェーダー関連
+	//-------------------------------------------------------------------------------------------------------
 
 	sprite->Update(0.0f, 0.0f,
 		100.0f, 100.0f,
@@ -144,8 +157,6 @@ void SceneGame::Update(float elapsedTime)
 		0.0f,
 		1.0f, 1.0f, 1.0f, 1.0f);
 
-	// エフェクトの更新処理
-	EffectManager::Instance().Update(elapsedTime);
 }
 
 // 描画処理
@@ -199,6 +210,101 @@ void SceneGame::DrawDebugParameter(DirectX::XMFLOAT4X4& transform, const char* l
 		ImGui::TreePop();
 	}
 	ImGui::PopID();
+}
+
+void SceneGame::CollisionPlayerVsObs()
+{
+	for (auto& it : stageManager->stages)
+	{
+		for (auto& it2 : it->obstacles)
+		{
+			if (it2->Type == 0)
+			{
+				// 衝突判定
+				DirectX::XMFLOAT3 outPosition;
+				if (Collision::IntersectCylinderVsCylinder
+				(player->GetPosition(),
+					player->GetRadius(),
+					player->GetHeight(),
+					it2->GetPosition(),
+					it2->GetRadius(),
+					it2->GetHeight(),
+					outPosition))
+				{
+					// 吹き飛ばす
+					{
+						const float power = 10.0f;
+						DirectX::XMFLOAT3 impulse;
+						DirectX::XMFLOAT3 p = it2->GetPosition();
+						DirectX::XMFLOAT3 e = player->GetPosition();
+						float vx = e.x - p.x;
+						float vz = e.z - p.z;
+						float lengthXZ = sqrtf(vx * vx + vz * vz);
+						//正規化
+						vx /= lengthXZ;
+						vz /= lengthXZ;
+						impulse.x = vx * power;
+						impulse.y = power * 0.5f;
+						impulse.z = vz * power;
+
+						player->AddImpulse(impulse);
+						// ヒットエフェクト再生
+						{
+							DirectX::XMFLOAT3 e = player->GetPosition();
+							e.y += player->GetHeight() * 0.5f;
+							hitEffect->Play(e);
+						}
+						//player->OnDead();
+					}
+				}
+			}
+
+			if (it2->Type == 1)
+			{
+				for (int n = 0; n < it2->CollisionNum; ++n)
+				{
+					// 衝突判定
+					DirectX::XMFLOAT3 outPosition;
+					if (Collision::IntersectCylinderVsCylinder
+					(player->GetPosition(),
+						player->GetRadius(),
+						player->GetHeight(),
+						{ (it2->GetPosition().x - (it2->CollisionNum * 0.5f) + it2->GetRadius()) + (n * it2->GetRadius() * 2.0f) ,it2->GetPosition().y,it2->GetPosition().z },
+						it2->GetRadius(),
+						it2->GetHeight(),
+						outPosition))
+					{
+						// 吹き飛ばす
+						{
+							const float power = 10.0f;
+							DirectX::XMFLOAT3 impulse;
+							DirectX::XMFLOAT3 p = { (it2->GetPosition().x - (it2->CollisionNum * 0.5f) + it2->GetRadius()) + (n * it2->GetRadius() * 2.0f) ,it2->GetPosition().y,it2->GetPosition().z };
+							DirectX::XMFLOAT3 e = player->GetPosition();
+							float vx = e.x - p.x;
+							float vz = e.z - p.z;
+							float lengthXZ = sqrtf(vx * vx + vz * vz);
+							//正規化
+							vx /= lengthXZ;
+							vz /= lengthXZ;
+							impulse.x = vx * power;
+							impulse.y = power * 0.5f;
+							impulse.z = vz * power;
+
+							player->AddImpulse(impulse);
+
+							// ヒットエフェクト再生
+							{
+								DirectX::XMFLOAT3 e = player->GetPosition();
+								e.z -= 4.0f;
+								hitEffect->Play(e);
+							}
+							//player->OnDead();
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 // グリッド描画

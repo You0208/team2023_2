@@ -12,6 +12,7 @@
 void Obstacle::Draw(RenderContext rc, ModelShader* shader)
 {
     shader->Draw(rc, model.get());
+    DrawDebugPrimitive();
 }
 
 //更新処理
@@ -234,12 +235,23 @@ Cola::Cola()
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/cola/Cola.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
+    height = 3.8f;
+    radius = 1.2f;
+    Type = 0;
+    CollisionNum = 1;
 }
 // 更新処理
 void Cola::Update(float elapsedTime)
 {
     // 基底クラス更新処理
     Obstacle::Update(elapsedTime);
+}
+
+void Cola::DrawDebugPrimitive()
+{
+    DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
+    //衝突判定用のデバッグ円柱を描画
+    debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
 }
 
 
@@ -249,6 +261,9 @@ Pokey::Pokey()
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/pocky/pooky.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
+    height = 7.0f;
+    Type = 1;
+    CollisionNum = 5;
 }
 // 描画処理
 void Pokey::Update(float elapsedTime)
@@ -256,6 +271,18 @@ void Pokey::Update(float elapsedTime)
     // 基底クラス描画処理
     Obstacle::Update(elapsedTime);
 }
+
+
+void Pokey::DrawDebugPrimitive()
+{
+    DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
+    //衝突判定用のデバッグ円柱を描画
+    for (int n = 0; n < CollisionNum; ++n)
+    {
+        debugRenderer->DrawCylinder({ (position.x - (5.0f * 0.5f) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
+    }
+}
+
 
 
 // マシュマロ

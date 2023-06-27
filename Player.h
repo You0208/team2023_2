@@ -1,6 +1,8 @@
 #pragma once
 #include "Graphics/Shader.h"
 #include "Graphics/Model.h"
+#include "SceneOver.h"
+#include "SceneManager.h"
 
 //プレイヤー
 class Player
@@ -22,6 +24,9 @@ public:
 
     //デバッグGUI描画
     void DrawDebugGUI();
+
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive();
 
     //行列更新処理
     void UpdateTransform();
@@ -58,6 +63,13 @@ public:
     // ダメージアニメが再生中であるかを取得
     bool GetIsDamageAnim() const { return isDamageAnim; }
 
+    // 衝撃を与える
+    void AddImpulse(const DirectX::XMFLOAT3& impulse);
+
+    // 死亡した時に呼ばれる
+    void OnDead() {
+        SceneManager::Instance().ChangeScene(new SceneOver);
+    };
 private:
 
     // 速度処理更新
@@ -78,8 +90,6 @@ private:
     // ダメージを受けたときに呼ばれる
     virtual void OnDamaged() {}
 
-    // 死亡した時に呼ばれる
-    virtual void OnDead() {}
 
     // == 追加した関数(この文はあとで削除する) ==
 

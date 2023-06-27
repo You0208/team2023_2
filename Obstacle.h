@@ -57,10 +57,14 @@ private:
     // 垂直移動更新処理
     void UpdateVerticalMove(float elapsedTime);
 
+    // デバッグプリミティブ描画
+    virtual void DrawDebugPrimitive() {};
 public:
     // モデルは呼び出すのでpublic
     std::unique_ptr<Model>  model       =    nullptr;        // モデル
 
+    int Type = 0;
+    int CollisionNum = 0;
 protected:
     DirectX::XMFLOAT3   position        = { 0,0,0 };        // 位置
     DirectX::XMFLOAT3   angle           = { 0,0,0 };        // 角度
@@ -97,6 +101,9 @@ public:
     Cola();
     // 更新処理
     void Update(float elapsedTime)override;
+
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
 };
 
 
@@ -107,6 +114,9 @@ public:
     Pokey();
     // 更新処理
     void Update(float elapsedTime)override;
+
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
 };
 
 

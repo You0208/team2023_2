@@ -43,6 +43,9 @@ public:
 	// グリッド描画
 	void DrawGrid(ID3D11DeviceContext* context, int subdivisions, float scale);
 
+	// 障害物とプレイヤーの当たり判定
+	void CollisionPlayerVsObs();
+
 private:
 	// 3D空間の描画
 	void Render3DScene();
@@ -58,6 +61,8 @@ private:
 	CameraController* cameraController = nullptr;
 
 	bool isPaused = false;//ポーズ
+
+	Effect* hitEffect = nullptr;
 	//-------------------------------------------------------------------------------------------------------
 	// ↓　この下はシェーダー関連
 	//-------------------------------------------------------------------------------------------------------

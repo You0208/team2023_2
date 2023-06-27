@@ -1,6 +1,7 @@
 #pragma once
 #include "Graphics/Shader.h"
 #include "Graphics/Model.h"
+#include "Obstacle.h"
 
 // ステージの基底クラス
 class BaseStage
@@ -43,6 +44,7 @@ protected:
 public:
     std::unique_ptr<Model> model = nullptr;
 
+    std::vector<Obstacle*> obstacles;
 protected:
     int stageSideMax                = 1;	                    // ステージの最大数(左右)
     int stageDepthMax               = 1;	                    // ステージの最大数(奥行)

@@ -106,6 +106,14 @@ void Player::InputMove(float elapsedTime)
     //maxMoveSpeed = moveSpeed;
 }
 
+void Player::AddImpulse(const DirectX::XMFLOAT3& impulse)
+{
+    // ‘¬—Í‚É—Í‚ğ‰Á‚¦‚é
+    velocity.x += impulse.x;
+    velocity.y += impulse.y;
+    velocity.z += impulse.z;
+}
+
 // ‘¬“xˆ—XV
 void Player::UpdateVelocity(float elapsedTime)
 {

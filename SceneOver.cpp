@@ -1,54 +1,65 @@
+#include "Graphics/Graphics.h"
 #include "SceneLoading.h"
-#include"Graphics/Graphics.h"
-#include "SceneLoading.h"
+#include "SceneGame.h"
 #include "SceneManager.h"
+#include "SceneOver.h"
+#include "Input/Input.h"
 
 // 初期化
-void SceneLoading::Initialize()
+void SceneOver::Initialize()
 {
-    // テクスチャを読み込む
-    texture = std::make_unique<Texture>("Data/Texture/LoadingIcon.png");
+    // スプライト初期化
+    texture = std::make_unique<Texture>("Data/Texture/Title.png");
     // スプライト
     sprite = std::make_unique<Sprite>();
     sprite->SetShaderResourceView(texture->GetShaderResourceView(), texture->GetWidth(), texture->GetHeight());
-    // スレッド開始
-    thread = new std::thread(LoadingThread, this);
+    // マスクテクスチャの読み込み
+    maskTexture = std::make_unique<Texture>("Data/Texture/dissolve_animation.png");
+    dissolveThreshold = 1.0f;
+    edgeThreshold = 0.2f; // 縁の閾値
+    edgeColor = { 1, 0, 0, 1 }; // 縁の色
 }
 
 // 終了化
-void SceneLoading::Finalize()
+void SceneOver::Finalize()
 {
-    // スレッド終了化
-    if (thread != nullptr)
-    {
-        thread->join();
-        delete thread;
-        thread = nullptr;
-    }
 }
 
 // 更新処理
-void SceneLoading::Update(float elapsedTime)
+void SceneOver::Update(float elapsedTime)
 {
-    constexpr float speed = 180;
-    angle += speed * elapsedTime;
+    GamePad& gamePad = Input::Instance().GetGamePad();
 
-    // 次のシーンの準備が完了したらシーンを切り替える
-    if (nextScene->IsReady())
+    // 何かボタンを押したらゲームシーンの切り替え
+    // なにかボタンを押したらローディングシーンを挟んでゲーム画面へ切り替え
+    const GamePadButton anyButton =
+        GamePad::BTN_A
+        | GamePad::BTN_B
+        | GamePad::BTN_X
+        | GamePad::BTN_Y
+        ;
+    if (gamePad.GetButtonDown() & anyButton)
     {
-        SceneManager::Instance().ChangeScene(nextScene);
-        nextScene = nullptr;
+        SceneManager::Instance().ChangeScene(new SceneGame);
     }
+
+    sprite->Update(0.0f, 0.0f,
+        100.0f, 100.0f,
+        0.0f, 0.0f,
+        static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight()),
+        0.0f,
+        1.0f, 1.0f, 1.0f, 1.0f);
+
     sprite->Update(0.0f, 0.0f,
         Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
         0.0f, 0.0f,
         static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight()),
-        angle,
+        0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 // 描画処理
-void SceneLoading::Render()
+void SceneOver::Render()
 {
     Graphics& graphics = Graphics::Instance();
     ID3D11DeviceContext* dc = graphics.GetDeviceContext();
@@ -72,20 +83,4 @@ void SceneLoading::Render()
         shader->Draw(rc, sprite.get());
         shader->End(rc);
     }
-}
-
-void SceneLoading::LoadingThread(SceneLoading* scene)
-{
-    // COM関連の初期化でスレッド毎に呼ぶ必要がある
-    CoInitialize(nullptr);
-
-    // 次のシーンの初期を行う
-    scene->nextScene->Initialize();
-
-    // スレッドが終わる前にCOM関連の終了化
-    CoUninitialize();
-
-    // 次のシーンの準備完了設定
-    scene->nextScene->SetReady();
-
 }

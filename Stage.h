@@ -34,8 +34,7 @@ public:
     // アイテム・障害物の追加
     void AddObstacle(Obstacle* obstacle) { obstacles.emplace_back(obstacle); }
 
-private:
-    std::vector<Obstacle*> obstacles;                    // 障害物
+private:                  // 障害物
 
     float offset        = 0.2f;
 

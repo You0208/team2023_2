@@ -54,10 +54,11 @@ private:
     // 水平速力更新処理
     void UpdataHorizontalVelocity(float elapsedFrame);
 
+public:
+    std::vector<BaseStage*>             stages;                         // ステージリスト
 private:
     // ステージデータ
     DirectX::XMFLOAT3 stageScrollVelocity = { 0.0f,0.0f ,-10.0f };      // 共通のスクロール速度のポインタ
-    std::vector<BaseStage*>             stages;                         // ステージリスト
     std::set<BaseStage*>                stageRemoves;                   // 削除リスト
     std::vector<DirectX::XMFLOAT3>      stagesSpawns;                   // 生成リスト(位置だけ持っている)
 
