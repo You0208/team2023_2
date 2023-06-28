@@ -5,6 +5,8 @@
 // コンストラクタ
 StageManager::StageManager()
 {
+    stageScrollVelocity.z = MaxStageScrollVelocity[1];
+    terrainScrollVelocity.z = MaxTerrainScrollVelocity[1];
 }
 
 // デストラクタ
@@ -78,10 +80,10 @@ void StageManager::Draw(RenderContext rc, ModelShader* shader)
     }
 
     // 地形描画
-    /*for (BaseStage* terrain : terrains)
+    for (BaseStage* terrain : terrains)
     {
         terrain->Draw(rc, shader);
-    }*/
+    }
 }
 
 // ステージ登録
@@ -270,6 +272,9 @@ void StageManager::UpdateVelocity(float elapsedTime, Player* player)
     // 経過フレーム
     float elapsedFrame = 60.0f * elapsedTime;
 
+    // プレイヤーの最大速度更新
+    maxPlayerVelocity = MaxPlayerVelocity[player->GetHungerLevel()];
+
     // 水平速力更新処理
     UpdataHorizontalVelocity(elapsedFrame);
 
@@ -277,6 +282,9 @@ void StageManager::UpdateVelocity(float elapsedTime, Player* player)
 
     // ステージのスクロール速度更新
     UpdateScrollVelocity(stageScrollVelocity, MaxStageScrollVelocity[player->GetHungerLevel()], ScrollVelocityRate);
+    
+    // 地形のスクロール速度更新
+    UpdateScrollVelocity(terrainScrollVelocity, MaxTerrainScrollVelocity[player->GetHungerLevel()], ScrollVelocityRate);
 }
 
 // 水平速力更新処理
@@ -304,7 +312,7 @@ void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
     }
 
     // XZ平面の速力を加速する
-    if (length <= maxMoveSpeed)
+    if (length <= maxPlayerVelocity)
     {
         // 移動ベクトルがゼロベクトル出ないなら加速する
         float moveVecLength = sqrtf(moveVecX * moveVecX);
@@ -318,11 +326,11 @@ void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
 
             // 最大速度制限
             float length = sqrtf(stageScrollVelocity.x * stageScrollVelocity.x);
-            if (length > maxMoveSpeed)
+            if (length > maxPlayerVelocity)
             {
                 float vx = stageScrollVelocity.x / length;
 
-                stageScrollVelocity.x = vx * maxMoveSpeed;
+                stageScrollVelocity.x = vx * maxPlayerVelocity;
             }
         }
     }
@@ -335,7 +343,7 @@ void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
 }
 
 // スクロール速度更新
-void StageManager::UpdateScrollVelocity(DirectX::XMFLOAT3 ScrollVelocity, float maxVelocity, float rate)
+void StageManager::UpdateScrollVelocity(DirectX::XMFLOAT3& ScrollVelocity, float maxVelocity, float rate)
 {
     float length = ScrollVelocity.z - maxVelocity;
     // 値が微小な場合は処理しない

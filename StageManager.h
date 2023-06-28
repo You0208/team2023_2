@@ -11,21 +11,28 @@
 class StageManager
 {
 private:
-    static constexpr float ScrollVelocityRate = 0.1f;          // スクロール速度補間係数
+    static constexpr float ScrollVelocityRate = 0.01f;          // スクロール速度補間係数
 
+    // 各空腹レベルでのプレイヤーの最大速度
+    static constexpr float MaxPlayerVelocity[3] =
+    {
+        60.0f,      // 空腹レベル：低
+        50.0f,      // 空腹レベル：中
+        20.0f       // 空腹レベル：高
+    };
     // 各空腹レベルでのステージの最大スクロール速度
     static constexpr float MaxStageScrollVelocity[3] =
     {
-        20.0f,      // 空腹レベル：低
-        50.0f,      // 空腹レベル：中
-        100.0f      // 空腹レベル：高
+        -100.0f,    // 空腹レベル：低
+        -50.0f,     // 空腹レベル：中
+        -20.0f      // 空腹レベル：高
     };
     // 各空腹レベルでのステージの最大スクロール速度
     static constexpr float MaxTerrainScrollVelocity[3] =
     {
-        100.0f,      // 空腹レベル：低
-        50.0f,      // 空腹レベル：中
-        20.0f      // 空腹レベル：高
+        -100.0f,    // 空腹レベル：高
+        -50.0f,     // 空腹レベル：中
+        -20.0f      // 空腹レベル：低
     };
 
 public:
@@ -73,7 +80,7 @@ private:
     void UpdataHorizontalVelocity(float elapsedFrame);
 
     // ステージのスクロール速度更新
-    void UpdateScrollVelocity(DirectX::XMFLOAT3 ScrollVelocity,float maxVelocity,float rate);
+    void UpdateScrollVelocity(DirectX::XMFLOAT3& ScrollVelocity,float maxVelocity,float rate);
 private:
     // ステージデータ
     DirectX::XMFLOAT3 stageScrollVelocity = { 0.0f,0.0f ,-10.0f };      // 共通のスクロール速度のポインタ
@@ -89,7 +96,7 @@ private:
 
 
     float moveVecX = 0.0f;                                              // 移動方向ベクトル
-    float maxMoveSpeed = 20.0f;                                         // 最大移動速度
+    float maxPlayerVelocity = 20.0f;                                    // プレイヤーの最大速度
     float friction = 0.5f;                                              // 減速
     float acceleration = 10.0f;                                         // 加速力
 };
