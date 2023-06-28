@@ -52,7 +52,7 @@ static constexpr int SpotLightMax = 8;
 // ガウスフィルター計算情報
 struct GaussianFilterData
 {
-	int kernelSize = 8; // カーネルサイズ
+	int kernelSize = 3; // カーネルサイズ
 	float deviation = 10.0f; // 標準偏差
 	DirectX::XMFLOAT2 textureSize; // 暈すテクスチャのサイズ
 };
@@ -72,7 +72,7 @@ struct ColorGradingData
 struct LuminanceExtractionData
 {
 	float threshold = 0.5f; // 閾値
-	float intensity = 1.0f; // ブルームの強度
+	float intensity = 0.5f; // ブルームの強度
 	DirectX::XMFLOAT2 dummy2;
 };
 
@@ -83,6 +83,14 @@ struct FinalpassnData
 	ID3D11ShaderResourceView* bloomTexture;
 };
 
+// シャドウマップ用情報
+struct ShadowMapData
+{
+	ID3D11ShaderResourceView* shadowMap; // シャドウマップテクスチャ
+	DirectX::XMFLOAT4X4 lightViewProjection; // ライトビュープロジェクション行列
+	DirectX::XMFLOAT3 shadowColor; // 影の色
+	float shadowBias; // 深度比較用のオフセット値
+};
 
 // レンダーコンテキスト
 struct RenderContext
@@ -120,4 +128,7 @@ struct RenderContext
 
 	// 最終パス情報
 	FinalpassnData finalpassnData;
+
+	// シャドウマップ情報
+	ShadowMapData shadowMapData;
 };

@@ -4,7 +4,6 @@
 #include "Graphics/Model.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/Texture.h"
-#include "Light.h"
 #include "CameraController.h"
 #include "Player.h"
 #include "Stage.h"
@@ -13,6 +12,8 @@
 #include "Scene.h"
 #include "Graphics/Texture.h"
 #include "Graphics/RenderTarget.h"
+#include "Graphics/DepthStencil.h"
+#include "Light.h"
 #include "PostprocessingRenderer.h"
 #include "Effect.h"
 #include "Obstacle.h"
@@ -50,6 +51,9 @@ private:
 	// 3D空間の描画
 	void Render3DScene();
 
+	// シャドウマップの描画
+	void RenderShadowmap();
+
 private:
 	
 	Player* player = nullptr;
@@ -85,4 +89,18 @@ private:
 	// ガウスフィルターデータ
 	GaussianFilterData gaussianFilterData;
 	std::unique_ptr<Sprite> gaussianBlurSprite;
+
+	// オフスクリーンレンダリング用描画ターゲット
+	std::unique_ptr<RenderTarget> renderTarget;
+
+	// シャドウマップ用情報
+	Light* mainDirectionalLight = nullptr; // シャドウマップを生成する平行光源
+	std::unique_ptr<DepthStencil> shadowmapDepthStencil; // シャドウマップ用深度ステンシルバッファ
+	float shadowDrawRect = 100.0f; // シャドウマップに描画する範囲
+	DirectX::XMFLOAT4X4 lightViewProjection; // ライトビュープロジェクション行列
+	DirectX::XMFLOAT3 shadowColor = { 0.2f, 0.2f, 0.2f }; // 影の色
+	float shadowBias = 0.001f; // 深度比較用のオフセット値
+
+	// ポストプロセス
+	std::unique_ptr<PostprocessingRenderer> postprocessingRenderer;
 };

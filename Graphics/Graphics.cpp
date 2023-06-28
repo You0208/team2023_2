@@ -13,6 +13,7 @@
 #include "Graphics/GaussianBlurShader.h"
 #include "Graphics/LuminanceExtractionShader.h"
 #include "Graphics/FinalpassShader.h"
+#include "Graphics/ShadowmapCasterShader.h"
 
 
 
@@ -151,7 +152,10 @@ Graphics::Graphics(HWND hWnd)
 			std::make_unique<DefaultModelShader>(device.Get());
 		modelShaders[static_cast<int>(ModelShaderId::Phong)] =
 			std::make_unique<PhongShader>(device.Get());
-		modelShaders[static_cast<int>(ModelShaderId::Toon)] = std::make_unique<ToonShader>(device.Get());
+		modelShaders[static_cast<int>(ModelShaderId::Toon)] = 
+			std::make_unique<ToonShader>(device.Get());
+		modelShaders[static_cast<int>(ModelShaderId::ShadowmapCaster)] =
+			std::make_unique<ShadowmapCasterShader>(device.Get());
 	}
 
 

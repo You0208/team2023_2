@@ -82,6 +82,11 @@ ToonShader::ToonShader(ID3D11Device* device)
         desc.ByteWidth = sizeof(CbSubset);
         hr = device->CreateBuffer(&desc, 0, subsetConstantBuffer.GetAddressOf());
         _ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
+        // シャドウマップ用バッファ
+        desc.ByteWidth = sizeof(CbShadowMap);
+        hr = device->CreateBuffer(&desc, 0, shadowMapConstantBuffer.GetAddressOf());
+        _ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
+
     }
     // ブレンドステート
     {
@@ -146,6 +151,19 @@ ToonShader::ToonShader(ID3D11Device* device)
         desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
         HRESULT hr = device->CreateSamplerState(&desc, samplerState.GetAddressOf());
         _ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
+
+        // シャドウマップ用
+        desc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+        desc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+        desc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+        desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+        desc.BorderColor[0] = FLT_MAX;
+        desc.BorderColor[1] = FLT_MAX;
+        desc.BorderColor[2] = FLT_MAX;
+        desc.BorderColor[3] = FLT_MAX;
+        hr = device->CreateSamplerState(&desc, shadowMapSamplerState.GetAddressOf());
+        _ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
+
     }
     // デフォルトのトゥーンテクスチャを読み込む
     {
@@ -163,15 +181,22 @@ void ToonShader::Begin(const RenderContext& rc)
     {
     sceneConstantBuffer.Get(),
     meshConstantBuffer.Get(),
-    subsetConstantBuffer.Get()
+    subsetConstantBuffer.Get(),
+    shadowMapConstantBuffer.Get()
     };
+
     rc.deviceContext->VSSetConstantBuffers(0, ARRAYSIZE(constantBuffers), constantBuffers);
     rc.deviceContext->PSSetConstantBuffers(0, ARRAYSIZE(constantBuffers), constantBuffers);
     const float blend_factor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
     rc.deviceContext->OMSetBlendState(blendState.Get(), blend_factor, 0xFFFFFFFF);
     rc.deviceContext->OMSetDepthStencilState(depthStencilState.Get(), 0);
     rc.deviceContext->RSSetState(rasterizerState.Get());
-    rc.deviceContext->PSSetSamplers(0, 1, samplerState.GetAddressOf());
+    ID3D11SamplerState* samplerStates[] =
+    {
+    samplerState.Get(),
+    shadowMapSamplerState.Get()
+    };
+    rc.deviceContext->PSSetSamplers(0, ARRAYSIZE(samplerStates), samplerStates);
     // シーン用定数バッファ更新
     CbScene cbScene;
     DirectX::XMMATRIX V = DirectX::XMLoadFloat4x4(&rc.view);
@@ -189,6 +214,16 @@ void ToonShader::Begin(const RenderContext& rc)
     cbScene.spotLightCount = rc.spotLightCount;
     cbScene.viewPosition = rc.viewPosition;
     rc.deviceContext->UpdateSubresource(sceneConstantBuffer.Get(), 0, 0, &cbScene, 0, 0);
+
+    // シャドウマップ用定数バッファ更新
+    CbShadowMap cbShadowMap;
+    cbShadowMap.shadowColor = rc.shadowMapData.shadowColor;
+    cbShadowMap.shadowBias = rc.shadowMapData.shadowBias;
+    cbShadowMap.lightViewProjection = rc.shadowMapData.lightViewProjection;
+    rc.deviceContext->UpdateSubresource(shadowMapConstantBuffer.Get(), 0, 0, &cbShadowMap, 0, 0);
+    // シャドウマップ設定
+    rc.deviceContext->PSSetShaderResources(2, 1, &rc.shadowMapData.shadowMap);
+
 }
 // 描画
 void ToonShader::Draw(const RenderContext& rc, const Model* model)
@@ -243,6 +278,7 @@ void ToonShader::End(const RenderContext& rc)
     rc.deviceContext->VSSetShader(nullptr, nullptr, 0);
     rc.deviceContext->PSSetShader(nullptr, nullptr, 0);
     rc.deviceContext->IASetInputLayout(nullptr);
-    ID3D11ShaderResourceView* srvs[] = { nullptr, nullptr };
+    ID3D11ShaderResourceView* srvs[] = { nullptr, nullptr, nullptr };
     rc.deviceContext->PSSetShaderResources(0, ARRAYSIZE(srvs), srvs);
+
 }

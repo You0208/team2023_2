@@ -1,12 +1,13 @@
 #include "Misc.h"
-#include "Graphics/PhongShader.h"
-PhongShader::PhongShader(ID3D11Device* device)
+#include "Graphics/ShadowmapCasterShader.h"
+
+ShadowmapCasterShader::ShadowmapCasterShader(ID3D11Device* device)
 {
     // 頂点シェーダー
     {
         // ファイルを開く
         FILE* fp = nullptr;
-        fopen_s(&fp, "Shader\\PhongVS.cso", "rb");
+        fopen_s(&fp, "Shader\\ShadowmapCasterVS.cso", "rb");
         _ASSERT_EXPR_A(fp, "CSO File not found");
         // ファイルのサイズを求める
         fseek(fp, 0, SEEK_END);
@@ -42,25 +43,6 @@ PhongShader::PhongShader(ID3D11Device* device)
             csoSize, inputLayout.GetAddressOf());
         _ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
     }
-    // ピクセルシェーダー
-    {
-        // ファイルを開く
-        FILE* fp = nullptr;
-        fopen_s(&fp, "Shader\\PhongPS.cso", "rb");
-        _ASSERT_EXPR_A(fp, "CSO File not found");
-        // ファイルのサイズを求める
-        fseek(fp, 0, SEEK_END);
-        long csoSize = ftell(fp);
-        fseek(fp, 0, SEEK_SET);
-        // メモリ上に頂点シェーダーデータを格納する領域を用意する
-        std::unique_ptr<u_char[]> csoData = std::make_unique<u_char[]>(csoSize);
-        fread(csoData.get(), csoSize, 1, fp);
-        fclose(fp);
-        // ピクセルシェーダー生成
-        HRESULT hr = device->CreatePixelShader(csoData.get(), csoSize, nullptr,
-            pixelShader.GetAddressOf());
-        _ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
-    }
     // 定数バッファ
     {
         // シーン用バッファ
@@ -78,15 +60,6 @@ PhongShader::PhongShader(ID3D11Device* device)
         desc.ByteWidth = sizeof(CbMesh);
         hr = device->CreateBuffer(&desc, 0, meshConstantBuffer.GetAddressOf());
         _ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
-        // サブセット用バッファ
-        desc.ByteWidth = sizeof(CbSubset);
-        hr = device->CreateBuffer(&desc, 0, subsetConstantBuffer.GetAddressOf());
-        _ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
-        // シャドウマップ用バッファ
-        desc.ByteWidth = sizeof(CbShadowMap);
-        hr = device->CreateBuffer(&desc, 0, shadowMapConstantBuffer.GetAddressOf());
-        _ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
-
     }
     // ブレンドステート
     {
@@ -132,102 +105,33 @@ PhongShader::PhongShader(ID3D11Device* device)
         HRESULT hr = device->CreateRasterizerState(&desc, rasterizerState.GetAddressOf());
         _ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
     }
-    // サンプラステート
-    {
-        D3D11_SAMPLER_DESC desc;
-        ::memset(&desc, 0, sizeof(desc));
-        desc.MipLODBias = 0.0f;
-        desc.MaxAnisotropy = 1;
-        desc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-        desc.MinLOD = -FLT_MAX;
-        desc.MaxLOD = FLT_MAX;
-        desc.BorderColor[0] = 1.0f;
-        desc.BorderColor[1] = 1.0f;
-        desc.BorderColor[2] = 1.0f;
-        desc.BorderColor[3] = 1.0f;
-        desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-        desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-        desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-        desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-        HRESULT hr = device->CreateSamplerState(&desc, samplerState.GetAddressOf());
-        _ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
-
-        // シャドウマップ用
-        desc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
-        desc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
-        desc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
-        desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-        desc.BorderColor[0] = FLT_MAX;
-        desc.BorderColor[1] = FLT_MAX;
-        desc.BorderColor[2] = FLT_MAX;
-        desc.BorderColor[3] = FLT_MAX;
-        hr = device->CreateSamplerState(&desc, shadowMapSamplerState.GetAddressOf());
-        _ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
-    }
 }
 // 描画開始
-void PhongShader::Begin(const RenderContext& rc)
+void ShadowmapCasterShader::Begin(const RenderContext& rc)
 {
     rc.deviceContext->VSSetShader(vertexShader.Get(), nullptr, 0);
-    rc.deviceContext->PSSetShader(pixelShader.Get(), nullptr, 0);
+    rc.deviceContext->PSSetShader(nullptr, nullptr, 0);
     rc.deviceContext->IASetInputLayout(inputLayout.Get());
     ID3D11Buffer* constantBuffers[] =
     {
     sceneConstantBuffer.Get(),
     meshConstantBuffer.Get(),
-    subsetConstantBuffer.Get(),
-    shadowMapConstantBuffer.Get()
     };
     rc.deviceContext->VSSetConstantBuffers(0, ARRAYSIZE(constantBuffers), constantBuffers);
-    rc.deviceContext->PSSetConstantBuffers(0, ARRAYSIZE(constantBuffers), constantBuffers);
     const float blend_factor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
     rc.deviceContext->OMSetBlendState(blendState.Get(), blend_factor, 0xFFFFFFFF);
     rc.deviceContext->OMSetDepthStencilState(depthStencilState.Get(), 0);
     rc.deviceContext->RSSetState(rasterizerState.Get());
-
-    ID3D11SamplerState* samplerStates[] =
-    {
-    samplerState.Get(),
-    shadowMapSamplerState.Get()
-    };
-    rc.deviceContext->PSSetSamplers(0, ARRAYSIZE(samplerStates), samplerStates);
-
     // シーン用定数バッファ更新
     CbScene cbScene;
     DirectX::XMMATRIX V = DirectX::XMLoadFloat4x4(&rc.view);
     DirectX::XMMATRIX P = DirectX::XMLoadFloat4x4(&rc.projection);
     DirectX::XMStoreFloat4x4(&cbScene.viewProjection, V * P);
-
-    cbScene.viewPosition = rc.viewPosition;
-    cbScene.ambientLightColor = rc.ambientLightColor;
-    cbScene.directionalLightData = rc.directionalLightData;
-
-    memcpy_s(cbScene.pointLightData,
-        sizeof(cbScene.pointLightData),
-        rc.pointLightData,
-        sizeof(rc.pointLightData));
-    cbScene.pointLightCount = rc.pointLightCount;
-
-    memcpy_s(cbScene.spotLightData,
-        sizeof(cbScene.spotLightData),
-        rc.spotLightData,
-        sizeof(rc.spotLightData));
-    cbScene.spotLightCount = rc.spotLightCount;
-
     rc.deviceContext->UpdateSubresource(sceneConstantBuffer.Get(), 0, 0, &cbScene, 0, 0);
-
-    // シャドウマップ用定数バッファ更新
-    CbShadowMap cbShadowMap;
-    cbShadowMap.shadowColor = rc.shadowMapData.shadowColor;
-    cbShadowMap.shadowBias = rc.shadowMapData.shadowBias;
-    cbShadowMap.lightViewProjection = rc.shadowMapData.lightViewProjection;
-    rc.deviceContext->UpdateSubresource(shadowMapConstantBuffer.Get(), 0, 0, &cbShadowMap, 0, 0);
-    // シャドウマップ設定
-    rc.deviceContext->PSSetShaderResources(2, 1, &rc.shadowMapData.shadowMap);
-
 }
+
 // 描画
-void PhongShader::Draw(const RenderContext& rc, const Model* model)
+void ShadowmapCasterShader::Draw(const RenderContext& rc, const Model* model)
 {
     const ModelResource* resource = model->GetResource();
     const std::vector<Model::Node>& nodes = model->GetNodes();
@@ -259,21 +163,14 @@ void PhongShader::Draw(const RenderContext& rc, const Model* model)
         rc.deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         for (const ModelResource::Subset& subset : mesh.subsets)
         {
-            CbSubset cbSubset;
-            cbSubset.materialColor = subset.material->color;
-            rc.deviceContext->UpdateSubresource(subsetConstantBuffer.Get(), 0, 0, &cbSubset, 0, 0);
-            rc.deviceContext->PSSetShaderResources(0, 1, subset.material->diffuse_map.GetAddressOf());
-            rc.deviceContext->PSSetSamplers(0, 1, samplerState.GetAddressOf());
             rc.deviceContext->DrawIndexed(subset.indexCount, subset.startIndex, 0);
         }
     }
 }
+
 // 描画終了
-void PhongShader::End(const RenderContext& rc)
+void ShadowmapCasterShader::End(const RenderContext& rc)
 {
     rc.deviceContext->VSSetShader(nullptr, nullptr, 0);
-    rc.deviceContext->PSSetShader(nullptr, nullptr, 0);
     rc.deviceContext->IASetInputLayout(nullptr);
-    ID3D11ShaderResourceView* srvs[] = { nullptr, nullptr, nullptr };
-    rc.deviceContext->PSSetShaderResources(0, ARRAYSIZE(srvs), srvs);
 }

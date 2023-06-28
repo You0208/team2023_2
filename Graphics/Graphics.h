@@ -28,6 +28,8 @@ enum class ModelShaderId
 	Default,
 	Phong,
 	Toon,
+	ShadowmapCaster,
+
 	Max
 };
 
