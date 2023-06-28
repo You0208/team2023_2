@@ -6,10 +6,11 @@
 class Player
 {
 public:
-    static constexpr float LeanAngle = 30.0f;       // 左右移動時の傾き角度
-    static constexpr float LeanSpeed = 0.5f;        // 左右移動時の傾き速度
+    static constexpr float LeanAngle = 30.0f;           // 左右移動時の傾き角度
+    static constexpr float LeanSpeed = 0.5f;            // 左右移動時の傾き速度
 
-    static constexpr float MaxHungerAmount = 100.0f;// 空腹量の最大値
+    static constexpr float MaxHungerPoint  = 100.0f;    // 空腹量の最大値
+    static constexpr float DecreaseHungerPoint = 1.0f;  // 空腹量の減少量
     // 各空腹レベルでのスケール
     static constexpr float MaxScale[3] =
     {
@@ -120,8 +121,14 @@ private:
     // スケール更新
     void UpdateScale(float maxScale, float rate);
 
+    // 空腹ポイント更新
+    void UpdateHungerPoint(float elapsedTime);
+
     // 空腹レベル更新
     void UpdateHungerLevel();
+
+    // 空腹ポイント加算
+    void AddHungerPoint(float add);
     
 public:
     // モデルはsceneのrenderで呼び出すのでpublic
@@ -173,5 +180,5 @@ private:
     bool    wait[3]                     = {};
 
     int     hungerLevel                 = 1;            // 空腹レベル
-    float   hungerAmount                = 50.0f;        // 空間量
+    float   hungerPoint                = 50.0f;         // 空腹ポイント
 };

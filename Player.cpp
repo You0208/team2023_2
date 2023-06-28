@@ -47,7 +47,7 @@ void Player::Update(float elapsedTime)
     }
 
     //  空腹レベルの更新
-    UpdateHungerLevel();
+    UpdateHungerPoint(elapsedTime);
 
     // スケールの更新
     UpdateScale(MaxScale[hungerLevel], ScaleRate);
@@ -164,11 +164,21 @@ void Player::DrawDebugGUI()
     }
 
 
-    // 空腹レベル
-    ImGui::SliderInt("hungerLevel", &hungerLevel, 0, 2);
-
-    // 空腹量hungerAmount
-    ImGui::SliderFloat("hungerAmount", &hungerAmount, 0.0f, MaxHungerAmount);
+    if (ImGui::CollapsingHeader("HungerPoint", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        // 空腹レベル
+        ImGui::SliderInt("hungerLevel", &hungerLevel, 0, 2);
+        // 空腹量
+        ImGui::SliderFloat("hungerAmount", &hungerPoint, 0.0f, MaxHungerPoint);
+        // 加算量
+        static float add = 10.0f;
+        ImGui::InputFloat("AddAmount", &add);
+        // 空腹量加算
+        if (ImGui::Button("add"))
+        {
+            AddHungerPoint(add);
+        }
+    }
 
     ImGui::End();
 }
@@ -360,10 +370,25 @@ void Player::UpdateScale(float maxScale, float rate)
     }
 }
 
+void Player::UpdateHungerPoint(float elapsedTime)
+{
+    // 常時空腹量が減少する
+    hungerPoint -= DecreaseHungerPoint * elapsedTime;
+
+    // 空腹レベル更新
+    UpdateHungerLevel();
+}
+
 // 空腹レベル更新
 void Player::UpdateHungerLevel()
 {
-    if (hungerAmount >= HungerLevelLine[1]) hungerLevel = 2;
-    else if (hungerAmount < HungerLevelLine[0])hungerLevel = 0;
+    if (hungerPoint >= HungerLevelLine[1]) hungerLevel = 2;
+    else if (hungerPoint < HungerLevelLine[0])hungerLevel = 0;
     else hungerLevel = 1;
+}
+
+// 空腹ポイント加算
+void Player::AddHungerPoint(float add)
+{
+    hungerPoint += add;
 }
