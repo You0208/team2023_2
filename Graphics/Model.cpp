@@ -75,10 +75,9 @@ void Model::UpdateAnimation(float elapsedTIme)
 	// ブレンド率の計算
 	float blendRate = 1.0f;
 
-	// animationBlendTImeに値が入っていいない(値が0)場合現在の経過時間(ブレンド開始時間)を代入
-	// (0を代入しているので == でもいいと思うが一応)
-	if (animationBlendTIme >= -FLT_EPSILON
-		&& animationBlendTIme < FLT_EPSILON)
+	// TODO: 先生に聞く
+	if (animationBlendTIme >= -animationBlendSeconds
+		&& animationBlendTIme < animationBlendSeconds)
 	{
 		animationBlendTIme = currentAnimationSeconds;
 	}
@@ -127,18 +126,18 @@ void Model::UpdateAnimation(float elapsedTIme)
 					
 					// 角度の線形補間
 					DirectX::XMVECTOR Now_Rotate = DirectX::XMLoadFloat4(&node.rotate);		// 今の姿勢
-					DirectX::XMVECTOR Key0_Rotate = DirectX::XMLoadFloat4(&key0.rotate);	// 次のキーフレームの姿勢
+					DirectX::XMVECTOR Key0_Rotate = DirectX::XMLoadFloat4(&key1.rotate);	// 次のキーフレームの姿勢
 					DirectX::XMVECTOR rotate =
 						DirectX::XMQuaternionSlerp(Now_Rotate, Key0_Rotate, blendRate);
 
 					// 座標の線形補間
-					DirectX::XMVECTOR Now_Translate = DirectX::XMLoadFloat3(&key0.translate);
+					DirectX::XMVECTOR Now_Translate = DirectX::XMLoadFloat3(&node.translate);
 					DirectX::XMVECTOR Key0_Translate = DirectX::XMLoadFloat3(&key1.translate);
 					DirectX::XMVECTOR translate =
 						DirectX::XMVectorLerp(Now_Translate, Key0_Translate, blendRate);
 
 					// 補間結果を設定
-					node.scale = key0.scale;
+					node.scale = key1.scale;
 					DirectX::XMStoreFloat4(&node.rotate, rotate);
 					DirectX::XMStoreFloat3(&node.translate, translate);
 				}

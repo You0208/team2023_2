@@ -98,20 +98,6 @@ bool Player::ApplyDamage(int damage, float invincibleTime)
     return true;
 }
 
-// 移動入力処理
-void Player::InputMove(float elapsedTime)
-{
-    // 進行ベクトル取得
-    DirectX::XMFLOAT3 moveVec = GetMoveVec();
-
-    // 移動処理
-    // 移動方向ベクトルを設定
-    moveVecX = moveVec.x;
-
-    // 最大速度設定
-    //maxMoveSpeed = moveSpeed;
-}
-
 // 速度処理更新
 void Player::UpdateVelocity(float elapsedTime)
 {
@@ -199,14 +185,13 @@ void Player::UpdateTransform()
 }
 
 // スティック入力値から移動ベクトルを取得
-DirectX::XMFLOAT3 Player::GetMoveVec() const
+float Player::GetMoveVecX() const
 {
     // 入力情報を取得
     GamePad& gamePad = Input::Instance().GetGamePad();
     float ax = gamePad.GetAxisLX();
-    DirectX::XMFLOAT3 vec = { ax ,0.0f,0.0f };
 
-    return vec;
+    return ax;
 }
 
 // 水平速力更新処理
@@ -285,7 +270,7 @@ void Player::UpdateIdleState(float elapsedTime)
     //UpdateVelocity(elapsedTime);
 
     // 傾き処理
-    Lean(elapsedTime, velocity.x, LeanSpeed);
+    Lean(elapsedTime, LeanRate);
 }
 
 
@@ -295,7 +280,7 @@ void Player::TransitionDamageState()
     state = State::Damage;
 
     // アニメーション再生
-    model->PlayAnimation(Anim_Damage, false);
+    model->PlayAnimation(Anim_Damage, false,0.1f);
     isDamageAnim = true;        // ダメージアニメ再生開始
 }
 // ダメージ状態更新
@@ -318,44 +303,19 @@ void Player::TransitionNodState()
 }
 
 // 傾き処理
-void Player::Lean(float elapsedTime, float vx, float add)
+void Player::Lean(float elapsedTime, float rate)
 {
-    // まっすぐにする(速度が０)
-    if (vx > -FLT_EPSILON && vx < FLT_EPSILON)
+    float vx = velocity.x;
+    float Angle = 0.0f;
+    float Rate = LeanRate_0;
+
+    // vxが0.0でないなら(キーが押されていたら)
+    if ((vx > FLT_EPSILON) || (vx < -FLT_EPSILON))
     {
-        // 左に傾いている
-        if (angle.z > FLT_EPSILON)
-        {
-            angle.z -= DirectX::XMConvertToRadians(add);
-
-            // 超過修正
-            angle.z = (std::max)(angle.z, 0.0f);
-        }
-        // 右に傾いている
-        if (angle.z < -FLT_EPSILON)
-        {
-            angle.z += DirectX::XMConvertToRadians(add);
-
-            // 超過修正
-            angle.z = (std::min)(angle.z, 0.0f);
-        }
+        Angle = vx > FLT_EPSILON ? DirectX::XMConvertToRadians(-LeanAngle) : DirectX::XMConvertToRadians(LeanAngle);
+        Rate = LeanRate;
     }
-    // 左に傾ける(速度が0未満)
-    else if (vx < 0)
-    {
-        angle.z += DirectX::XMConvertToRadians(add);
-
-        // 超過修正
-        angle.z = (std::min)(angle.z,DirectX::XMConvertToRadians(LeanAngle));
-    }
-    // 左に傾ける(速度が0より大きい)
-    else if (vx > 0)
-    {
-        angle.z -= DirectX::XMConvertToRadians(add);
-
-        // 超過修正e
-        angle.z = (std::max)(angle.z, DirectX::XMConvertToRadians(-LeanAngle));
-    }
+    angle.z = angle.z + (Rate) * (Angle - angle.z);
 }
 
 // スケール更新

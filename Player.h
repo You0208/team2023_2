@@ -6,8 +6,10 @@
 class Player
 {
 public:
-    static constexpr float LeanAngle = 30.0f;           // 左右移動時の傾き角度
-    static constexpr float LeanSpeed = 0.5f;            // 左右移動時の傾き速度
+
+    static constexpr float LeanAngle = 30.0f;       // 左右移動時の傾き角度
+static constexpr float LeanRate = 0.03f;       // 傾きの補間係数
+static constexpr float LeanRate_0 = 0.01f;       // 戻る傾き補間係数
 
     static constexpr float MaxHungerPoint  = 100.0f;    // 空腹量の最大値
     static constexpr float DecreaseHungerPoint = 1.0f;  // 空腹量の減少量
@@ -25,6 +27,7 @@ public:
         33.0f,      // これ以上が空腹レベル：中
         66.0f       // これ以上が空腹レベル：高
     };
+
 
 public:
 
@@ -45,9 +48,6 @@ public:
 
     // ダメージを与える
     bool ApplyDamage(int damage, float invincibleTime);
-
-    // 移動入力処理
-    void InputMove(float elapsedTime);
     
     // 位置更新
     void SetPosition(const DirectX::XMFLOAT3& position) { this->position = position; }
@@ -86,7 +86,7 @@ private:
     void UpdateInvincibleTimer(float elapsedTime);
 
     // スティック入力値から移動ベクトルを取得
-    DirectX::XMFLOAT3 GetMoveVec() const;
+    float GetMoveVecX() const;
 
     // 水平速力更新処理
     void UpdataHorizontalVelocity(float elapsedFrame);
@@ -116,7 +116,7 @@ private:
     void TransitionNodState();
 
     // 傾き処理
-    void Lean(float elapsedTime,float vx,float add);
+    void Lean(float elapsedTime, float rate);
 
     // スケール更新
     void UpdateScale(float maxScale, float rate);
