@@ -29,7 +29,7 @@ void StageManager::DrawDebugGUI()
         ImGui::SliderFloat("terrainScrollVelocityZ", &terrainScrollVelocity.z, 0.0f, -300.0f);
     }
 
-    ImGui::Text("SpawnStageCount:%ld", SpawnStageCount);
+    ImGui::Text("SpawnStageCount:%ld", GetSpawnStageCount());
 
     ImGui::Text("[I][J][K][L] : camera");
     ImGui::Text("[A][D] : player");
@@ -129,8 +129,6 @@ void StageManager::StageSpawn(DirectX::XMFLOAT3 position)
     s->SetScrollVelocity(&stageScrollVelocity);     // 共通のスクロール速度を設定
     s->Initialize();                                // 障害物生成
     stages.emplace_back(s);                         // コンテナ追加
-
-    SpawnStageCount++;                              // 生成カウントを増やす
 }
 
 // ステージの更新
