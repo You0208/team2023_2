@@ -46,6 +46,8 @@ void Player::Update(float elapsedTime)
         break;
     }
 
+    UpdateScale(MaxScale[hungerLevel], ScaleRate);
+
     //オブジェクト行列を更新
     UpdateTransform();
 
@@ -335,5 +337,17 @@ void Player::Lean(float elapsedTime, float vx, float add)
 
         // 超過修正e
         angle.z = (std::max)(angle.z, DirectX::XMConvertToRadians(-LeanAngle));
+    }
+}
+
+// スケール更新
+void Player::UpdateScale(float maxScale, float rate)
+{
+    float length = maxScale - scale.x;
+    // 値が微小な場合は処理しない
+    if (fabs(length) > 1e-8f)
+    {
+        //return a + t * (b - a);
+        scale.x = scale.y = scale.z = scale.x + rate * (maxScale - scale.x);
     }
 }

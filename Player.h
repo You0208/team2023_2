@@ -9,6 +9,15 @@ public:
     static constexpr float LeanAngle = 30.0f;       // 左右移動時の傾き角度
     static constexpr float LeanSpeed = 0.5f;        // 左右移動時の傾き速度
 
+    // 各空腹レベルでのスケール
+    static constexpr float MaxScale[3] =
+    {
+        0.5f,      // 空腹レベル：低
+        1.0f,      // 空腹レベル：中
+        2.0f       // 空腹レベル：高
+    };
+    static constexpr float ScaleRate = 0.002f;       // スケール拡縮の補間係数
+
 public:
 
     Player();
@@ -100,6 +109,9 @@ private:
 
     // 傾き処理
     void Lean(float elapsedTime,float vx,float add);
+
+    // スケール更新
+    void UpdateScale(float maxScale, float rate);
     
 public:
     // モデルはsceneのrenderで呼び出すのでpublic
