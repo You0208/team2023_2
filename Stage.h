@@ -10,9 +10,9 @@ class Stage: public BaseStage
 {
 public:
     static const int StageKindMax           = 2;        //ステージの種類の最大数
-    static const int StageSideMax           = 3;	    //ステージの最大数(左右)
-    static const int StageDepthMax          = 5;	    //ステージの最大数(奥行)
-    static constexpr float StageSize        = 30.0f;    //ステージのサイズ
+    static const int StageSideMax           = 2;	    //ステージの最大数(左右)
+    static const int StageDepthMax          = 3;	    //ステージの最大数(奥行)
+    static constexpr float StageSize        = 500.0f;    //ステージのサイズ
 
 public:
     Stage();
@@ -50,6 +50,7 @@ private:
     {
         cola,
         pokey,
+        prits,
         marshmallow_Blue,
         marshmallow_Pink,
         jellybeans_Yellow,
@@ -58,6 +59,7 @@ private:
         chocolate_ball,
         grape_can,
         orange_gum,
+        husen_gum,
         candy_gate,
         orange_can,
         marble_chocolate,

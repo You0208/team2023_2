@@ -4,6 +4,7 @@
 #include "LightManager.h"
 #include "EffectManager.h"
 #include "Input/Input.h"
+#include "Stage.h"
 
 //-------------------------------------------------------------------------------------------------------
 // 
@@ -22,6 +23,8 @@ void SceneGame::Initialize()
 
 	// ステージマネージャー初期設定
 	stageManager = new StageManager;
+
+	BaseStage::clear();
 
 	// ステージ生成
 	for (int z = 0; z < Stage::StageDepthMax; ++z)

@@ -27,6 +27,8 @@ public:
     DirectX::XMFLOAT3 GetSpawnPosition() { return spawnPosition; }          // 生成位置取得
 
     DirectX::XMFLOAT3* GetAddressOfVelocity() { return &velocity; }         // velocityのポインター取得
+
+    static void clear();                                                           // 初期化
 protected:
     // スクロール処理
     virtual void UpdateVelocity(float elapsedTime);
@@ -65,5 +67,7 @@ protected:
     // ステージ削除
     bool isDestroy                  = false;                    // ステージ削除フラグ
     bool a[2] = {};
+
+    static int SpawnStageCount;                                 // 生成したステージの数
 };
 

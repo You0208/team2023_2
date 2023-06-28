@@ -25,24 +25,16 @@ void StageManager::DrawDebugGUI()
 
     if (ImGui::Begin("StageManager", nullptr, ImGuiWindowFlags_None))
     {
-        ImGui::SliderFloat("scrollVelocityZ", &stageScrollVelocity.z, 0.0f, -100.0f);
-        ImGui::SliderFloat("terrainScrollVelocityZ", &terrainScrollVelocity.z, 0.0f, -100.0f);
+        ImGui::SliderFloat("scrollVelocityZ", &stageScrollVelocity.z, 0.0f, -300.0f);
+        ImGui::SliderFloat("terrainScrollVelocityZ", &terrainScrollVelocity.z, 0.0f, -300.0f);
     }
 
-    // スクロール停止
-    if (ImGui::Button("STOP")) {
-        stageScrollVelocity = { 0.0f,0.0f ,0.0f };
-        terrainScrollVelocity = { 0.0f,0.0f ,0.0f };
-    }
-    // スクロールスタート
-    if (ImGui::Button("STATE")) {
-        stageScrollVelocity = { 0.0f,0.0f ,-10.0f };
-        terrainScrollVelocity = { 0.0f,0.0f ,-10.0f };
-    }
+    ImGui::Text("SpawnStageCount:%ld", SpawnStageCount);
 
     ImGui::Text("[I][J][K][L] : camera");
     ImGui::Text("[A][D] : player");
     ImGui::Text("[X] : HitAnime");
+    ImGui::Text("[C] : pause");
 
     ImGui::End();
 }
@@ -132,12 +124,13 @@ void StageManager::Clear()
 // ステージ生成
 void StageManager::StageSpawn(DirectX::XMFLOAT3 position)
 {
-    //Stage* s = new Stage();//ランダムな種類のステージを生成
-    Stage* s = new Stage;           //ステージを生成
-    s->SetPosition(position);// ここでステージのポジションを決める
-    s->SetScrollVelocity(&stageScrollVelocity);  // 共通のスクロール速度を設定
-    s->Initialize();
-    stages.emplace_back(s);
+    Stage* s = new Stage;                           //ステージを生成
+    s->SetPosition(position);                       // ここでステージのポジションを決める
+    s->SetScrollVelocity(&stageScrollVelocity);     // 共通のスクロール速度を設定
+    s->Initialize();                                // 障害物生成
+    stages.emplace_back(s);                         // コンテナ追加
+
+    SpawnStageCount++;                              // 生成カウントを増やす
 }
 
 // ステージの更新

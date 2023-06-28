@@ -247,7 +247,7 @@ void Cola::Update(float elapsedTime)
 Pokey::Pokey()
 {
     //モデルを読み込み
-    model = std::make_unique<Model>("Data/Model/Obstacle/pocky/pooky.mdl");
+    model = std::make_unique<Model>("Data/Model/Obstacle/pocky/pozky.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
 }
 // 描画処理
@@ -255,6 +255,15 @@ void Pokey::Update(float elapsedTime)
 {
     // 基底クラス描画処理
     Obstacle::Update(elapsedTime);
+}
+
+
+// プリッツ
+Prits::Prits()
+{
+    //モデルを読み込み
+    model = std::make_unique<Model>("Data/Model/Obstacle/prits/prits.mdl");
+    angle.y = DirectX::XMConvertToRadians(180);
 }
 
 
@@ -329,6 +338,16 @@ Grape_can::Grape_can()
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/grape_can/grape_can.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
+}
+
+
+// フーセンガム
+Husen_gum::Husen_gum()
+{
+    //モデルを読み込み
+    model = std::make_unique<Model>("Data/Model/Obstacle/husen_gum/husen_gum.mdl");
+    angle.y = DirectX::XMConvertToRadians(180);
+    scale = { 5.0f,5.0f ,5.0f };
 }
 
 

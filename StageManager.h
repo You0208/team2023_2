@@ -98,6 +98,7 @@ private:
     float moveVecX = 0.0f;                                              // 移動方向ベクトル
     float maxPlayerVelocity = 20.0f;                                    // プレイヤーの最大速度
     
+    int SpawnStageCount = 0;                                              // 生成したステージの数
     // ===== 非使用　後で使うかも？ =====
     float friction = 0.5f;                                              // 減速
     float acceleration = 10.0f;                                         // 加速力

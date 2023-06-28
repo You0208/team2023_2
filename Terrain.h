@@ -8,9 +8,9 @@
 class Terrain : public BaseStage
 {
 public:
-    static const int StageSideMax       = 3;        // ステージの最大数(左右)
-    static const int StageDepthMax      = 4;        // ステージの最大数(奥行)
-    static constexpr float StageSize    = 45.0f;    // ステージのサイズ
+    static const int StageSideMax       = 2;        // ステージの最大数(左右)
+    static const int StageDepthMax      = 3;        // ステージの最大数(奥行)
+    static constexpr float StageSize    = 500.0f;    // ステージのサイズ
 public:
     Terrain();
 

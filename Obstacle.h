@@ -109,6 +109,12 @@ public:
     void Update(float elapsedTime)override;
 };
 
+// プリッツ
+class Prits : public Obstacle
+{
+public:
+    Prits();
+};
 
 // マシュマロ(ベース)
 class Marshmallow_Base : public Obstacle
@@ -185,6 +191,14 @@ public:
     Orange_gum();
 };
 
+
+
+// フーセンガム
+class Husen_gum : public Obstacle
+{
+public:
+    Husen_gum();
+};
 
 // キャンディーゲート
 class Candy_gate : public Obstacle
