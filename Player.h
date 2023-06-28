@@ -9,14 +9,21 @@ public:
     static constexpr float LeanAngle = 30.0f;       // 左右移動時の傾き角度
     static constexpr float LeanSpeed = 0.5f;        // 左右移動時の傾き速度
 
+    static constexpr float MaxHungerAmount = 100.0f;// 空腹量の最大値
     // 各空腹レベルでのスケール
     static constexpr float MaxScale[3] =
     {
-        0.5f,      // 空腹レベル：低
-        1.0f,      // 空腹レベル：中
-        2.0f       // 空腹レベル：高
+        0.5f,       // 空腹レベル：低
+        1.0f,       // 空腹レベル：中
+        2.0f        // 空腹レベル：高
     };
     static constexpr float ScaleRate = 0.002f;       // スケール拡縮の補間係数
+    // 空腹レベルが切り替わる境目
+    static constexpr float HungerLevelLine[2] =
+    {
+        33.0f,      // これ以上が空腹レベル：中
+        66.0f       // これ以上が空腹レベル：高
+    };
 
 public:
 
@@ -112,6 +119,9 @@ private:
 
     // スケール更新
     void UpdateScale(float maxScale, float rate);
+
+    // 空腹レベル更新
+    void UpdateHungerLevel();
     
 public:
     // モデルはsceneのrenderで呼び出すのでpublic
@@ -163,4 +173,5 @@ private:
     bool    wait[3]                     = {};
 
     int     hungerLevel                 = 1;            // 空腹レベル
+    float   hungerAmount                = 50.0f;        // 空間量
 };

@@ -46,6 +46,10 @@ void Player::Update(float elapsedTime)
         break;
     }
 
+    //  空腹レベルの更新
+    UpdateHungerLevel();
+
+    // スケールの更新
     UpdateScale(MaxScale[hungerLevel], ScaleRate);
 
     //オブジェクト行列を更新
@@ -160,7 +164,11 @@ void Player::DrawDebugGUI()
     }
 
 
+    // 空腹レベル
     ImGui::SliderInt("hungerLevel", &hungerLevel, 0, 2);
+
+    // 空腹量hungerAmount
+    ImGui::SliderFloat("hungerAmount", &hungerAmount, 0.0f, MaxHungerAmount);
 
     ImGui::End();
 }
@@ -350,4 +358,12 @@ void Player::UpdateScale(float maxScale, float rate)
         //return a + t * (b - a);
         scale.x = scale.y = scale.z = scale.x + rate * (maxScale - scale.x);
     }
+}
+
+// 空腹レベル更新
+void Player::UpdateHungerLevel()
+{
+    if (hungerAmount >= HungerLevelLine[1]) hungerLevel = 2;
+    else if (hungerAmount < HungerLevelLine[0])hungerLevel = 0;
+    else hungerLevel = 1;
 }
