@@ -129,6 +129,9 @@ private:
 
     // 空腹ポイント加算
     void AddHungerPoint(float add);
+
+    // 空腹ポイント減算
+    void RemoveHungerPoint(float elapsedTime,float Remove);
     
 public:
     // モデルはsceneのrenderで呼び出すのでpublic

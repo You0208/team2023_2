@@ -333,7 +333,7 @@ void Player::UpdateScale(float maxScale, float rate)
 void Player::UpdateHungerPoint(float elapsedTime)
 {
     // 常時空腹量が減少する
-    hungerPoint -= DecreaseHungerPoint * elapsedTime;
+    RemoveHungerPoint(elapsedTime, 1.0f);
 
     // 空腹レベル更新
     UpdateHungerLevel();
@@ -350,5 +350,18 @@ void Player::UpdateHungerLevel()
 // 空腹ポイント加算
 void Player::AddHungerPoint(float add)
 {
+    // 最大値以上ならreturnする
+    if (hungerPoint >= MaxHungerPoint) return;
     hungerPoint += add;
+    // 超過修正
+    hungerPoint = (std::min)(hungerPoint, MaxHungerPoint);
+}
+
+void Player::RemoveHungerPoint(float elapsedTime,float Remove)
+{
+    // 0以下ならreturnする
+    if (hungerPoint <= 0.0f) return;
+    hungerPoint -= Remove * elapsedTime;
+    // 超過修正
+    hungerPoint = (std::max)(hungerPoint, 0.0f);
 }
