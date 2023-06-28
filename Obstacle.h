@@ -3,6 +3,14 @@
 #include "graphics/shader.h"
 #include "graphics/model.h"
 
+enum TYPE
+{
+    CYLINDER,
+    CYLINDERS,
+    ITEMS,
+    GATE,
+};
+
 // 障害物（基底クラス）
 class Obstacle 
 {
@@ -127,6 +135,9 @@ public:
     Marshmallow_Base() {}
     // 更新処理
     void Update(float elapsedTime)override;
+
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
 };
 // マシュマロ(青)
 class Marshmallow_Blue : public Marshmallow_Base
@@ -149,6 +160,8 @@ public:
     Jellybeans_Base() { scale = { 0.5f,0.5f ,0.5f }; }
     // 更新処理
     void Update(float elapsedTime)override;
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
 };
 // ビーンズ(黄色)
 class Jellybeans_Yellow : public Jellybeans_Base
@@ -177,6 +190,8 @@ public:
     Chocolate_ball();
     // 更新処理
     void Update(float elapsedTime)override;
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
 };
 
 
@@ -185,6 +200,8 @@ class Grape_can : public Obstacle
 {
 public:
     Grape_can();
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
 };
 
 
@@ -193,6 +210,8 @@ class Orange_gum : public Obstacle
 {
 public:
     Orange_gum();
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
 };
 
 
@@ -201,6 +220,8 @@ class Candy_gate : public Obstacle
 {
 public:
     Candy_gate();
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
 };
 
 
@@ -209,6 +230,8 @@ class Orange_can : public Obstacle
 {
 public:
     Orange_can();
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
 };
 
 
@@ -217,6 +240,8 @@ class Marble_chocolate : public Obstacle
 {
 public:
     Marble_chocolate();
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
 };
 
 
@@ -225,6 +250,8 @@ class Cupcake_Base : public Obstacle
 {
 public:
     Cupcake_Base(){}
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
 };
 // カップケーキ(チョコ)
 class Cupcake_Choco : public Cupcake_Base

@@ -237,7 +237,7 @@ Cola::Cola()
     angle.y = DirectX::XMConvertToRadians(180);
     height = 3.8f;
     radius = 1.2f;
-    Type = 0;
+    Type = TYPE::CYLINDER;
     CollisionNum = 1;
 }
 // 更新処理
@@ -262,7 +262,7 @@ Pokey::Pokey()
     model = std::make_unique<Model>("Data/Model/Obstacle/pocky/pooky.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
     height = 7.0f;
-    Type = 1;
+    Type = TYPE::CYLINDERS;
     CollisionNum = 5;
 }
 // 描画処理
@@ -271,7 +271,6 @@ void Pokey::Update(float elapsedTime)
     // 基底クラス描画処理
     Obstacle::Update(elapsedTime);
 }
-
 
 void Pokey::DrawDebugPrimitive()
 {
@@ -283,14 +282,20 @@ void Pokey::DrawDebugPrimitive()
     }
 }
 
-
-
 // マシュマロ
 // 更新処理
 void Marshmallow_Base::Update(float elapsedTime)
 {
     // 基底クラス描画処理
     Obstacle::Update(elapsedTime);
+    radius = 1.0f;
+    Type = TYPE::ITEMS;
+}
+void Marshmallow_Base::DrawDebugPrimitive()
+{
+    DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
+    //衝突判定用のデバッグ円柱を描画
+    debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
 }
 // コンストラクタ
 Marshmallow_Blue::Marshmallow_Blue()
@@ -312,6 +317,14 @@ void Jellybeans_Base::Update(float elapsedTime)
 {
     // 基底クラス描画処理
     Obstacle::Update(elapsedTime);
+    radius = 1.0f;
+    Type = TYPE::ITEMS;
+}
+void Jellybeans_Base::DrawDebugPrimitive()
+{
+    DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
+    //衝突判定用のデバッグ円柱を描画
+    debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
 }
 // ビーンズ(黄色)
 Jellybeans_Yellow::Jellybeans_Yellow()
@@ -342,11 +355,24 @@ Chocolate_ball::Chocolate_ball()
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/chocolate_ball/chocolate_ball.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
+    height = 6.0f;
+    Type = TYPE::CYLINDERS;
+    CollisionNum = 3;
 }
 void Chocolate_ball::Update(float elapsedTime)
 {
     // 基底クラス描画処理
     Obstacle::Update(elapsedTime);
+}
+
+void Chocolate_ball::DrawDebugPrimitive()
+{
+    DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
+    //衝突判定用のデバッグ円柱を描画
+    for (int n = 0; n < CollisionNum; ++n)
+    {
+        debugRenderer->DrawCylinder({ (position.x - (CollisionNum * 0.5f) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
+    }
 }
 
 
@@ -356,6 +382,17 @@ Grape_can::Grape_can()
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/grape_can/grape_can.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
+    height = 3.8f;
+    radius = 1.2f;
+    Type = TYPE::CYLINDER;
+    CollisionNum = 1;
+}
+
+void Grape_can::DrawDebugPrimitive()
+{
+    DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
+    //衝突判定用のデバッグ円柱を描画
+    debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
 }
 
 
@@ -366,6 +403,20 @@ Orange_gum::Orange_gum()
     model = std::make_unique<Model>("Data/Model/Obstacle/orange_gum/orange_gum.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
     scale = { 3.0f,3.0f ,3.0f };
+    height = 3.0f;
+    radius = 0.5f;
+    Type = TYPE::CYLINDERS;
+    CollisionNum = 3;
+}
+
+void Orange_gum::DrawDebugPrimitive()
+{
+    DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
+    //衝突判定用のデバッグ円柱を描画
+    for (int n = 0; n < CollisionNum; ++n)
+    {
+        debugRenderer->DrawCylinder({ (position.x - (CollisionNum * 0.5f) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
+    }
 }
 
 
@@ -376,6 +427,19 @@ Candy_gate::Candy_gate()
     model = std::make_unique<Model>("Data/Model/Obstacle/candy_gate/candy_gate.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
     scale = { 3.0f,3.0f ,3.0f };
+    height = 9.0f;
+    Type = TYPE::GATE;
+    CollisionNum = 9;
+}
+
+void Candy_gate::DrawDebugPrimitive()
+{
+    DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
+    //衝突判定用のデバッグ円柱を描画
+    for (int n = 0; n < CollisionNum; ++n)
+    {
+        debugRenderer->DrawCylinder({ (position.x - (CollisionNum * 0.5f) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
+    }
 }
 
 
@@ -385,6 +449,17 @@ Orange_can::Orange_can()
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/orange_can/orange_can.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
+    height = 3.8f;
+    radius = 1.2f;
+    Type = TYPE::CYLINDER;
+    CollisionNum = 1;
+}
+
+void Orange_can::DrawDebugPrimitive()
+{
+    DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
+    //衝突判定用のデバッグ円柱を描画
+    debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
 }
 
 
@@ -394,6 +469,19 @@ Marble_chocolate::Marble_chocolate()
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/marble_chocolate/marble_chocolate.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
+    height = 7.0f;
+    Type = TYPE::CYLINDERS;
+    CollisionNum = 1;
+}
+
+void Marble_chocolate::DrawDebugPrimitive()
+{
+    DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
+    //衝突判定用のデバッグ円柱を描画
+    for (int n = 0; n < CollisionNum; ++n)
+    {
+        debugRenderer->DrawCylinder({ (position.x - (CollisionNum * 0.5f) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
+    }
 }
 
 
@@ -401,9 +489,20 @@ Marble_chocolate::Marble_chocolate()
 Cupcake_Choco::Cupcake_Choco()
 {
     model = std::make_unique<Model>("Data/Model/Obstacle/cupcake/cupcake_choco.mdl");
+    radius = 2.5f;
+    Type = TYPE::ITEMS;
 }
 // カップケーキ(ピンク)
 Cupcake_Pink::Cupcake_Pink()
 {
     model = std::make_unique<Model>("Data/Model/Obstacle/cupcake/cupcake_pink.mdl");
+    radius = 2.5f;
+    Type = TYPE::ITEMS;
+}
+
+void Cupcake_Base::DrawDebugPrimitive()
+{
+    DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
+    //衝突判定用のデバッグ円柱を描画
+    debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
 }
