@@ -156,6 +156,10 @@ void Player::DrawDebugGUI()
             ImGui::InputFloat3("velocity", &velocity.x);
         }
     }
+
+
+    ImGui::SliderInt("hungerLevel", &hungerLevel, 0, 2);
+
     ImGui::End();
 }
 

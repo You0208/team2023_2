@@ -57,6 +57,8 @@ public:
     int GetMaxHealth() const { return maxHealth; }
     // ダメージアニメが再生中であるかを取得
     bool GetIsDamageAnim() const { return isDamageAnim; }
+    // 空腹レベル取得
+    int GetHungerLevel() const { return hungerLevel; }
 
 private:
 
@@ -147,4 +149,6 @@ private:
     State   state                       = State::Idle;  // 現在の状態
     bool    isDamageAnim                = false;        // ダメージアニメが再生中か
     bool    wait[3]                     = {};
+
+    int     hungerLevel                 = 1;            // 空腹レベル
 };

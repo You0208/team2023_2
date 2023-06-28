@@ -274,6 +274,9 @@ void StageManager::UpdateVelocity(float elapsedTime, Player* player)
     UpdataHorizontalVelocity(elapsedFrame);
 
     player->SetVelocity({ -stageScrollVelocity.x,0.0f,0.0f });
+
+    // ステージのスクロール速度更新
+    UpdateScrollVelocity(stageScrollVelocity, MaxStageScrollVelocity[player->GetHungerLevel()], ScrollVelocityRate);
 }
 
 // 水平速力更新処理
@@ -329,4 +332,16 @@ void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
 
     // 移動ベクトルをリセット
     moveVecX = 0.0f;
+}
+
+// スクロール速度更新
+void StageManager::UpdateScrollVelocity(DirectX::XMFLOAT3 ScrollVelocity, float maxVelocity, float rate)
+{
+    float length = ScrollVelocity.z - maxVelocity;
+    // 値が微小な場合は処理しない
+    if (fabs(length) > 1e-8f)
+    {
+        //return a + t * (b - a);
+        ScrollVelocity.z = ScrollVelocity.z + rate * (maxVelocity - ScrollVelocity.z);
+    }
 }

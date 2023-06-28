@@ -10,6 +10,24 @@
 // ステージマネージャー
 class StageManager
 {
+private:
+    static constexpr float ScrollVelocityRate = 0.1f;          // スクロール速度補間係数
+
+    // 各空腹レベルでのステージの最大スクロール速度
+    static constexpr float MaxStageScrollVelocity[3] =
+    {
+        20.0f,      // 空腹レベル：低
+        50.0f,      // 空腹レベル：中
+        100.0f      // 空腹レベル：高
+    };
+    // 各空腹レベルでのステージの最大スクロール速度
+    static constexpr float MaxTerrainScrollVelocity[3] =
+    {
+        100.0f,      // 空腹レベル：低
+        50.0f,      // 空腹レベル：中
+        20.0f      // 空腹レベル：高
+    };
+
 public:
     StageManager();
     ~StageManager();
@@ -54,6 +72,8 @@ private:
     // 水平速力更新処理
     void UpdataHorizontalVelocity(float elapsedFrame);
 
+    // ステージのスクロール速度更新
+    void UpdateScrollVelocity(DirectX::XMFLOAT3 ScrollVelocity,float maxVelocity,float rate);
 private:
     // ステージデータ
     DirectX::XMFLOAT3 stageScrollVelocity = { 0.0f,0.0f ,-10.0f };      // 共通のスクロール速度のポインタ
