@@ -98,19 +98,6 @@ bool Player::ApplyDamage(int damage, float invincibleTime)
     return true;
 }
 
-// 速度処理更新
-void Player::UpdateVelocity(float elapsedTime)
-{
-    // 経過フレーム
-    float elapsedFrame = 60.0f * elapsedTime;
-
-    // 水平速力更新処理
-    UpdataHorizontalVelocity(elapsedFrame);
-
-    // 水平移動更新処理
-    UpdateHorizontalMove(elapsedTime);
-}
-
 // 無敵時間更新
 void Player::UpdateInvincibleTimer(float elapsedTime)
 {
@@ -192,64 +179,6 @@ float Player::GetMoveVecX() const
     float ax = gamePad.GetAxisLX();
 
     return ax;
-}
-
-// 水平速力更新処理
-void Player::UpdataHorizontalVelocity(float elapsedFrame)
-{
-    // XZ平面の速力を減速する
-    float length = sqrtf(velocity.x * velocity.x);
-    if (length > 0.0f)
-    {
-        // 摩擦力
-        float friction = this->friction * elapsedFrame;
-
-        // 摩擦による横方向の減速処理
-        if (length > friction)
-        {
-            float vx = velocity.x / length;
-
-            velocity.x -= vx * friction;
-        }
-        // 横方向の速力が摩擦力以下になったので速力を無効化
-        else
-        {
-            velocity.x = 0;
-        }
-    }
-
-    // XZ平面の速力を加速する
-    if (length <= maxMoveSpeed)
-    {
-        // 移動ベクトルがゼロベクトル出ないなら加速する
-        float moveVecLength = sqrtf(moveVecX * moveVecX);
-        if (moveVecLength > 0.0f)
-        {
-            // 加速力
-            float acceleration = this->acceleration * elapsedFrame;
-
-            // 移動ベクトルによる加速処理
-            velocity.x += moveVecX * acceleration;
-
-            // 最大速度制限
-            float length = sqrtf(velocity.x * velocity.x);
-            if (length > maxMoveSpeed)
-            {
-                float vx = velocity.x / length;
-
-                velocity.x = vx * maxMoveSpeed;
-            }
-        }
-    }
-    // 移動ベクトルをリセット
-    moveVecX = 0.0f;
-}
-
-// 水平移動更新処理
-void Player::UpdateHorizontalMove(float elapsedTime)
-{
-    // 移動処理
-    position.x += velocity.x * elapsedTime;
 }
 
 // 待機状態へ遷移

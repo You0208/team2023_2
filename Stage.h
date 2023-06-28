@@ -10,11 +10,9 @@ class Stage: public BaseStage
 {
 public:
     static const int StageKindMax           = 2;        //ステージの種類の最大数
-    static const int ObsTypeMax             = 2;        //障害物の種類の最大数
     static const int StageSideMax           = 3;	    //ステージの最大数(左右)
     static const int StageDepthMax          = 5;	    //ステージの最大数(奥行)
     static constexpr float StageSize        = 30.0f;    //ステージのサイズ
-    static const int ObsMax                 = 30;       //障害物の最大数
 
 public:
     Stage();

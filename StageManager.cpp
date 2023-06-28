@@ -5,6 +5,7 @@
 // コンストラクタ
 StageManager::StageManager()
 {
+    // 初期速度設定
     stageScrollVelocity.z = MaxStageScrollVelocity[1];
     terrainScrollVelocity.z = MaxTerrainScrollVelocity[1];
 }
@@ -17,11 +18,6 @@ StageManager::~StageManager()
 
 void StageManager::DrawDebugGUI()
 {
-    //for (BaseStage* stage : stages)
-    //{
-    //    stage->DrawDebugGUI();
-    //}
-
     Stage::DrawDebugGUI_();
 
     ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);

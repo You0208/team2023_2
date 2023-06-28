@@ -30,6 +30,7 @@ Stage::Stage()
 
     //stageInfo[1](this);
 
+    // デバッグ用
     StageInfoDebug(this, ObstacleNumber);
 }
 
