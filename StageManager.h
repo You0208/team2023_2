@@ -69,7 +69,7 @@ private:
 
 
     float moveVecX = 0.0f;                                              // 移動方向ベクトル
-    float maxMoveSpeed = 20.0f;                                         // 最大移動速度
+    float maxMoveSpeed = 40.0f;                                         // 最大移動速度
     float friction = 0.5f;                                              // 減速
     float acceleration = 10.0f;                                         // 加速力
 };

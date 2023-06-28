@@ -281,24 +281,24 @@ void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
 {
     // XZ•½–Ê‚Ì‘¬—Í‚ğŒ¸‘¬‚·‚é
     float length = sqrtf(stageScrollVelocity.x * stageScrollVelocity.x);
-    if (length > 0.0f)
-    {
-        // –€C—Í
-        float friction = this->friction * elapsedFrame;
+    //if (length > 0.0f)
+    //{
+    //    // –€C—Í
+    //    float friction = this->friction * elapsedFrame;
 
-        // –€C‚É‚æ‚é‰¡•ûŒü‚ÌŒ¸‘¬ˆ—
-        if (length > friction)
-        {
-            float vx = stageScrollVelocity.x / length;
+    //    // –€C‚É‚æ‚é‰¡•ûŒü‚ÌŒ¸‘¬ˆ—
+    //    if (length > friction)
+    //    {
+    //        float vx = stageScrollVelocity.x / length;
 
-            stageScrollVelocity.x -= vx * friction;
-        }
-        // ‰¡•ûŒü‚Ì‘¬—Í‚ª–€C—ÍˆÈ‰º‚É‚È‚Á‚½‚Ì‚Å‘¬—Í‚ğ–³Œø‰»
-        else
-        {
-            stageScrollVelocity.x = 0;
-        }
-    }
+    //        stageScrollVelocity.x -= vx * friction;
+    //    }
+    //    // ‰¡•ûŒü‚Ì‘¬—Í‚ª–€C—ÍˆÈ‰º‚É‚È‚Á‚½‚Ì‚Å‘¬—Í‚ğ–³Œø‰»
+    //    else
+    //    {
+    //        stageScrollVelocity.x = 0;
+    //    }
+    //}
 
     // XZ•½–Ê‚Ì‘¬—Í‚ğ‰Á‘¬‚·‚é
     if (length <= maxMoveSpeed)
@@ -322,6 +322,12 @@ void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
                 stageScrollVelocity.x = vx * maxMoveSpeed;
             }
         }
+    }
+
+    // moveVecX‚ª0‚È‚çVelocity‚ğ0‚É‚·‚é
+    if ((moveVecX < FLT_EPSILON) && (moveVecX > -FLT_EPSILON))
+    {
+        stageScrollVelocity.x = 0.0f;
     }
 
     // ’nŒ`ƒf[ƒ^‚Ì‘¬—Í‚É‘ã“ü

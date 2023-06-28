@@ -7,8 +7,8 @@ class Player
 {
 public:
     static constexpr float LeanAngle = 30.0f;       // 左右移動時の傾き角度
-    static constexpr float LeanSpeed = 0.5f;        // 左右移動時の傾き速度
-
+    static constexpr float LeanRate  = 0.03f;       // 傾きの補間係数
+    static constexpr float LeanRate_0= 0.01f;       // 戻る傾き補間係数
 public:
 
     Player();
@@ -28,9 +28,6 @@ public:
 
     // ダメージを与える
     bool ApplyDamage(int damage, float invincibleTime);
-
-    // 移動入力処理
-    void InputMove(float elapsedTime);
     
     // 位置更新
     void SetPosition(const DirectX::XMFLOAT3& position) { this->position = position; }
@@ -67,7 +64,7 @@ private:
     void UpdateInvincibleTimer(float elapsedTime);
 
     // スティック入力値から移動ベクトルを取得
-    DirectX::XMFLOAT3 GetMoveVec() const;
+    float GetMoveVecX() const;
 
     // 水平速力更新処理
     void UpdataHorizontalVelocity(float elapsedFrame);
@@ -97,7 +94,7 @@ private:
     void TransitionNodState();
 
     // 傾き処理
-    void Lean(float elapsedTime,float vx,float add);
+    void Lean(float elapsedTime,float rate);
     
 public:
     // モデルはsceneのrenderで呼び出すのでpublic
