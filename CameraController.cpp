@@ -53,3 +53,30 @@ void CameraController::Update(float elapsedTime)
     //ƒJƒƒ‰‚ÌŽ‹“_‚Æ’Ž‹“_‚ðÝ’è
     Camera::Instance().SetLookAt(eye, target, DirectX::XMFLOAT3(0, 1, 0));
 }
+
+void CameraController::Shake(int t,float n)
+{
+    if (flag)
+    {
+        switch (state)
+        {
+        case 0:
+            time = t;
+            state++;
+            break;
+        case 1:
+            time -= 2;
+            if (time > 0)
+            {
+                target.x = ((1 ^ (-time / 10)) * cosf(time / 2.0f) * cosf(time / 0.1f)) * 0.3f;
+                target.y = n+((1 ^ (-time / 10)) * cosf(time / 2.0f) * cosf(time / 0.1f)) * 0.3f;
+            }
+            else if (time <= 0)
+            {
+                time = 0;
+                state = 0;
+                flag = false;
+            }
+        }
+    }
+}

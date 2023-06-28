@@ -145,10 +145,18 @@ void SceneGame::Finalize()
 // 更新処理
 void SceneGame::Update(float elapsedTime)
 {
-	// カメラコントローラー更新処理化
-	DirectX::XMFLOAT3 target = player->GetPosition();
-	target.y += 0.5f;
-	cameraController->setTarget(target);
+	if (cameraController->flag)
+	{
+		// カメラコントローラー更新処理化
+		cameraController->Shake(10, player->GetPosition().y + 0.5f);
+	}
+	else
+	{
+		// カメラコントローラー更新処理化
+		DirectX::XMFLOAT3 target = player->GetPosition();
+		target.y += 0.5f;
+		cameraController->setTarget(target);
+	}
 	cameraController->Update(elapsedTime);
 
 	// ポーズ処理
@@ -307,6 +315,7 @@ void SceneGame::CollisionPlayerVsObs()
 					it2->GetHeight(),
 					outPosition))
 				{
+					cameraController->flag = true;
 					// ヒットエフェクト再生
 					{
 						DirectX::XMFLOAT3 e = player->GetPosition();
