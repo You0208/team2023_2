@@ -85,6 +85,8 @@ public:
     
     // ダメージを与える
     bool ApplyDamage(int damage, float invincibleTime);
+    // 空腹ポイント加算
+    void AddHungerPoint(float add);
 
 private:
 
@@ -112,8 +114,6 @@ private:
     void UpdateHungerPoint(float elapsedTime);
     // 空腹レベル更新
     void UpdateHungerLevel();
-    // 空腹ポイント加算
-    void AddHungerPoint(float add);
     // 空腹ポイント減算
     void RemoveHungerPoint(float elapsedTime,float Remove);
 

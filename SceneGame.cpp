@@ -74,6 +74,7 @@ void SceneGame::Initialize()
 
 	// ヒットエフェクト読み込み
 	hitEffect = new Effect("Data/Effect/Hit.efk");
+	accelEffect = new Effect("Data/Effect/kasoku_kari_0629.efk");
 
 
 	//-------------------------------------------------------------------------------------------------------
@@ -137,6 +138,18 @@ void SceneGame::Finalize()
 		delete player;
 		player = nullptr;
 	}
+	// プレイヤー終了
+	if (hitEffect != nullptr)
+	{
+		delete hitEffect;
+		hitEffect = nullptr;
+	}
+	// プレイヤー終了
+	if (accelEffect != nullptr)
+	{
+		delete accelEffect;
+		accelEffect = nullptr;
+	}
 	// 空終了
 	if (sky != nullptr)
 	{
@@ -157,7 +170,11 @@ void SceneGame::Update(float elapsedTime)
 
 	if (gamePad.GetButtonDown() & GamePad::BTN_Y)
 	{
-		cameraController->flag = true;
+		// ヒットエフェクト再生
+		{
+			DirectX::XMFLOAT3 e = player->GetPosition();
+			accelEffect->Play(e);
+		}
 	}
 	if (cameraController->flag)
 	{
@@ -372,6 +389,7 @@ void SceneGame::CollisionPlayerVsObs()
 							outPosition))
 						{
 							player->AddScore(it2->score);
+							player->AddHungerPoint(it2->hungerPoint);
 
 							// ヒットエフェクト再生
 							{
@@ -399,8 +417,7 @@ void SceneGame::CollisionPlayerVsObs()
 								// ヒットエフェクト再生
 								{
 									DirectX::XMFLOAT3 e = player->GetPosition();
-									e.z -= 4.0f;
-									hitEffect->Play(e);
+									accelEffect->Play(e);
 								}
 								it2->IsHit = true;
 							}
