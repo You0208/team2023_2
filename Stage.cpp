@@ -19,19 +19,19 @@ Stage::Stage()
     stageSideMax    = StageSideMax;
     stageDepthMax   = StageDepthMax;
 
-    // アイテム・障害物生成
-    int n = rand() % Stage::StageKindMax;
-
-    StageInfo stageInfo[Stage::StageKindMax] =
+    StageInfo stageInfo[] =
     {
-        StageInfo01
+        StageInfo00
+        ,StageInfo01
         ,StageInfo02
     };
 
-    //stageInfo[1](this);
+    int  stageKindMax = sizeof(stageInfo) / sizeof(StageInfo);
 
-    // デバッグ用
-    StageInfoDebug(this, ObstacleNumber);
+    // アイテム・障害物生成
+    int n = rand() % stageKindMax;
+
+    stageInfo[n](this);
 }
 
 Stage::~Stage()

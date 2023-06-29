@@ -14,7 +14,7 @@ public:
     static const int ObsMax                 = 30;       //障害物の最大数
     static const int StageSideMax           = 2;	    //ステージの最大数(左右)
     static const int StageDepthMax          = 3;	    //ステージの最大数(奥行)
-    static constexpr float StageSize        = 500.0f;    //ステージのサイズ
+    static constexpr float StageSize        = 50.0f;    //ステージのサイズ
 
 public:
     Stage();
@@ -38,7 +38,14 @@ private:                  // 障害物
     float offset        = 0.2f;
 
 private:
+    struct SpawnObstacle
+    {
+        int test;
+    };
+
     // ステージ情報
+    // ステージ00
+    static void StageInfo00(Stage* stage){}
     // ステージ01
     static void StageInfo01(Stage* stage);
     // ステージ02
