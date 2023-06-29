@@ -77,6 +77,8 @@ private:
         ,StageInfo02
     };
 
+    // Noneステージ
+    //static void StageInfo
 private:
     // デバッグ用
     enum  ObstacleName

@@ -74,13 +74,14 @@ void SceneGame::Initialize()
 
 	// ヒットエフェクト読み込み
 	hitEffect = new Effect("Data/Effect/Hit.efk");
+	accelEffect = new Effect("Data/Effect/kasoku_kari_0629.efk");
 
 
 	//-------------------------------------------------------------------------------------------------------
 	// ↓　この下はシェーダー関連
 	//-------------------------------------------------------------------------------------------------------
 	// テクスチャを読み込む
-	texture = std::make_unique<Texture>("Data/Texture/1920px-Equirectangular-projection.jpg");
+	texture = std::make_unique<Texture>("Data/Texture/titleFrame.png");
 
 	// スプライト
 	sprite = std::make_unique<Sprite>();
@@ -137,6 +138,18 @@ void SceneGame::Finalize()
 		delete player;
 		player = nullptr;
 	}
+	// プレイヤー終了
+	if (hitEffect != nullptr)
+	{
+		delete hitEffect;
+		hitEffect = nullptr;
+	}
+	// プレイヤー終了
+	if (accelEffect != nullptr)
+	{
+		delete accelEffect;
+		accelEffect = nullptr;
+	}
 	// 空終了
 	if (sky != nullptr)
 	{
@@ -148,10 +161,25 @@ void SceneGame::Finalize()
 // 更新処理
 void SceneGame::Update(float elapsedTime)
 {
+
+	// ポーズ処理
+	GamePad& gamePad = Input::Instance().GetGamePad();
+	if (gamePad.GetButtonDown() & GamePad::BTN_X)
+		isPaused = !isPaused;       // 0コンのスタートボタンが押されたらポーズ状態が反転
+	if (isPaused) return;           // この時点でポーズ中ならリターン
+
+	if (gamePad.GetButtonDown() & GamePad::BTN_Y)
+	{
+		// ヒットエフェクト再生
+		{
+			DirectX::XMFLOAT3 e = player->GetPosition();
+			accelEffect->Play(e);
+		}
+	}
 	if (cameraController->flag)
 	{
 		// カメラコントローラー更新処理化
-		cameraController->Shake(10, player->GetPosition().y + 0.5f);
+		cameraController->Shake(60, player->GetPosition().y + 0.5f);
 	}
 	else
 	{
@@ -162,11 +190,6 @@ void SceneGame::Update(float elapsedTime)
 	}
 	cameraController->Update(elapsedTime);
 
-	// ポーズ処理
-	GamePad& gamePad = Input::Instance().GetGamePad();
-	if (gamePad.GetButtonDown() & GamePad::BTN_X)
-		isPaused = !isPaused;       // 0コンのスタートボタンが押されたらポーズ状態が反転
-	if (isPaused) return;           // この時点でポーズ中ならリターン
 
 	//プレイヤー更新処理
 	player->Update(elapsedTime);
@@ -239,8 +262,7 @@ void SceneGame::Render()
 
 	}
 	// 2Dスプライト描画
-	{
-		// 今は何も描画しない
+	{  
 	}
 
 	// デバッグ情報の表示
@@ -367,6 +389,7 @@ void SceneGame::CollisionPlayerVsObs()
 							outPosition))
 						{
 							player->AddScore(it2->score);
+							player->AddHungerPoint(it2->hungerPoint);
 
 							// ヒットエフェクト再生
 							{
@@ -389,12 +412,12 @@ void SceneGame::CollisionPlayerVsObs()
 								it2->GetHeight(),
 								outPosition))
 							{
+								// 加速
 								stageManager->AddVelocity();
 								// ヒットエフェクト再生
 								{
 									DirectX::XMFLOAT3 e = player->GetPosition();
-									e.z -= 4.0f;
-									hitEffect->Play(e);
+									accelEffect->Play(e);
 								}
 								it2->IsHit = true;
 							}

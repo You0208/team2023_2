@@ -65,11 +65,11 @@ void CameraController::Shake(int t,float n)
             state++;
             break;
         case 1:
-            time -= 2;
+            time -= 1;
             if (time > 0)
             {
-                target.x = ((1 ^ (-time / 10)) * cosf(time / 2.0f) * cosf(time / 0.1f)) * 0.3f;
-                target.y = n+((1 ^ (-time / 10)) * cosf(time / 2.0f) * cosf(time / 0.1f)) * 0.3f;
+                if(time%2==0)target.x = ((1 ^ (-time / 10)) * cosf(time / 0.5f) * cosf(time / 1))*0.15f;
+                else if (time % 2 != 0)target.y = n + ((1 ^ (-time / 10)) * cosf(time / 0.5f) * cosf(time / 1)) * 0.15f;
             }
             else if (time <= 0)
             {
