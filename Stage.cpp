@@ -12,7 +12,7 @@ typedef	void(*StageInfo)(Stage* stage);
 Stage::Stage()
 {
     //ステージモデルを読み込み
-    model = std::make_unique<Model>("Data/Model/Debug/cube.mdl");
+    //model = std::make_unique<Model>("Data/Model/Debug/cube.mdl");
 
     // 初期設定
     scale           = { StageSize,0.5f ,StageSize };
@@ -30,6 +30,7 @@ Stage::Stage()
 
     //stageInfo[1](this);
 
+    // デバッグ用
     StageInfoDebug(this, ObstacleNumber);
 }
 
@@ -150,6 +151,9 @@ void Stage::StageInfoDebug(Stage* stage,int n)
     case pokey:
         SpawnObstacle<Pokey>({ 0.0f,0.0f,0.0f }, stage);
         break;
+    case prits:
+        SpawnObstacle<Prits>({ 0.0f,0.0f,0.0f }, stage);
+        break;
     case marshmallow_Blue:
         SpawnObstacle<Marshmallow_Blue>({ 0.0f,0.0f,0.0f }, stage);
         break;
@@ -173,6 +177,9 @@ void Stage::StageInfoDebug(Stage* stage,int n)
         break;
     case orange_gum:
         SpawnObstacle<Orange_gum>({ 0.0f,0.0f,0.0f }, stage);
+        break;
+    case husen_gum:
+        SpawnObstacle<Husen_gum>({ 0.0f,0.0f,0.0f }, stage);
         break;
     case candy_gate:
         SpawnObstacle<Candy_gate>({ 0.0f,0.0f,0.0f }, stage);
@@ -200,6 +207,7 @@ namespace
     {
         "cola",
         "pokey",
+        "prits",
         "marshmallow_Blue",
         "marshmallow_Pink",
         "jellybeans_Yellow",
@@ -208,6 +216,7 @@ namespace
         "chocolate_ball",
         "grape_can",
         "orange_gum",
+        "husen_gum",
         "candy_gate",
         "orange_can",
         "marble_chocolate",

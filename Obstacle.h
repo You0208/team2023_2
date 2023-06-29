@@ -132,6 +132,12 @@ public:
     void DrawDebugPrimitive()override;
 };
 
+// プリッツ
+class Prits : public Obstacle
+{
+public:
+    Prits();
+};
 
 // マシュマロ(ベース)
 class Marshmallow_Base : public Obstacle
@@ -219,6 +225,14 @@ public:
     void DrawDebugPrimitive()override;
 };
 
+
+
+// フーセンガム
+class Husen_gum : public Obstacle
+{
+public:
+    Husen_gum();
+};
 
 // キャンディーゲート
 class Candy_gate : public Obstacle

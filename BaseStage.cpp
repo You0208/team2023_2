@@ -1,4 +1,11 @@
 #include "BaseStage.h"
+int BaseStage::SpawnStageCount = 0;
+
+// ‰Šú‰»
+void BaseStage::clear()
+{
+    SpawnStageCount = 0;
+}
 
 // ƒXƒNƒ[ƒ‹ˆ—
 void BaseStage::UpdateVelocity(float elapsedTime)
@@ -37,6 +44,8 @@ void BaseStage::StageSpawn()
 
         // ¶¬ˆ—
         spawnPosition = { position.x,position.y,position.z + (scale.z * modelSize.z * stageDepthMax) };
+        
+        SpawnStageCount++;
     }
 
     // ¶

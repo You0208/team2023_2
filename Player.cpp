@@ -46,6 +46,12 @@ void Player::Update(float elapsedTime)
         break;
     }
 
+    //  空腹レベルの更新
+    UpdateHungerPoint(elapsedTime);
+
+    // スケールの更新
+    UpdateScale(MaxScale[hungerLevel], ScaleRate);
+
     //オブジェクト行列を更新
     UpdateTransform();
 
@@ -92,41 +98,6 @@ bool Player::ApplyDamage(int damage, float invincibleTime)
     return true;
 }
 
-// 移動入力処理
-void Player::InputMove(float elapsedTime)
-{
-    // 進行ベクトル取得
-    DirectX::XMFLOAT3 moveVec = GetMoveVec();
-
-    // 移動処理
-    // 移動方向ベクトルを設定
-    moveVecX = moveVec.x;
-
-    // 最大速度設定
-    //maxMoveSpeed = moveSpeed;
-}
-
-void Player::AddImpulse(const DirectX::XMFLOAT3& impulse)
-{
-    // 速力に力を加える
-    velocity.x += impulse.x;
-    velocity.y += impulse.y;
-    velocity.z += impulse.z;
-}
-
-// 速度処理更新
-void Player::UpdateVelocity(float elapsedTime)
-{
-    // 経過フレーム
-    float elapsedFrame = 60.0f * elapsedTime;
-
-    // 水平速力更新処理
-    UpdataHorizontalVelocity(elapsedFrame);
-
-    // 水平移動更新処理
-    UpdateHorizontalMove(elapsedTime);
-}
-
 // 無敵時間更新
 void Player::UpdateInvincibleTimer(float elapsedTime)
 {
@@ -165,6 +136,24 @@ void Player::DrawDebugGUI()
             ImGui::InputInt("score", &score);
         }
     }
+
+
+    if (ImGui::CollapsingHeader("HungerPoint", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        // 空腹レベル
+        ImGui::SliderInt("hungerLevel", &hungerLevel, 0, 2);
+        // 空腹量
+        ImGui::SliderFloat("hungerAmount", &hungerPoint, 0.0f, MaxHungerPoint);
+        // 加算量
+        static float add = 10.0f;
+        ImGui::InputFloat("AddAmount", &add);
+        // 空腹量加算
+        if (ImGui::Button("add"))
+        {
+            AddHungerPoint(add);
+        }
+    }
+
     ImGui::End();
 }
 
@@ -184,72 +173,13 @@ void Player::UpdateTransform()
 }
 
 // スティック入力値から移動ベクトルを取得
-DirectX::XMFLOAT3 Player::GetMoveVec() const
+float Player::GetMoveVecX() const
 {
     // 入力情報を取得
     GamePad& gamePad = Input::Instance().GetGamePad();
     float ax = gamePad.GetAxisLX();
-    DirectX::XMFLOAT3 vec = { ax ,0.0f,0.0f };
 
-    return vec;
-}
-
-// 水平速力更新処理
-void Player::UpdataHorizontalVelocity(float elapsedFrame)
-{
-    // XZ平面の速力を減速する
-    float length = sqrtf(velocity.x * velocity.x);
-    if (length > 0.0f)
-    {
-        // 摩擦力
-        float friction = this->friction * elapsedFrame;
-
-        // 摩擦による横方向の減速処理
-        if (length > friction)
-        {
-            float vx = velocity.x / length;
-
-            velocity.x -= vx * friction;
-        }
-        // 横方向の速力が摩擦力以下になったので速力を無効化
-        else
-        {
-            velocity.x = 0;
-        }
-    }
-
-    // XZ平面の速力を加速する
-    if (length <= maxMoveSpeed)
-    {
-        // 移動ベクトルがゼロベクトル出ないなら加速する
-        float moveVecLength = sqrtf(moveVecX * moveVecX);
-        if (moveVecLength > 0.0f)
-        {
-            // 加速力
-            float acceleration = this->acceleration * elapsedFrame;
-
-            // 移動ベクトルによる加速処理
-            velocity.x += moveVecX * acceleration;
-
-            // 最大速度制限
-            float length = sqrtf(velocity.x * velocity.x);
-            if (length > maxMoveSpeed)
-            {
-                float vx = velocity.x / length;
-
-                velocity.x = vx * maxMoveSpeed;
-            }
-        }
-    }
-    // 移動ベクトルをリセット
-    moveVecX = 0.0f;
-}
-
-// 水平移動更新処理
-void Player::UpdateHorizontalMove(float elapsedTime)
-{
-    // 移動処理
-    position.x += velocity.x * elapsedTime;
+    return ax;
 }
 
 // 待機状態へ遷移
@@ -270,7 +200,7 @@ void Player::UpdateIdleState(float elapsedTime)
     //UpdateVelocity(elapsedTime);
 
     // 傾き処理
-    Lean(elapsedTime, velocity.x, LeanSpeed);
+    Lean(elapsedTime, LeanRate);
 }
 
 
@@ -280,7 +210,7 @@ void Player::TransitionDamageState()
     state = State::Damage;
 
     // アニメーション再生
-    model->PlayAnimation(Anim_Damage, false);
+    model->PlayAnimation(Anim_Damage, false,0.1f);
     isDamageAnim = true;        // ダメージアニメ再生開始
 }
 // ダメージ状態更新
@@ -303,42 +233,65 @@ void Player::TransitionNodState()
 }
 
 // 傾き処理
-void Player::Lean(float elapsedTime, float vx, float add)
+void Player::Lean(float elapsedTime, float rate)
 {
-    // まっすぐにする(速度が０)
-    if (vx > -FLT_EPSILON && vx < FLT_EPSILON)
+    float vx = velocity.x;
+    float Angle = 0.0f;
+    float Rate = LeanRate_0;
+
+    // vxが0.0でないなら(キーが押されていたら)
+    if ((vx > FLT_EPSILON) || (vx < -FLT_EPSILON))
     {
-        // 左に傾いている
-        if (angle.z > FLT_EPSILON)
-        {
-            angle.z -= DirectX::XMConvertToRadians(add);
-
-            // 超過修正
-            angle.z = (std::max)(angle.z, 0.0f);
-        }
-        // 右に傾いている
-        if (angle.z < -FLT_EPSILON)
-        {
-            angle.z += DirectX::XMConvertToRadians(add);
-
-            // 超過修正
-            angle.z = (std::min)(angle.z, 0.0f);
-        }
+        Angle = vx > FLT_EPSILON ? DirectX::XMConvertToRadians(-LeanAngle) : DirectX::XMConvertToRadians(LeanAngle);
+        Rate = LeanRate;
     }
-    // 左に傾ける(速度が0未満)
-    else if (vx < 0)
+    angle.z = angle.z + (Rate) * (Angle - angle.z);
+}
+
+// スケール更新
+void Player::UpdateScale(float maxScale, float rate)
+{
+    float length = maxScale - scale.x;
+    // 値が微小な場合は処理しない
+    if (fabs(length) > 1e-8f)
     {
-        angle.z += DirectX::XMConvertToRadians(add);
-
-        // 超過修正
-        angle.z = (std::min)(angle.z,DirectX::XMConvertToRadians(LeanAngle));
+        //return a + t * (b - a);
+        scale.x = scale.y = scale.z = scale.x + rate * (maxScale - scale.x);
     }
-    // 左に傾ける(速度が0より大きい)
-    else if (vx > 0)
-    {
-        angle.z -= DirectX::XMConvertToRadians(add);
+}
 
-        // 超過修正e
-        angle.z = (std::max)(angle.z, DirectX::XMConvertToRadians(-LeanAngle));
-    }
+void Player::UpdateHungerPoint(float elapsedTime)
+{
+    // 常時空腹量が減少する
+    RemoveHungerPoint(elapsedTime, 1.0f);
+
+    // 空腹レベル更新
+    UpdateHungerLevel();
+}
+
+// 空腹レベル更新
+void Player::UpdateHungerLevel()
+{
+    if (hungerPoint >= HungerLevelLine[1]) hungerLevel = 2;
+    else if (hungerPoint < HungerLevelLine[0])hungerLevel = 0;
+    else hungerLevel = 1;
+}
+
+// 空腹ポイント加算
+void Player::AddHungerPoint(float add)
+{
+    // 最大値以上ならreturnする
+    if (hungerPoint >= MaxHungerPoint) return;
+    hungerPoint += add;
+    // 超過修正
+    hungerPoint = (std::min)(hungerPoint, MaxHungerPoint);
+}
+
+void Player::RemoveHungerPoint(float elapsedTime,float Remove)
+{
+    // 0以下ならreturnする
+    if (hungerPoint <= 0.0f) return;
+    hungerPoint -= Remove * elapsedTime;
+    // 超過修正
+    hungerPoint = (std::max)(hungerPoint, 0.0f);
 }

@@ -8,8 +8,27 @@
 class Player
 {
 public:
-    static constexpr float LeanAngle = 30.0f;       // 左右移動時の傾き角度
-    static constexpr float LeanSpeed = 0.5f;        // 左右移動時の傾き速度
+    static constexpr float ScaleRate = 0.002f;  // スケール拡縮の補間係数
+
+    static constexpr float LeanAngle    = 30.0f;        // 左右移動時の傾き角度
+    static constexpr float LeanRate     = 0.03f;        // 傾きの補間係数
+    static constexpr float LeanRate_0   = 0.01f;        // 戻る時の傾き補間係数
+
+    static constexpr float MaxHungerPoint       = 100.0f;   // 空腹量の最大値
+    static constexpr float DecreaseHungerPoint   = 1.0f;    // 空腹量の減少量
+    // 各空腹レベルでのスケール
+    static constexpr float MaxScale[3] =
+    {
+        0.5f,       // 空腹レベル：低
+        1.0f,       // 空腹レベル：中
+        2.0f        // 空腹レベル：高
+    };
+    // 空腹レベルが切り替わる境目
+    static constexpr float HungerLevelLine[2] =
+    {
+        33.0f,      // これ以上が空腹レベル：中
+        66.0f       // これ以上が空腹レベル：高
+    };
 
 public:
 
@@ -25,20 +44,8 @@ public:
     //デバッグGUI描画
     void DrawDebugGUI();
 
-    // デバッグプリミティブ描画
-    void DrawDebugPrimitive();
-
     //行列更新処理
     void UpdateTransform();
-
-    // ダメージを与える
-    bool ApplyDamage(int damage, float invincibleTime);
-
-    // 移動入力処理
-    void InputMove(float elapsedTime);
-
-    // 衝撃を与える
-    void AddImpulse(const DirectX::XMFLOAT3& impulse);
 
     // 位置更新
     void SetPosition(const DirectX::XMFLOAT3& position) { this->position = position; }
@@ -71,45 +78,56 @@ public:
     void OnDead() {
         SceneManager::Instance().ChangeScene(new SceneOver);
     };
+    // 空腹レベル取得
+    int GetHungerLevel() const { return hungerLevel; }
+
+    // ===== 非使用　後で使うかも？ =====
+    
+    // ダメージを与える
+    bool ApplyDamage(int damage, float invincibleTime);
 
 private:
 
-    // 速度処理更新
-    void UpdateVelocity(float elapsedTime);
+    // 傾き処理
+    void Lean(float elapsedTime, float rate);
 
-    // 無敵時間更新
-    void UpdateInvincibleTimer(float elapsedTime);
-
-    // スティック入力値から移動ベクトルを取得
-    DirectX::XMFLOAT3 GetMoveVec() const;
-
-    // 水平速力更新処理
-    void UpdataHorizontalVelocity(float elapsedFrame);
-
-    // 水平移動更新処理
-    void UpdateHorizontalMove(float elapsedTime);
-
-    // ダメージを受けたときに呼ばれる
-    virtual void OnDamaged() {}
 
 
     // == 追加した関数(この文はあとで削除する) ==
+    // スケール更新
+    void UpdateScale(float maxScale, float rate);
 
     // 待機状態へ遷移
     void TransitionIdleState();
     // 待機状態更新
     void UpdateIdleState(float elapsedTime);
-
     // ダメージ状態へ遷移
     void TransitionDamageState();
     // ダメージ状態更新
     void UpdateDamageState(float elapsedTime);
-
     // 頷き状態へ遷移
     void TransitionNodState();
 
-    // 傾き処理
-    void Lean(float elapsedTime,float vx,float add);
+    // 空腹ポイント更新
+    void UpdateHungerPoint(float elapsedTime);
+    // 空腹レベル更新
+    void UpdateHungerLevel();
+    // 空腹ポイント加算
+    void AddHungerPoint(float add);
+    // 空腹ポイント減算
+    void RemoveHungerPoint(float elapsedTime,float Remove);
+
+
+    // ===== 非使用　後で使うかも？ =====
+
+    // スティック入力値から移動ベクトルを取得
+    float GetMoveVecX() const;
+
+    // 無敵時間更新
+    void UpdateInvincibleTimer(float elapsedTime);
+
+    // ダメージを受けたときに呼ばれる
+    virtual void OnDamaged() {}
     
 public:
     // モデルはsceneのrenderで呼び出すのでpublic
@@ -140,15 +158,6 @@ private:
     float   height                     = 2.0f;           // 高さ
     float   radius                     = 0.5f;           // 半径
 
-    float   acceleration               = 10.0f;          // 加速力
-    float   moveSpeed                  = 10.0f;          // 移動速度
-    float   maxMoveSpeed               = 30.0f;          // 最大移動速度
-
-    float   friction                   = 0.5f;           // 減速
-    
-    float   moveVecX                   = 0.0f;           // 移動方向ベクトル
-
-    int     health                     = 5;              // 体力
     int     maxHealth                  = 5;              // 最大体力
     float   invincibleTimer            = 1.0f;           // 無敵時間
 
@@ -159,5 +168,11 @@ private:
     // 追加した変数(この文はあとで消す)
     State   state                       = State::Idle;  // 現在の状態
     bool    isDamageAnim                = false;        // ダメージアニメが再生中か
-    bool    wait[3]                     = {};
+    bool    a[3]                        = {};
+
+    int     hungerLevel                 = 1;            // 空腹レベル
+    float   hungerPoint                = 50.0f;         // 空腹ポイント
+
+    // ===== 非使用　後で使うかも？ =====
+    int     health = 5;              // 体力
 };

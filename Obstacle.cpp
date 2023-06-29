@@ -278,7 +278,7 @@ void Cola::DrawDebugPrimitive()
 Pokey::Pokey()
 {
     //モデルを読み込み
-    model = std::make_unique<Model>("Data/Model/Obstacle/pocky/pooky.mdl");
+    model = std::make_unique<Model>("Data/Model/Obstacle/pocky/pozky.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
     height = 7.0f;
     Type = TYPE::CYLINDERS;
@@ -300,6 +300,15 @@ void Pokey::DrawDebugPrimitive()
         debugRenderer->DrawCylinder({ (position.x - (5.0f * 0.5f) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
     }
 }
+
+// プリッツ
+Prits::Prits()
+{
+    //モデルを読み込み
+    model = std::make_unique<Model>("Data/Model/Obstacle/prits/prits.mdl");
+    angle.y = DirectX::XMConvertToRadians(180);
+}
+
 
 // マシュマロ
 // 更新処理
@@ -414,6 +423,16 @@ void Grape_can::DrawDebugPrimitive()
     DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
     //衝突判定用のデバッグ円柱を描画
     debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
+}
+
+
+// フーセンガム
+Husen_gum::Husen_gum()
+{
+    //モデルを読み込み
+    model = std::make_unique<Model>("Data/Model/Obstacle/husen_gum/husen_gum.mdl");
+    angle.y = DirectX::XMConvertToRadians(180);
+    scale = { 5.0f,5.0f ,5.0f };
 }
 
 

@@ -5,6 +5,9 @@
 // コンストラクタ
 StageManager::StageManager()
 {
+    // 初期速度設定
+    stageScrollVelocity.z = MaxStageScrollVelocity[1];
+    terrainScrollVelocity.z = MaxTerrainScrollVelocity[1];
 }
 
 // デストラクタ
@@ -15,11 +18,6 @@ StageManager::~StageManager()
 
 void StageManager::DrawDebugGUI()
 {
-    //for (BaseStage* stage : stages)
-    //{
-    //    stage->DrawDebugGUI();
-    //}
-
     Stage::DrawDebugGUI_();
 
     ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
@@ -27,24 +25,16 @@ void StageManager::DrawDebugGUI()
 
     if (ImGui::Begin("StageManager", nullptr, ImGuiWindowFlags_None))
     {
-        ImGui::SliderFloat("scrollVelocityZ", &stageScrollVelocity.z, 0.0f, -100.0f);
-        ImGui::SliderFloat("terrainScrollVelocityZ", &terrainScrollVelocity.z, 0.0f, -100.0f);
+        ImGui::SliderFloat("scrollVelocityZ", &stageScrollVelocity.z, 0.0f, -300.0f);
+        ImGui::SliderFloat("terrainScrollVelocityZ", &terrainScrollVelocity.z, 0.0f, -300.0f);
     }
 
-    // スクロール停止
-    if (ImGui::Button("STOP")) {
-        stageScrollVelocity = { 0.0f,0.0f ,0.0f };
-        terrainScrollVelocity = { 0.0f,0.0f ,0.0f };
-    }
-    // スクロールスタート
-    if (ImGui::Button("STATE")) {
-        stageScrollVelocity = { 0.0f,0.0f ,-10.0f };
-        terrainScrollVelocity = { 0.0f,0.0f ,-10.0f };
-    }
+    ImGui::Text("SpawnStageCount:%ld", GetSpawnStageCount());
 
     ImGui::Text("[I][J][K][L] : camera");
     ImGui::Text("[A][D] : player");
     ImGui::Text("[X] : HitAnime");
+    ImGui::Text("[C] : pause");
 
     ImGui::End();
 }
@@ -78,10 +68,10 @@ void StageManager::Draw(RenderContext rc, ModelShader* shader)
     }
 
     // 地形描画
-    /*for (BaseStage* terrain : terrains)
+    for (BaseStage* terrain : terrains)
     {
         terrain->Draw(rc, shader);
-    }*/
+    }
 }
 
 void StageManager::ObsDraw(RenderContext rc, ModelShader* shader)
@@ -145,12 +135,11 @@ void StageManager::Clear()
 // ステージ生成
 void StageManager::StageSpawn(DirectX::XMFLOAT3 position)
 {
-    //Stage* s = new Stage();//ランダムな種類のステージを生成
-    Stage* s = new Stage;           //ステージを生成
-    s->SetPosition(position);// ここでステージのポジションを決める
-    s->SetScrollVelocity(&stageScrollVelocity);  // 共通のスクロール速度を設定
-    s->Initialize();
-    stages.emplace_back(s);
+    Stage* s = new Stage;                           //ステージを生成
+    s->SetPosition(position);                       // ここでステージのポジションを決める
+    s->SetScrollVelocity(&stageScrollVelocity);     // 共通のスクロール速度を設定
+    s->Initialize();                                // 障害物生成
+    stages.emplace_back(s);                         // コンテナ追加
 }
 
 // ステージの更新
@@ -286,10 +275,19 @@ void StageManager::UpdateVelocity(float elapsedTime, Player* player)
     // 経過フレーム
     float elapsedFrame = 60.0f * elapsedTime;
 
+    // プレイヤーの最大速度更新
+    maxPlayerVelocity = MaxPlayerVelocity[player->GetHungerLevel()];
+
     // 水平速力更新処理
     UpdataHorizontalVelocity(elapsedFrame);
 
     player->SetVelocity({ -stageScrollVelocity.x,0.0f,0.0f });
+
+    // ステージのスクロール速度更新
+    UpdateScrollVelocity(stageScrollVelocity, MaxStageScrollVelocity[player->GetHungerLevel()], ScrollVelocityRate);
+    
+    // 地形のスクロール速度更新
+    UpdateScrollVelocity(terrainScrollVelocity, MaxTerrainScrollVelocity[player->GetHungerLevel()], ScrollVelocityRate);
 }
 
 // 水平速力更新処理
@@ -297,27 +295,11 @@ void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
 {
     // XZ平面の速力を減速する
     float length = sqrtf(stageScrollVelocity.x * stageScrollVelocity.x);
-    if (length > 0.0f)
-    {
-        // 摩擦力
-        float friction = this->friction * elapsedFrame;
 
-        // 摩擦による横方向の減速処理
-        if (length > friction)
-        {
-            float vx = stageScrollVelocity.x / length;
-
-            stageScrollVelocity.x -= vx * friction;
-        }
-        // 横方向の速力が摩擦力以下になったので速力を無効化
-        else
-        {
-            stageScrollVelocity.x = 0;
-        }
-    }
+    // キーを離すとすぐ止まってほしので減速処理なし
 
     // XZ平面の速力を加速する
-    if (length <= maxMoveSpeed)
+    if (length <= maxPlayerVelocity)
     {
         // 移動ベクトルがゼロベクトル出ないなら加速する
         float moveVecLength = sqrtf(moveVecX * moveVecX);
@@ -331,13 +313,19 @@ void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
 
             // 最大速度制限
             float length = sqrtf(stageScrollVelocity.x * stageScrollVelocity.x);
-            if (length > maxMoveSpeed)
+            if (length > maxPlayerVelocity)
             {
                 float vx = stageScrollVelocity.x / length;
 
-                stageScrollVelocity.x = vx * maxMoveSpeed;
+                stageScrollVelocity.x = vx * maxPlayerVelocity;
             }
         }
+    }
+
+    // moveVecXが0ならVelocityを0にする
+    if ((moveVecX < FLT_EPSILON) && (moveVecX > -FLT_EPSILON))
+    {
+        stageScrollVelocity.x = 0.0f;
     }
 
     // 地形データの速力に代入
@@ -345,4 +333,16 @@ void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
 
     // 移動ベクトルをリセット
     moveVecX = 0.0f;
+}
+
+// スクロール速度更新
+void StageManager::UpdateScrollVelocity(DirectX::XMFLOAT3& ScrollVelocity, float maxVelocity, float rate)
+{
+    float length = ScrollVelocity.z - maxVelocity;
+    // 値が微小な場合は処理しない
+    if (fabs(length) > 1e-8f)
+    {
+        //return a + t * (b - a);
+        ScrollVelocity.z = ScrollVelocity.z + rate * (maxVelocity - ScrollVelocity.z);
+    }
 }
