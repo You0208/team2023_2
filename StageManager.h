@@ -22,6 +22,9 @@ public:
     // 描画処理
     void Draw(RenderContext rc, ModelShader* shader);
 
+    // 障害物表示:シェーダー用
+    void ObsDraw(RenderContext rc, ModelShader* shader);
+
     // ステージ登録
     void Register(Stage* stage);
 

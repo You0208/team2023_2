@@ -5,8 +5,8 @@ Sky::Sky()
     model = std::make_unique<Model>("Data/Model/Debug/back.mdl");
     angle.x = DirectX::XMConvertToRadians(180);
     angle.z = DirectX::XMConvertToRadians(180);
-    scale.x = scale.y = scale.z = 6.0f;
-    position.z = 510.0f;
+    scale.x = scale.y = scale.z = 10.0f;
+    position.z = space;
 }
 
 void Sky::Update(float elapsedTime)

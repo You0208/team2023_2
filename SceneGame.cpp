@@ -175,7 +175,7 @@ void SceneGame::Update(float elapsedTime)
 
 	//空更新処理
 	sky->Update(elapsedTime);
-	sky->SetPosition({ player->GetPosition().x,player->GetPosition().y,player->GetPosition().z + 510 });
+	sky->SetPosition({ player->GetPosition().x,player->GetPosition().y,player->GetPosition().z + sky->space });
 
 	// エフェクトの更新処理
 	EffectManager::Instance().Update(elapsedTime);
@@ -537,7 +537,7 @@ void SceneGame::RenderShadowmap()
 			DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
 		// シャドウマップに描画したい範囲の射影行列を生成
 		DirectX::XMMATRIX P = DirectX::XMMatrixOrthographicLH(shadowDrawRect, shadowDrawRect, 0.1f,
-			1000.0f);
+			1200.0f);
 		DirectX::XMStoreFloat4x4(&rc.view, V);
 		DirectX::XMStoreFloat4x4(&rc.projection, P);
 		DirectX::XMStoreFloat4x4(&lightViewProjection, V * P);
@@ -546,7 +546,7 @@ void SceneGame::RenderShadowmap()
 	{
 		ModelShader* shader = graphics.GetShader(ModelShaderId::ShadowmapCaster);
 		shader->Begin(rc);
-		stageManager->Draw(rc, shader);
+		stageManager->ObsDraw(rc, shader);
 		shader->End(rc);
 	}
 }

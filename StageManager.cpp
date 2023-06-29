@@ -84,6 +84,17 @@ void StageManager::Draw(RenderContext rc, ModelShader* shader)
     }*/
 }
 
+void StageManager::ObsDraw(RenderContext rc, ModelShader* shader)
+{   // ステージ描画
+    for (BaseStage* stage : stages)
+    {
+        for (auto& it : stage->obstacles)
+        {
+            it->Draw(rc, shader);
+        }
+    }
+}
+
 // ステージ登録
 void StageManager::Register(Stage* stage)
 {

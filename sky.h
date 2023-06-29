@@ -23,6 +23,7 @@ public:
 public:
     // モデルはsceneのrenderで呼び出すのでpublic
     std::unique_ptr<Model>  model = nullptr;       // モデル
+    float space = 900;
 private:
     DirectX::XMFLOAT3   position = { 0,0,0 };     // 位置
     DirectX::XMFLOAT3   angle = { 0,0,0 };     // 角度
