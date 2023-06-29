@@ -34,6 +34,9 @@ public:
     // 地形生成
     void TerrainSpawn(DirectX::XMFLOAT3 position);
 
+    // 加速処理
+    void AddVelocity();
+
 
 private:
     // ステージの更新

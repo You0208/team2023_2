@@ -36,7 +36,10 @@ public:
 
     // 移動入力処理
     void InputMove(float elapsedTime);
-    
+
+    // 衝撃を与える
+    void AddImpulse(const DirectX::XMFLOAT3& impulse);
+
     // 位置更新
     void SetPosition(const DirectX::XMFLOAT3& position) { this->position = position; }
     // 回転更新
@@ -62,16 +65,13 @@ public:
     int GetMaxHealth() const { return maxHealth; }
     // ダメージアニメが再生中であるかを取得
     bool GetIsDamageAnim() const { return isDamageAnim; }
-
+    // スコアを加算する
     void AddScore(int s) { score += s; }
-
-    // 衝撃を与える
-    void AddImpulse(const DirectX::XMFLOAT3& impulse);
-
     // 死亡した時に呼ばれる
     void OnDead() {
         SceneManager::Instance().ChangeScene(new SceneOver);
     };
+
 private:
 
     // 速度処理更新

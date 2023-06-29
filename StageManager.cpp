@@ -242,6 +242,11 @@ void StageManager::TerrainSpawn(DirectX::XMFLOAT3 position)
     terrains.emplace_back(s);
 }
 
+void StageManager::AddVelocity()
+{
+    stageScrollVelocity = { stageScrollVelocity.x * 1.5f,stageScrollVelocity.y * 1.5f ,stageScrollVelocity.z * 1.5f };
+}
+
 // スティック入力値から移動ベクトルを取得
 DirectX::XMFLOAT3 StageManager::GetMoveVec()
 {

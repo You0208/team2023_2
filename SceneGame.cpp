@@ -302,99 +302,108 @@ void SceneGame::CollisionPlayerVsObs()
 	{
 		for (auto& it2 : it->obstacles)
 		{
-			if (it2->Type == TYPE::CYLINDER)// 円柱
+			if (!it2->IsHit)
 			{
-				// 衝突判定
-				DirectX::XMFLOAT3 outPosition;
-				if (Collision::IntersectCylinderVsCylinder
-				(player->GetPosition(),
-					player->GetRadius(),
-					player->GetHeight(),
-					it2->GetPosition(),
-					it2->GetRadius(),
-					it2->GetHeight(),
-					outPosition))
+				switch (it2->Type)
 				{
-					cameraController->flag = true;
-					// ヒットエフェクト再生
-					{
-						DirectX::XMFLOAT3 e = player->GetPosition();
-						e.y += player->GetHeight() * 0.5f;
-						hitEffect->Play(e);
-					}
-					//player->OnDead();
-				}
-			}
-			if (it2->Type == TYPE::CYLINDERS)// 直方体
-			{
-				for (int n = 0; n < it2->CollisionNum; ++n)
-				{
-					// 衝突判定
-					DirectX::XMFLOAT3 outPosition;
-					if (Collision::IntersectCylinderVsCylinder
-					(player->GetPosition(),
-						player->GetRadius(),
-						player->GetHeight(),
-						{ (it2->GetPosition().x - (it2->CollisionNum * 0.5f) + it2->GetRadius()) + (n * it2->GetRadius() * 2.0f) ,it2->GetPosition().y,it2->GetPosition().z },
-						it2->GetRadius(),
-						it2->GetHeight(),
-						outPosition))
-					{
-						// ヒットエフェクト再生
+					case TYPE::CYLINDER:// 円柱
+						// 衝突判定
+						DirectX::XMFLOAT3 outPosition;
+						if (Collision::IntersectCylinderVsCylinder
+						(player->GetPosition(),
+							player->GetRadius(),
+							player->GetHeight(),
+							it2->GetPosition(),
+							it2->GetRadius(),
+							it2->GetHeight(),
+							outPosition))
 						{
-							DirectX::XMFLOAT3 e = player->GetPosition();
-							e.z -= 4.0f;
-							hitEffect->Play(e);
+							cameraController->flag = true;
+							// ヒットエフェクト再生
+							{
+								DirectX::XMFLOAT3 e = player->GetPosition();
+								e.y += player->GetHeight() * 0.5f;
+								hitEffect->Play(e);
+							}
+							//player->OnDead();
+							it2->IsHit = true;
 						}
-						//player->OnDead();
-					}
-				}
-			}
-			if (it2->Type == TYPE::ITEMS)// アイテム
-			{
-				// 衝突判定
-				DirectX::XMFLOAT3 outPosition;
-				if (Collision::IntersectSphereVsCylinder
-				(it2->GetPosition(),
-					it2->GetRadius(),
-					player->GetPosition(),
-					player->GetRadius(),
-					player->GetHeight(),
-					outPosition))
-				{
-					player->AddScore(it2->score);
-
-					// ヒットエフェクト再生
-					{
-						DirectX::XMFLOAT3 e = player->GetPosition();
-						hitEffect->Play(e);
-					}
-				}
-
-			}
-			if (it2->Type == TYPE::GATE)// ゲート
-			{
-				for (int n = 0; n < it2->CollisionNum; ++n)
-				{
-					// 衝突判定
-					DirectX::XMFLOAT3 outPosition;
-					if (Collision::IntersectCylinderVsCylinder
-					(player->GetPosition(),
-						player->GetRadius(),
-						player->GetHeight(),
-						{ (it2->GetPosition().x - (it2->CollisionNum * 0.5f) + it2->GetRadius()) + (n * it2->GetRadius() * 2.0f) ,it2->GetPosition().y,it2->GetPosition().z },
-						it2->GetRadius(),
-						it2->GetHeight(),
-						outPosition))
-					{
-						// ヒットエフェクト再生
+					break;
+					case TYPE::CYLINDERS:// 直方体
+						for (int n = 0; n < it2->CollisionNum; ++n)
 						{
-							DirectX::XMFLOAT3 e = player->GetPosition();
-							e.z -= 4.0f;
-							hitEffect->Play(e);
+							// 衝突判定
+							if (Collision::IntersectCylinderVsCylinder
+							(player->GetPosition(),
+								player->GetRadius(),
+								player->GetHeight(),
+								{ (it2->GetPosition().x - (it2->CollisionNum * 0.5f) + it2->GetRadius()) + (n * it2->GetRadius() * 2.0f) ,it2->GetPosition().y,it2->GetPosition().z },
+								it2->GetRadius(),
+								it2->GetHeight(),
+								outPosition))
+							{
+								// ヒットエフェクト再生
+								{
+									DirectX::XMFLOAT3 e = player->GetPosition();
+									e.z -= 4.0f;
+									hitEffect->Play(e);
+								}
+								//player->OnDead();
+								it2->IsHit = true;
+							}
 						}
-					}
+						break;
+					case TYPE::ITEMS:// アイテム
+						// 衝突判定
+						if (Collision::IntersectSphereVsCylinder
+						(it2->GetPosition(),
+							it2->GetRadius(),
+							player->GetPosition(),
+							player->GetRadius(),
+							player->GetHeight(),
+							outPosition))
+						{
+							player->AddScore(it2->score);
+
+							// ヒットエフェクト再生
+							{
+								DirectX::XMFLOAT3 e = player->GetPosition();
+								hitEffect->Play(e);
+							}
+							it2->IsHit = true;
+						}
+						break;
+					case TYPE::GATE:// ゲート
+						for (int n = 0; n < it2->CollisionNum; ++n)
+						{
+							// 衝突判定
+							if (Collision::IntersectCylinderVsCylinder
+							(player->GetPosition(),
+								player->GetRadius(),
+								player->GetHeight(),
+								{ (it2->GetPosition().x - (it2->CollisionNum * 0.5f) + it2->GetRadius()) + (n * it2->GetRadius() * 2.0f) ,it2->GetPosition().y,it2->GetPosition().z },
+								it2->GetRadius(),
+								it2->GetHeight(),
+								outPosition))
+							{
+								stageManager->AddVelocity();
+								// ヒットエフェクト再生
+								{
+									DirectX::XMFLOAT3 e = player->GetPosition();
+									e.z -= 4.0f;
+									hitEffect->Play(e);
+								}
+								it2->IsHit = true;
+							}
+						}
+						break;
+					default:
+						break;
 				}
+			}
+			else if(it2->Type==TYPE::ITEMS)
+			{
+				it2->GetItem();
 			}
 		}
 	}

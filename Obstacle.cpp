@@ -1,5 +1,6 @@
 #include<imgui.h>
 #include "Obstacle.h"
+#include "Tool.h"
 #include "Graphics/Graphics.h"
 
 //-------------------------------------------------------------------------------------------------------
@@ -18,6 +19,10 @@ void Obstacle::Draw(RenderContext rc, ModelShader* shader)
 //更新処理
 void Obstacle::Update(float elapsedTime)
 {
+    if (Type == ITEMS)
+    {
+        angle.y += DirectX::XMConvertToRadians(1);//回す
+    }
     // 速度処理更新
     UpdateVelocity(elapsedTime);
 
@@ -70,6 +75,20 @@ void Obstacle::UpdateTransform()
     DirectX::XMMATRIX W = S * R * T;
     //計算したワールド行列を取り出す
     DirectX::XMStoreFloat4x4(&transform, W);
+}
+
+void Obstacle::GetItem()
+{
+    if (Type == TYPE::ITEMS)
+    {
+        position.y=lerp(position.y, 5.0f, 0.03f);
+        angle.y += DirectX::XMConvertToRadians(1);
+        //オブジェクト行列を更新
+        UpdateTransform();
+
+        //モデル行列更新
+        model->UpdateTransform(transform);
+    }
 }
 
 // 旋回処理

@@ -43,6 +43,9 @@ public:
     // 高さ取得
     float GetHeight() const { return height; }
 
+    // アイテム取得演出
+    void GetItem();
+
     // == 追加した関数(この文はあとで削除する) ==
     void SetScrollVelocity(DirectX::XMFLOAT3* ScrollVelocity) { scrollVelocity = ScrollVelocity; }
 
@@ -74,6 +77,7 @@ public:
     int score = 0;
     int Type = 0;
     int CollisionNum = 0;
+    bool IsHit = false;
 protected:
     DirectX::XMFLOAT3   position        = { 0,0,0 };        // 位置
     DirectX::XMFLOAT3   angle           = { 0,0,0 };        // 角度
