@@ -35,6 +35,12 @@ private:
         -20.0f      // 空腹レベル：低
     };
 
+    // ステージが切り替わる境目
+    static constexpr int StageChangeLine[Stage::StageMax - 1] =
+    {
+        10
+    };
+
 public:
     StageManager();
     ~StageManager();
@@ -65,6 +71,8 @@ public:
     // 加速処理
     void AddVelocity();
 
+    // 生成したステージ数を返す
+    int GetSpawnStageCount() { return BaseStage::GetSpawnStageCount() / Stage::StageSideMax; }
 
 private:
     // ステージの更新
@@ -85,6 +93,9 @@ private:
     // 水平速力更新処理
     void UpdataHorizontalVelocity(float elapsedFrame);
 
+    // ステージの切り替え
+    void ChangeStage();
+
 public:
     bool IsStart = true;
 
@@ -92,8 +103,6 @@ public:
     // ステージのスクロール速度更新
     void UpdateScrollVelocity(DirectX::XMFLOAT3& ScrollVelocity,float maxVelocity,float rate);
 
-    // ステージの生成数を返す
-    int GetSpawnStageCount() const { return Stage::GetSpawnStageCount() / Stage::StageSideMax;}
 private:
     // ステージデータ
     DirectX::XMFLOAT3 stageScrollVelocity = { 0.0f,0.0f ,-10.0f };      // 共通のスクロール速度のポインタ
@@ -109,8 +118,8 @@ private:
 
     float moveVecX = 0.0f;                                              // 移動方向ベクトル
     float maxPlayerVelocity = 20.0f;                                    // プレイヤーの最大速度
-
-    // ===== 非使用　後で使うかも？ =====
+    int   stageNo           = 0;                                        // 現在のステージ
+                                                                        // ===== 非使用　後で使うかも？ =====
     float friction = 0.5f;                                              // 減速
     float acceleration = 10.0f;                                         // 加速力
 };

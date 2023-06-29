@@ -9,13 +9,13 @@
 class Stage: public BaseStage
 {
 public:
-    static const int StageKindMax           = 2;        //ステージの種類の最大数
+    static const int StageMax               = 2;        //ステージの最大数
     static const int StageSideMax           = 2;	    //ステージの最大数(左右)
     static const int StageDepthMax          = 3;	    //ステージの最大数(奥行)
     static constexpr float StageSize        = 50.0f;    //ステージのサイズ
 
 public:
-    Stage();
+    Stage(int stageNo);
     ~Stage();
 
     void DrawDebugGUI(){}
@@ -32,6 +32,10 @@ public:
     // アイテム・障害物の追加
     void AddObstacle(Obstacle* obstacle) { obstacles.emplace_back(obstacle); }
 
+private:
+    // ステージの生成
+    void StageSpawn()override;
+
 private:                  // 障害物
     float offset        = 0.2f;
 
@@ -43,6 +47,8 @@ private:
     static void AreaInfo01(Stage* stage);
     // エリア02
     static void AreaInfo02(Stage* stage);
+    // エリア03
+    static void AreaInfo03(Stage* stage);
 
 public:
     typedef	void(*AreaInfo)(Stage* stage);
@@ -71,7 +77,7 @@ private:
     // ステージ02
     static SpawnObstacleInfo StageInfo02[];
 
-    static constexpr SpawnObstacleInfo* stageInfo[StageKindMax]
+    static constexpr SpawnObstacleInfo* stageInfo[StageMax]
     {
         StageInfo01
         ,StageInfo02

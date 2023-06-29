@@ -30,6 +30,7 @@ void StageManager::DrawDebugGUI()
     }
 
     ImGui::Text("SpawnStageCount:%ld", GetSpawnStageCount());
+    ImGui::Text("stageNo:%ld", stageNo);
 
     ImGui::Text("[I][J][K][L] : camera");
     ImGui::Text("[A][D] : player");
@@ -44,6 +45,9 @@ void StageManager::Update(Player* player, float elapsedTIme)
 {
     // プレイヤーのダメージアニメ再生は以下の処理を行わない
     if(player->GetIsDamageAnim()) return;
+
+    // ステージ切り替え
+    ChangeStage();
 
     // 移動入力処理
     InputMove(elapsedTIme);
@@ -135,7 +139,7 @@ void StageManager::Clear()
 // ステージ生成
 void StageManager::StageSpawn(DirectX::XMFLOAT3 position)
 {
-    Stage* s = new Stage;                           //ステージを生成
+    Stage* s = new Stage(stageNo);                  //ステージを生成
     s->SetPosition(position);                       // ここでステージのポジションを決める
     s->SetScrollVelocity(&stageScrollVelocity);     // 共通のスクロール速度を設定
     s->Initialize();                                // 障害物生成
@@ -333,6 +337,19 @@ void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
 
     // 移動ベクトルをリセット
     moveVecX = 0.0f;
+}
+
+// ステージの切り替え
+void StageManager::ChangeStage()
+{
+    for (int i = stageNo ;i < 3;++i)
+    {
+        if (GetSpawnStageCount() >= StageChangeLine[i])
+        {
+            stageNo++;      // 次のステージに切り替え
+            return;
+        }
+    }
 }
 
 // スクロール速度更新

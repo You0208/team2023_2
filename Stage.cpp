@@ -16,7 +16,7 @@ Stage::SpawnObstacleInfo Stage::StageInfo01[] =
 };
 Stage::SpawnObstacleInfo Stage::StageInfo02[] =
 {
-    {AreaInfo00,Stage::SpawnLevel::high}
+    {AreaInfo03,Stage::SpawnLevel::high}
     ,{AreaInfo01,Stage::SpawnLevel::middle}
     ,{AreaInfo02,Stage::SpawnLevel::low}
 
@@ -27,9 +27,9 @@ Stage::SpawnObstacleInfo Stage::StageInfo02[] =
 Stage::AreaInfo Stage::RandSpawn(Stage::SpawnObstacleInfo* data)
 {
     // 各出現する確率(合計100になるようにする)
-    int High = 100;       // 高 (0～High)
-    int Middle = 0;     // 中 (High～High + Middle)
-    int Low = 0;        // 低 (High + Middle～100)
+    int High = 60;       // 高 (0～High)
+    int Middle = 30;     // 中 (High～High + Middle)
+    int Low = 10;        // 低 (High + Middle～100)
 
     // 生成レベル決定
     int spawnLevel = 0;
@@ -57,8 +57,10 @@ Stage::AreaInfo Stage::RandSpawn(Stage::SpawnObstacleInfo* data)
 
 
 // コンストラクタ（nはステージの種類）
-Stage::Stage()
+Stage::Stage(int stageNo)
 {
+    stageNo = (std::min)(stageNo, StageMax);
+
     //ステージモデルを読み込み
     //model = std::make_unique<Model>("Data/Model/Debug/cube.mdl");
 
@@ -67,7 +69,7 @@ Stage::Stage()
     stageSideMax    = StageSideMax;
     stageDepthMax   = StageDepthMax;
 
-    AreaInfo info = RandSpawn(stageInfo[0]);
+    AreaInfo info = RandSpawn(stageInfo[stageNo]);
 
     info(this);
 }
@@ -130,6 +132,18 @@ void Stage::Draw(RenderContext rc, ModelShader* shader)
     }
 }
 
+
+// ステージの生成
+void Stage::StageSpawn()
+{
+    // 奥行
+    if (DepthSpawn()) SpawnStageCount++;    // ステージ生成数増加
+    // 左
+    LeftSpawn();
+    // 右
+    RightSpawn();
+}
+
 // アイテム・障害物生成
 template<typename T>
 void SpawnObstacle(DirectX::XMFLOAT3 position, Stage* stage)
@@ -173,6 +187,12 @@ void Stage::AreaInfo01(Stage* stage)
 void Stage::AreaInfo02(Stage* stage)
 {
     SpawnObstacle<Marble_chocolate>({ 0.0f,0.0f,0.0f }, stage);
+}
+
+// エリア03
+void Stage::AreaInfo03(Stage* stage)
+{
+    SpawnObstacle<Cupcake_Choco>({ 0.0f,0.0f,0.0f }, stage);
 }
 
 

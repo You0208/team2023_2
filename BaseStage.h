@@ -38,7 +38,13 @@ protected:
     virtual void UpdateTransform();
 
     // ステージの生成
-    void StageSpawn();
+    virtual void StageSpawn();
+    // 奥行のステージ生成
+    bool DepthSpawn();
+    // 左のステージ生成
+    bool LeftSpawn();
+    // 右のステージ生成
+    bool RightSpawn();
 
     // ステージの削除
     void StageDelete();
