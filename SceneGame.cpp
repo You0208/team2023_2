@@ -302,7 +302,7 @@ void SceneGame::CollisionPlayerVsObs()
 	{
 		for (auto& it2 : it->obstacles)
 		{
-			if (it2->Type == TYPE::CYLINDER)
+			if (it2->Type == TYPE::CYLINDER)// 円柱
 			{
 				// 衝突判定
 				DirectX::XMFLOAT3 outPosition;
@@ -325,7 +325,7 @@ void SceneGame::CollisionPlayerVsObs()
 					//player->OnDead();
 				}
 			}
-			if (it2->Type == TYPE::CYLINDERS)
+			if (it2->Type == TYPE::CYLINDERS)// 直方体
 			{
 				for (int n = 0; n < it2->CollisionNum; ++n)
 				{
@@ -350,7 +350,7 @@ void SceneGame::CollisionPlayerVsObs()
 					}
 				}
 			}
-			if (it2->Type == TYPE::ITEMS)
+			if (it2->Type == TYPE::ITEMS)// アイテム
 			{
 				// 衝突判定
 				DirectX::XMFLOAT3 outPosition;
@@ -362,6 +362,8 @@ void SceneGame::CollisionPlayerVsObs()
 					player->GetHeight(),
 					outPosition))
 				{
+					player->AddScore(it2->score);
+
 					// ヒットエフェクト再生
 					{
 						DirectX::XMFLOAT3 e = player->GetPosition();
@@ -370,7 +372,7 @@ void SceneGame::CollisionPlayerVsObs()
 				}
 
 			}
-			if (it2->Type == TYPE::GATE)
+			if (it2->Type == TYPE::GATE)// ゲート
 			{
 				for (int n = 0; n < it2->CollisionNum; ++n)
 				{

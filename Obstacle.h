@@ -71,6 +71,7 @@ public:
     // ƒ‚ƒfƒ‹‚ÍŒÄ‚Ño‚·‚Ì‚Åpublic
     std::unique_ptr<Model>  model       =    nullptr;        // ƒ‚ƒfƒ‹
 
+    int score = 0;
     int Type = 0;
     int CollisionNum = 0;
 protected:

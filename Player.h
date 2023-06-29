@@ -63,6 +63,8 @@ public:
     // ダメージアニメが再生中であるかを取得
     bool GetIsDamageAnim() const { return isDamageAnim; }
 
+    void AddScore(int s) { score += s; }
+
     // 衝撃を与える
     void AddImpulse(const DirectX::XMFLOAT3& impulse);
 
@@ -150,6 +152,7 @@ private:
     int     maxHealth                  = 5;              // 最大体力
     float   invincibleTimer            = 1.0f;           // 無敵時間
 
+    int     score                      = 0;
     // 回転速度
     float   turnSpeed                  = DirectX::XMConvertToRadians(720);
 

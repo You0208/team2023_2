@@ -162,6 +162,7 @@ void Player::DrawDebugGUI()
             ImGui::InputFloat3("Scale", &scale.x);
             // ‘¬“x
             ImGui::InputFloat3("velocity", &velocity.x);
+            ImGui::InputInt("score", &score);
         }
     }
     ImGui::End();

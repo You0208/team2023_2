@@ -290,6 +290,7 @@ void Marshmallow_Base::Update(float elapsedTime)
     Obstacle::Update(elapsedTime);
     radius = 1.0f;
     Type = TYPE::ITEMS;
+    score = 5;
 }
 void Marshmallow_Base::DrawDebugPrimitive()
 {
@@ -319,6 +320,7 @@ void Jellybeans_Base::Update(float elapsedTime)
     Obstacle::Update(elapsedTime);
     radius = 1.0f;
     Type = TYPE::ITEMS;
+    score = 3;
 }
 void Jellybeans_Base::DrawDebugPrimitive()
 {
@@ -491,6 +493,7 @@ Cupcake_Choco::Cupcake_Choco()
     model = std::make_unique<Model>("Data/Model/Obstacle/cupcake/cupcake_choco.mdl");
     radius = 2.5f;
     Type = TYPE::ITEMS;
+    score = 10;
 }
 // カップケーキ(ピンク)
 Cupcake_Pink::Cupcake_Pink()
@@ -498,6 +501,7 @@ Cupcake_Pink::Cupcake_Pink()
     model = std::make_unique<Model>("Data/Model/Obstacle/cupcake/cupcake_pink.mdl");
     radius = 2.5f;
     Type = TYPE::ITEMS;
+    score = 10;
 }
 
 void Cupcake_Base::DrawDebugPrimitive()
