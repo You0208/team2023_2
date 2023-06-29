@@ -6,7 +6,55 @@
 // 
 //-------------------------------------------------------------------------------------------------------
 
-typedef	void(*StageInfo)(Stage* stage);
+Stage::SpawnObstacleInfo Stage::StageInfo01[] =
+{
+    {AreaInfo00,Stage::SpawnLevel::low}
+    ,{AreaInfo01,Stage::SpawnLevel::middle}
+    ,{AreaInfo02,Stage::SpawnLevel::high}
+
+    ,{nullptr,0} // END
+};
+Stage::SpawnObstacleInfo Stage::StageInfo02[] =
+{
+    {AreaInfo00,Stage::SpawnLevel::high}
+    ,{AreaInfo01,Stage::SpawnLevel::middle}
+    ,{AreaInfo02,Stage::SpawnLevel::low}
+
+    ,{nullptr,0} // END
+};
+
+// 生成するエリア情報(関数のポインタ)を返す
+Stage::AreaInfo Stage::RandSpawn(Stage::SpawnObstacleInfo* data)
+{
+    // 各出現する確率(合計100になるようにする)
+    int High = 100;       // 高 (0～High)
+    int Middle = 0;     // 中 (High～High + Middle)
+    int Low = 0;        // 低 (High + Middle～100)
+
+    // 生成レベル決定
+    int spawnLevel = 0;
+    int n = rand() % 100;
+    // Highより小さい(0～High以内)なのでレベルをhighに設定
+    if (n <= High) spawnLevel = SpawnLevel::high;
+    // [High+Middle]より大きい([High+Middle]～100以内)なのでレベルをlowに設定
+    else if (n >= High + Middle)spawnLevel = SpawnLevel::low;
+    // レベルをmiddleに設定
+    else spawnLevel = SpawnLevel::middle;
+
+    std::vector<AreaInfo> areaInfo;             // 生成レベルが同じだったエリア情報を格納するコンテナ
+    for (; data->info != nullptr; ++data)
+    {
+        // 生成レベルが同じなら[areaInfo]に追加
+        if (data->spawnRate == spawnLevel)
+        {
+            areaInfo.emplace_back(data->info);
+        }
+    }
+
+    // ランダムなエリア情報を返す
+    return areaInfo.at(rand() % areaInfo.size());
+}
+
 
 // コンストラクタ（nはステージの種類）
 Stage::Stage()
@@ -19,19 +67,9 @@ Stage::Stage()
     stageSideMax    = StageSideMax;
     stageDepthMax   = StageDepthMax;
 
-    StageInfo stageInfo[] =
-    {
-        StageInfo00
-        ,StageInfo01
-        ,StageInfo02
-    };
+    AreaInfo info = RandSpawn(stageInfo[0]);
 
-    int  stageKindMax = sizeof(stageInfo) / sizeof(StageInfo);
-
-    // アイテム・障害物生成
-    int n = rand() % stageKindMax;
-
-    stageInfo[n](this);
+    info(this);
 }
 
 Stage::~Stage()
@@ -124,7 +162,7 @@ void SpawnObstacle(DirectX::XMFLOAT3 position, Stage* stage)
 }
 
 // ステージ01
-void Stage::StageInfo01(Stage* stage)
+void Stage::AreaInfo01(Stage* stage)
 {
     SpawnObstacle<Cola>({ -10.0f,0.0f,0.0f }, stage);
     SpawnObstacle<Cola>({ 0.0f,0.0f,0.0f }, stage);
@@ -132,11 +170,10 @@ void Stage::StageInfo01(Stage* stage)
 }
 
 // ステージ02
-void Stage::StageInfo02(Stage* stage)
+void Stage::AreaInfo02(Stage* stage)
 {
     SpawnObstacle<Marble_chocolate>({ 0.0f,0.0f,0.0f }, stage);
 }
-
 
 
 // === 以下デバッグ用関数 ===
