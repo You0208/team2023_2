@@ -80,7 +80,7 @@ void SceneGame::Initialize()
 	// ↓　この下はシェーダー関連
 	//-------------------------------------------------------------------------------------------------------
 	// テクスチャを読み込む
-	texture = std::make_unique<Texture>("Data/Texture/1920px-Equirectangular-projection.jpg");
+	texture = std::make_unique<Texture>("Data/Texture/titleFrame.png");
 
 	// スプライト
 	sprite = std::make_unique<Sprite>();
@@ -148,10 +148,21 @@ void SceneGame::Finalize()
 // 更新処理
 void SceneGame::Update(float elapsedTime)
 {
+
+	// ポーズ処理
+	GamePad& gamePad = Input::Instance().GetGamePad();
+	if (gamePad.GetButtonDown() & GamePad::BTN_X)
+		isPaused = !isPaused;       // 0コンのスタートボタンが押されたらポーズ状態が反転
+	if (isPaused) return;           // この時点でポーズ中ならリターン
+
+	if (gamePad.GetButtonDown() & GamePad::BTN_Y)
+	{
+		cameraController->flag = true;
+	}
 	if (cameraController->flag)
 	{
 		// カメラコントローラー更新処理化
-		cameraController->Shake(10, player->GetPosition().y + 0.5f);
+		cameraController->Shake(60, player->GetPosition().y + 0.5f);
 	}
 	else
 	{
@@ -162,11 +173,6 @@ void SceneGame::Update(float elapsedTime)
 	}
 	cameraController->Update(elapsedTime);
 
-	// ポーズ処理
-	GamePad& gamePad = Input::Instance().GetGamePad();
-	if (gamePad.GetButtonDown() & GamePad::BTN_X)
-		isPaused = !isPaused;       // 0コンのスタートボタンが押されたらポーズ状態が反転
-	if (isPaused) return;           // この時点でポーズ中ならリターン
 
 	//プレイヤー更新処理
 	player->Update(elapsedTime);
@@ -239,8 +245,7 @@ void SceneGame::Render()
 
 	}
 	// 2Dスプライト描画
-	{
-		// 今は何も描画しない
+	{  
 	}
 
 	// デバッグ情報の表示
@@ -389,6 +394,7 @@ void SceneGame::CollisionPlayerVsObs()
 								it2->GetHeight(),
 								outPosition))
 							{
+								// 加速
 								stageManager->AddVelocity();
 								// ヒットエフェクト再生
 								{

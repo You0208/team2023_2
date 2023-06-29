@@ -86,6 +86,8 @@ private:
     void UpdataHorizontalVelocity(float elapsedFrame);
 
 public:
+    bool IsStart = true;
+
     std::vector<BaseStage*>             stages;                         // ステージリスト
     // ステージのスクロール速度更新
     void UpdateScrollVelocity(DirectX::XMFLOAT3& ScrollVelocity,float maxVelocity,float rate);
