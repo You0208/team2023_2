@@ -8,6 +8,8 @@ StageManager::StageManager()
     // 初期速度設定
     stageScrollVelocity.z = MaxStageScrollVelocity[1];
     terrainScrollVelocity.z = MaxTerrainScrollVelocity[1];
+
+    scrollVelocityRate = ScrollVelocityRate;
 }
 
 // デストラクタ
@@ -31,6 +33,7 @@ void StageManager::DrawDebugGUI()
 
     ImGui::Text("SpawnStageCount:%ld", GetSpawnStageCount());
     ImGui::Text("stageNo:%ld", stageNo);
+    ImGui::Text("accelerationTimer:%d", static_cast<int>(accelerationTimer));
 
     ImGui::Text("[I][J][K][L] : camera");
     ImGui::Text("[A][D] : player");
@@ -246,9 +249,11 @@ void StageManager::TerrainSpawn(DirectX::XMFLOAT3 position)
     terrains.emplace_back(s);
 }
 
-void StageManager::AddVelocity()
+void StageManager::AddVelocity(float addVelocity, float timer)
 {
-    stageScrollVelocity = { stageScrollVelocity.x * 1.5f,stageScrollVelocity.y * 1.5f ,stageScrollVelocity.z * 1.5f };
+    accelerationTimer = timer;
+    stageScrollVelocity.z -= addVelocity;
+    terrainScrollVelocity.z -= addVelocity;
 }
 
 // スティック入力値から移動ベクトルを取得
@@ -287,11 +292,21 @@ void StageManager::UpdateVelocity(float elapsedTime, Player* player)
 
     player->SetVelocity({ -stageScrollVelocity.x,0.0f,0.0f });
 
+    // 加速状態なら
+    if (accelerationTimer >= 0.0f)
+    {
+        accelerationTimer      -= elapsedTime;
+        scrollVelocityRate      = ScrollVelocityRate_ac;
+        stageScrollVelocity.z   = (std::max)(stageScrollVelocity.z, MaxVelocity);
+        terrainScrollVelocity.z = (std::max)(terrainScrollVelocity.z, MaxVelocity);
+    }
+    else scrollVelocityRate = ScrollVelocityRate;
+
     // ステージのスクロール速度更新
-    UpdateScrollVelocity(stageScrollVelocity, MaxStageScrollVelocity[player->GetHungerLevel()], ScrollVelocityRate);
+    UpdateScrollVelocity(stageScrollVelocity, MaxStageScrollVelocity[player->GetHungerLevel()], scrollVelocityRate);
     
     // 地形のスクロール速度更新
-    UpdateScrollVelocity(terrainScrollVelocity, MaxTerrainScrollVelocity[player->GetHungerLevel()], ScrollVelocityRate);
+    UpdateScrollVelocity(terrainScrollVelocity, MaxTerrainScrollVelocity[player->GetHungerLevel()], scrollVelocityRate);
 }
 
 // 水平速力更新処理

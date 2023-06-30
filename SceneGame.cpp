@@ -413,7 +413,7 @@ void SceneGame::CollisionPlayerVsObs()
 								outPosition))
 							{
 								// 加速
-								stageManager->AddVelocity();
+								stageManager->AddVelocity(50.0f,1.0f);
 								// ヒットエフェクト再生
 								{
 									DirectX::XMFLOAT3 e = player->GetPosition();

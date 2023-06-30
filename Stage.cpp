@@ -180,7 +180,7 @@ void Stage::AreaInfo01(Stage* stage)
 {
     SpawnObstacle<Cola>({ -10.0f,0.0f,0.0f }, stage);
     SpawnObstacle<Cola>({ 0.0f,0.0f,0.0f }, stage);
-    SpawnObstacle<Pokey>({ 10.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Candy_gate>({ 10.0f,0.0f,0.0f }, stage);
 }
 
 // ステージ02

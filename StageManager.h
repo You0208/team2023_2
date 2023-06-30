@@ -11,7 +11,9 @@
 class StageManager
 {
 private:
-    static constexpr float ScrollVelocityRate = 0.01f;          // スクロール速度補間係数
+    static constexpr float ScrollVelocityRate = 0.01f;              // スクロール速度補間係数
+    static constexpr float ScrollVelocityRate_ac = 0.001f;          // スクロール速度補間係数(加速状態)
+    static constexpr float MaxVelocity = -300.0f;                    // Velocityの最大値
 
     // 各空腹レベルでのプレイヤーの最大速度
     static constexpr float MaxPlayerVelocity[3] =
@@ -23,16 +25,16 @@ private:
     // 各空腹レベルでのステージの最大スクロール速度
     static constexpr float MaxStageScrollVelocity[3] =
     {
-        -100.0f,    // 空腹レベル：低
-        -50.0f,     // 空腹レベル：中
-        -20.0f      // 空腹レベル：高
+        -150.0f,    // 空腹レベル：低
+        -100.0f,    // 空腹レベル：中
+        -75.0f      // 空腹レベル：高
     };
-    // 各空腹レベルでのステージの最大スクロール速度
+    // 各空腹レベルでの地形の最大スクロール速度
     static constexpr float MaxTerrainScrollVelocity[3] =
     {
-        -100.0f,    // 空腹レベル：高
-        -50.0f,     // 空腹レベル：中
-        -20.0f      // 空腹レベル：低
+        -150.0f,    // 空腹レベル：高
+        -100.0f,    // 空腹レベル：中
+        -75.0f      // 空腹レベル：低
     };
 
     // ステージが切り替わる境目
@@ -69,7 +71,7 @@ public:
     void TerrainSpawn(DirectX::XMFLOAT3 position);
 
     // 加速処理
-    void AddVelocity();
+    void AddVelocity(float addVelocity,float timer);
 
     // 生成したステージ数を返す
     int GetSpawnStageCount() { return BaseStage::GetSpawnStageCount() / Stage::StageSideMax; }
@@ -122,4 +124,7 @@ private:
                                                                         // ===== 非使用　後で使うかも？ =====
     float friction = 0.5f;                                              // 減速
     float acceleration = 10.0f;                                         // 加速力
+
+    float scrollVelocityRate = 0.0f;                                    // スクロール速度補間係数
+    float accelerationTimer = 0.0f;                                     // 加速タイマー(0以上のとき加速状態である)
 };

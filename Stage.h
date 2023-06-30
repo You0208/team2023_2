@@ -12,7 +12,7 @@ public:
     static const int StageMax               = 2;        //ステージの最大数
     static const int StageSideMax           = 2;	    //ステージの最大数(左右)
     static const int StageDepthMax          = 3;	    //ステージの最大数(奥行)
-    static constexpr float StageSize        = 50.0f;    //ステージのサイズ
+    static constexpr float StageSize        = 500.0f;    //ステージのサイズ
 
 public:
     Stage(int stageNo);
