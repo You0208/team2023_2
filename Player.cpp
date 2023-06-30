@@ -25,6 +25,15 @@ Player::Player()
     TransitionIdleState();
 }
 
+void Player::SelectUpdate(float elapsedTime)
+{
+    //オブジェクト行列を更新
+    UpdateTransform();
+
+    //モデル行列更新
+    model->UpdateTransform(transform);
+}
+
 //更新処理
 void Player::Update(float elapsedTime)
 {
@@ -171,6 +180,7 @@ void Player::UpdateTransform()
     //計算したワールド行列を取り出す
     DirectX::XMStoreFloat4x4(&transform, W);
 }
+
 
 // スティック入力値から移動ベクトルを取得
 float Player::GetMoveVecX() const

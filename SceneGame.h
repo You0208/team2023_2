@@ -47,6 +47,14 @@ public:
 	// 障害物とプレイヤーの当たり判定
 	void CollisionPlayerVsObs();
 
+	// セレクト画面
+	void SelectUpdate(float elapsedTime);
+
+	// 遷移処理
+	void TransUpdate(float elapsedTime);
+
+	// 死亡演出
+	void DeathUpdate(float elapsedTime);
 private:
 	// 3D空間の描画
 	void Render3DScene();
@@ -55,7 +63,11 @@ private:
 	void RenderShadowmap();
 
 private:
-	
+	bool isTrans = false;// 遷移中か
+	DirectX::XMFLOAT3 target;// セレクト用
+	float range;// セレクト用
+	float rotation;// セレクト用
+
 	Player* player = nullptr;
 
 	Sky* sky = nullptr;

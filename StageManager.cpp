@@ -1,4 +1,5 @@
 #include "StageManager.h"
+#include "Tool.h"
 #include<imgui.h>
 #include <Input/Input.h>
 
@@ -58,6 +59,30 @@ void StageManager::Update(Player* player, float elapsedTIme)
     // 速度処理更新
     UpdateVelocity(elapsedTIme, player);
 
+    // ステージの更新
+    StageUpdate(elapsedTIme);
+
+    // 地形更新
+    TerrainUpdate(elapsedTIme);
+}
+
+// セレクト更新
+void StageManager::StageSelectUpdate(float elapsedTIme)
+{
+    stageScrollVelocity = { 0,0,0 };
+    terrainScrollVelocity = { 0,0,0 };
+    // ステージの更新
+    StageUpdate(elapsedTIme);
+
+    // 地形更新
+    TerrainUpdate(elapsedTIme);
+}
+
+void StageManager::StageDeathUpdate(float elapsedTIme)
+{
+    VZ = lerp(VZ, 100.0f, 0.001f);
+    stageScrollVelocity = { 0,0,VZ };
+    terrainScrollVelocity = { 0,0,VZ };
     // ステージの更新
     StageUpdate(elapsedTIme);
 
@@ -357,7 +382,7 @@ void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
 // ステージの切り替え
 void StageManager::ChangeStage()
 {
-    for (int i = stageNo ;i < 3;++i)
+    for (int i = stageNo ;i < Stage::StageMax - 1;++i)
     {
         if (GetSpawnStageCount() >= StageChangeLine[i])
         {

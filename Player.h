@@ -35,6 +35,9 @@ public:
     Player();
     ~Player() {}
 
+    // セレクト用更新
+    void SelectUpdate(float elapsedTime);
+
     //更新処理  
     void Update(float elapsedTime);
 
@@ -47,10 +50,16 @@ public:
     //行列更新処理
     void UpdateTransform();
 
+    // 死亡した時に呼ばれる
+    void OnDead() {
+        IsDeath = true;
+    }
+
     // 位置更新
     void SetPosition(const DirectX::XMFLOAT3& position) { this->position = position; }
     // 回転更新
     void SetAngle(const DirectX::XMFLOAT3& angle) { this->angle = angle; }
+    void SetAngleY(const float angle) { this->angle.y = angle; }
     // スケール更新
     void SetScale(const DirectX::XMFLOAT3& scale) { this->scale = scale; }
     // 速度更新
@@ -74,10 +83,6 @@ public:
     bool GetIsDamageAnim() const { return isDamageAnim; }
     // スコアを加算する
     void AddScore(int s) { score += s; }
-    // 死亡した時に呼ばれる
-    void OnDead() {
-        SceneManager::Instance().ChangeScene(new SceneOver);
-    };
     // 空腹レベル取得
     int GetHungerLevel() const { return hungerLevel; }
 
@@ -132,6 +137,8 @@ private:
 public:
     // モデルはsceneのrenderで呼び出すのでpublic
     std::unique_ptr<Model>  model      = nullptr;       // モデル
+
+    bool IsDeath = false;
 private:
     enum class State
     {

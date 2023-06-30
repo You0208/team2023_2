@@ -40,6 +40,7 @@ void SceneOver::Update(float elapsedTime)
         ;
     if (gamePad.GetButtonDown() & anyButton)
     {
+        SceneManager::Instance().IsNoneStage = true;
         SceneManager::Instance().ChangeScene(new SceneGame);
     }
 

@@ -29,6 +29,10 @@ public:
     // ƒV[ƒ“‚ÌØ‚è‘Ö‚¦
     void ChangeScene(Scene* scene);
 
+public:
+    bool IsNoneStage = false;
+    bool IsSelect = false;
+
 private:
     Scene* currentScene = nullptr;
     Scene* nextScene = nullptr;

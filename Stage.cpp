@@ -1,10 +1,20 @@
 #include "Stage.h"
+#include "SceneManager.h"
 #include<imgui.h>
 //-------------------------------------------------------------------------------------------------------
 // 
 //		 ステージ
 // 
 //-------------------------------------------------------------------------------------------------------
+
+Stage::SpawnObstacleInfo Stage::StageNONE[] =
+{
+    {AreaInfo00,Stage::SpawnLevel::low}
+    ,{AreaInfo00,Stage::SpawnLevel::middle}
+    ,{AreaInfo00,Stage::SpawnLevel::high}
+
+    ,{nullptr,0} // END
+};
 
 Stage::SpawnObstacleInfo Stage::StageInfo01[] =
 {
@@ -20,6 +30,14 @@ Stage::SpawnObstacleInfo Stage::StageInfo02[] =
     ,{AreaInfo01,Stage::SpawnLevel::middle}
     ,{AreaInfo02,Stage::SpawnLevel::low}
 
+    ,{nullptr,0} // END
+};
+
+Stage::SpawnObstacleInfo Stage::stageDebug[] =
+{
+    {AreaInfoDebug,Stage::SpawnLevel::high}
+    ,{AreaInfoDebug,Stage::SpawnLevel::middle}
+    ,{AreaInfoDebug,Stage::SpawnLevel::low}
     ,{nullptr,0} // END
 };
 
@@ -65,13 +83,21 @@ Stage::Stage(int stageNo)
     //model = std::make_unique<Model>("Data/Model/Debug/cube.mdl");
 
     // 初期設定
-    scale           = { StageSize,0.5f ,StageSize };
-    stageSideMax    = StageSideMax;
-    stageDepthMax   = StageDepthMax;
+    scale = { StageSize,0.5f ,StageSize };
+    stageSideMax = StageSideMax;
+    stageDepthMax = StageDepthMax;
 
-    AreaInfo info = RandSpawn(stageInfo[stageNo]);
-
-    info(this);
+    if (SceneManager::Instance().IsNoneStage)
+    {
+        AreaInfo infoN = RandSpawn(StageNONE);
+        infoN(this);
+    }
+    else 
+    {
+        //AreaInfo info = RandSpawn(stageInfo[stageNo]);
+        AreaInfo info = RandSpawn(StageDebug[stageNo]);
+        info(this);
+    }
 }
 
 Stage::~Stage()
@@ -193,6 +219,14 @@ void Stage::AreaInfo02(Stage* stage)
 void Stage::AreaInfo03(Stage* stage)
 {
     SpawnObstacle<Cupcake_Choco>({ 0.0f,0.0f,0.0f }, stage);
+}
+
+void Stage::AreaInfoDebug(Stage* stage)
+{
+    SpawnObstacle<Pokey>({ 0.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Pokey>({ 20.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Pokey>({ 40.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Pokey>({ 60.0f,0.0f,0.0f }, stage);
 }
 
 

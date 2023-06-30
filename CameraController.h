@@ -18,6 +18,10 @@ public:
     // ターゲット位置設定
     void setTargetY(float y) { this->target.y = y; }
 
+    void setRange(float i) { range = i; }
+
+    float getRange() { return range; }
+
     // カメラシェイク
     void Shake(int time,float);
 

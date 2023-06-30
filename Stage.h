@@ -5,7 +5,7 @@
 #include "BaseStage.h"
 #include "Obstacle.h"
 
-//ステージ
+// ステージ
 class Stage: public BaseStage
 {
 public:
@@ -50,6 +50,8 @@ private:
     // エリア03
     static void AreaInfo03(Stage* stage);
 
+    // デバッグ用INFO
+    static void  AreaInfoDebug(Stage* stage);
 public:
     typedef	void(*AreaInfo)(Stage* stage);
     
@@ -72,10 +74,21 @@ public:
 
 private:
     // ステージ情報
+    // ステージNONE
+    static SpawnObstacleInfo StageNONE[];
     // ステージ01
     static SpawnObstacleInfo StageInfo01[];
     // ステージ02
     static SpawnObstacleInfo StageInfo02[];
+
+    // ステージDebug
+    static SpawnObstacleInfo stageDebug[];
+
+    static constexpr SpawnObstacleInfo* StageDebug[StageMax]
+    {
+        stageDebug
+        ,stageDebug
+    };
 
     static constexpr SpawnObstacleInfo* stageInfo[StageMax]
     {
@@ -83,8 +96,6 @@ private:
         ,StageInfo02
     };
 
-    // Noneステージ
-    //static void StageInfo
 private:
     // デバッグ用
     enum  ObstacleName

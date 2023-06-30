@@ -6,6 +6,7 @@
 #include "Collision.h"
 #include "Input/Input.h"
 #include "Stage.h"
+#include "Tool.h"
 
 //-------------------------------------------------------------------------------------------------------
 // 
@@ -138,13 +139,13 @@ void SceneGame::Finalize()
 		delete player;
 		player = nullptr;
 	}
-	// プレイヤー終了
+	// エフェクト終了
 	if (hitEffect != nullptr)
 	{
 		delete hitEffect;
 		hitEffect = nullptr;
 	}
-	// プレイヤー終了
+	// エフェクト終了
 	if (accelEffect != nullptr)
 	{
 		delete accelEffect;
@@ -161,51 +162,59 @@ void SceneGame::Finalize()
 // 更新処理
 void SceneGame::Update(float elapsedTime)
 {
-
-	// ポーズ処理
-	GamePad& gamePad = Input::Instance().GetGamePad();
-	if (gamePad.GetButtonDown() & GamePad::BTN_X)
-		isPaused = !isPaused;       // 0コンのスタートボタンが押されたらポーズ状態が反転
-	if (isPaused) return;           // この時点でポーズ中ならリターン
-
-	if (gamePad.GetButtonDown() & GamePad::BTN_Y)
+	if (SceneManager::Instance().IsSelect)
 	{
-		// ヒットエフェクト再生
-		{
-			DirectX::XMFLOAT3 e = player->GetPosition();
-			accelEffect->Play(e);
-		}
-	}
-	if (cameraController->flag)
-	{
-		// カメラコントローラー更新処理化
-		cameraController->Shake(60, player->GetPosition().y + 0.5f);
+		SelectUpdate(elapsedTime);
 	}
 	else
 	{
-		// カメラコントローラー更新処理化
-		DirectX::XMFLOAT3 target = player->GetPosition();
-		target.y += 0.5f;
-		cameraController->setTarget(target);
+		// ポーズ処理
+		GamePad& gamePad = Input::Instance().GetGamePad();
+		if (gamePad.GetButtonDown() & GamePad::BTN_X)
+			isPaused = !isPaused;       // 0コンのスタートボタンが押されたらポーズ状態が反転
+		if (isPaused) return;           // この時点でポーズ中ならリターン
+
+		if (gamePad.GetButtonDown() & GamePad::BTN_Y)
+		{
+			player->IsDeath = true;
+		}
+		if (cameraController->flag)
+		{
+			// カメラコントローラー更新処理化
+			cameraController->Shake(60, player->GetPosition().y + 0.5f);
+		}
+		else
+		{
+			// カメラコントローラー更新処理化
+			target = player->GetPosition();
+			target.y += 0.5f;
+			cameraController->setTarget(target);
+		}
+		cameraController->Update(elapsedTime);
+
+		//プレイヤー更新処理
+		player->Update(elapsedTime);
+
+		//空更新処理
+		sky->Update(elapsedTime);
+		sky->SetPosition({ player->GetPosition().x,player->GetPosition().y,player->GetPosition().z + sky->space });
+
+		if (!player->IsDeath)// プレイヤーが死んでいない時
+		{
+			//ステージ更新処理
+			stageManager->Update(player, elapsedTime);
+			CollisionPlayerVsObs();
+		}
+		else if (player->IsDeath)// プレイヤーが死んでいる時
+		{
+			DeathUpdate(elapsedTime);
+		}
 	}
-	cameraController->Update(elapsedTime);
-
-
-	//プレイヤー更新処理
-	player->Update(elapsedTime);
-
-	CollisionPlayerVsObs();
-
-	//ステージ更新処理
-	stageManager->Update(player, elapsedTime);
-
-	//空更新処理
-	sky->Update(elapsedTime);
-	sky->SetPosition({ player->GetPosition().x,player->GetPosition().y,player->GetPosition().z + sky->space });
-
-	// エフェクトの更新処理
-	EffectManager::Instance().Update(elapsedTime);
-
+	if (!player->IsDeath)
+	{
+		// エフェクトの更新処理
+		EffectManager::Instance().Update(elapsedTime);
+	}
 	//-------------------------------------------------------------------------------------------------------
 	// ↓　この下はシェーダー関連
 	//-------------------------------------------------------------------------------------------------------
@@ -223,7 +232,6 @@ void SceneGame::Update(float elapsedTime)
 		static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight()),
 		0.0f,
 		1.0f, 1.0f, 1.0f, 1.0f);
-
 }
 
 // 描画処理
@@ -350,7 +358,7 @@ void SceneGame::CollisionPlayerVsObs()
 								e.y += player->GetHeight() * 0.5f;
 								hitEffect->Play(e);
 							}
-							//player->OnDead();
+							player->OnDead();
 							it2->IsHit = true;
 						}
 					break;
@@ -373,7 +381,7 @@ void SceneGame::CollisionPlayerVsObs()
 									e.z -= 4.0f;
 									hitEffect->Play(e);
 								}
-								//player->OnDead();
+								player->OnDead();
 								it2->IsHit = true;
 							}
 						}
@@ -433,6 +441,75 @@ void SceneGame::CollisionPlayerVsObs()
 			}
 		}
 	}
+}
+
+void SceneGame::SelectUpdate(float elapsedTime)
+{
+	if (!isTrans)
+	{
+		// カメラコントローラー更新処理
+		target = player->GetPosition();
+		target.y += 1.5f;
+		target.x += 1.5f;
+		cameraController->setTarget(target);
+		cameraController->setRange(5.0f);
+		player->SetAngle({ 0.0f,  DirectX::XMConvertToRadians(130.0f), 0.0f });
+	}
+	cameraController->Update(elapsedTime);
+
+
+	//プレイヤー更新処理
+	player->Update(elapsedTime);
+	//ステージ更新処理
+	stageManager->StageSelectUpdate(elapsedTime);
+
+	//空更新処理
+	sky->Update(elapsedTime);
+	sky->SetPosition({ player->GetPosition().x,player->GetPosition().y,player->GetPosition().z + sky->space });
+
+	GamePad& gamePad = Input::Instance().GetGamePad();
+	if (gamePad.GetButtonDown() & GamePad::BTN_B)
+	{
+		range = cameraController->getRange();
+		rotation = player->GetAngle().y;
+		isTrans = true;
+	}
+
+	if (isTrans) {
+		TransUpdate(elapsedTime);
+		player->SelectUpdate(elapsedTime);
+		if (range >= 9.98f) {
+			stageManager->setVelocityZ(-10.0f);
+			player->SetAngleY(0.0f);
+			SceneManager::Instance().IsSelect = false;
+			SceneManager::Instance().IsNoneStage = false;
+		}
+	}
+
+}
+
+void SceneGame::TransUpdate(float elapsedTime)
+{
+	range = lerp(range, 10.0f, 0.01f);
+	target.y = lerp(target.y, player->GetPosition().y + 0.5f, 0.01f);
+	target.x = lerp(target.x, player->GetPosition().x, 0.01f);
+
+	cameraController->setTarget(target);
+	cameraController->setRange(range);
+	if (rotation < DirectX::XMConvertToRadians(360.0f))
+	{
+		rotation += DirectX::XMConvertToRadians(1.0f);
+		player->SetAngleY(rotation);
+	}
+	else
+	{
+		player->SetAngleY(0.0f);
+	}
+}
+
+void SceneGame::DeathUpdate(float elapsedTime)
+{
+	stageManager->StageDeathUpdate(elapsedTime);
 }
 
 // グリッド描画

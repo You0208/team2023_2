@@ -52,6 +52,12 @@ public:
     // 更新処理
     void Update(Player* player, float elapsedTIme);
 
+    // セレクト画面での更新
+    void StageSelectUpdate(float elapsedTIme);
+
+    // 死亡時の更新
+    void StageDeathUpdate(float elapsedTIme);
+
     // 描画処理
     void Draw(RenderContext rc, ModelShader* shader);
 
@@ -75,6 +81,10 @@ public:
 
     // 生成したステージ数を返す
     int GetSpawnStageCount() { return BaseStage::GetSpawnStageCount() / Stage::StageSideMax; }
+
+    void setVelocityZ(int i) { stageScrollVelocity.z = i; }
+
+    float getVelocityZ() { return stageScrollVelocity.z; }
 
 private:
     // ステージの更新
@@ -100,6 +110,7 @@ private:
 
 public:
     bool IsStart = true;
+    float VZ = 0;
 
     std::vector<BaseStage*>             stages;                         // ステージリスト
     // ステージのスクロール速度更新
