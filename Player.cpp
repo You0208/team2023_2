@@ -134,6 +134,9 @@ void Player::DrawDebugGUI()
             // 速度
             ImGui::InputFloat3("velocity", &velocity.x);
             ImGui::InputInt("score", &score);
+
+            // スコア
+            ImGui::Text("score:%ld", score);
         }
     }
 

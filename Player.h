@@ -140,7 +140,7 @@ private:
     };
     enum Anination
     {
-        Anim_Idle,     // 待機
+        Anim_Idle,      // 待機
         Anim_Nod,       // 頷く
         Anim_Damage,    // ダメージ
     };
