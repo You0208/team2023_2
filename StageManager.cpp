@@ -357,7 +357,7 @@ void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
 // ステージの切り替え
 void StageManager::ChangeStage()
 {
-    for (int i = stageNo ;i < 3;++i)
+    for (int i = stageNo ;i < Stage::StageMax - 1;++i)
     {
         if (GetSpawnStageCount() >= StageChangeLine[i])
         {
