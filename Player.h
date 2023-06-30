@@ -19,9 +19,9 @@ public:
     // 各空腹レベルでのスケール
     static constexpr float MaxScale[3] =
     {
-        0.5f,       // 空腹レベル：低
+        0.7f,       // 空腹レベル：低
         1.0f,       // 空腹レベル：中
-        2.0f        // 空腹レベル：高
+        1.3f        // 空腹レベル：高
     };
     // 空腹レベルが切り替わる境目
     static constexpr float HungerLevelLine[2] =

@@ -44,4 +44,3 @@ INT WINAPI wWinMain(HINSTANCE instance, HINSTANCE prev_instance, LPWSTR cmd_line
 	SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(&f));
 	return f.Run();
 }
-DXGI_SWAP_CHAIN_DESC;

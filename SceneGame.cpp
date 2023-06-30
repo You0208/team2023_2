@@ -25,6 +25,13 @@ void SceneGame::Initialize()
 	// 空初期設定
 	sky = new Sky();
 
+
+	// 空腹ゲージ設定
+	texture_hungerGage = std::make_unique<Texture>("Data/Texture/UI/GaugeUI.png");
+	sprite_hungerGage = std::make_unique<Sprite>();
+	sprite_hungerGage->SetShaderResourceView(texture_hungerGage->GetShaderResourceView(),
+		texture_hungerGage->GetWidth(), texture_hungerGage->GetHeight());
+
 	// ステージマネージャー初期設定
 	stageManager = new StageManager;
 
@@ -206,6 +213,9 @@ void SceneGame::Update(float elapsedTime)
 	// エフェクトの更新処理
 	EffectManager::Instance().Update(elapsedTime);
 
+	// 空腹ゲージの更新
+	UpdateHungerGage();
+
 	//-------------------------------------------------------------------------------------------------------
 	// ↓　この下はシェーダー関連
 	//-------------------------------------------------------------------------------------------------------
@@ -261,8 +271,16 @@ void SceneGame::Render()
 		postprocessingRenderer->Render(dc);
 
 	}
+
 	// 2Dスプライト描画
 	{  
+		// 描画処理
+		RenderContext rc;
+		rc.deviceContext = dc;
+		SpriteShader* shader = graphics.GetShader(SpriteShaderId::Default);
+		shader->Begin(rc);
+		shader->Draw(rc, sprite_hungerGage.get());
+		shader->End(rc);;
 	}
 
 	// デバッグ情報の表示
@@ -576,6 +594,22 @@ void SceneGame::RenderShadowmap()
 		shader->End(rc);
 	}
 }
+
+// 空腹ゲージの更新
+void SceneGame::UpdateHungerGage()
+{
+	float magnification = 20.0f;		// 倍率
+	float dw = 35 * magnification;		// 描画サイズ(x)
+	float dh = 9.0f * magnification;	// 描画サイズ(y)
+	// 空腹ゲージ更新処理
+	sprite_hungerGage->Update(0.0f, Graphics::Instance().GetScreenHeight() - dh,
+		dw, dh,
+		0.0f, static_cast<float>(texture_hungerGage->GetHeight() / 3) * player->GetHungerLevel(),
+		static_cast<float>(texture_hungerGage->GetWidth()), static_cast<float>(texture_hungerGage->GetHeight() / 3),
+		0.0f,
+		1.0f, 1.0f, 1.0f, 1.0f);
+}
+
 // 3D空間の描画
 void SceneGame::Render3DScene()
 {

@@ -13,7 +13,7 @@
 //コンストラクタ   
 Player::Player()
 {
-    model = std::make_unique< Model>("Data/Model/Player/Hamster.mdl");
+    model = std::make_unique<Model>("Data/Model/Player/Hamster.mdl");
 
     //モデルが大きいのでスケーリング
     scale.x = scale.y = scale.z = 1.0f;
