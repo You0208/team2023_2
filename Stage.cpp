@@ -6,11 +6,61 @@
 // 
 //-------------------------------------------------------------------------------------------------------
 
-typedef	void(*StageInfo)(Stage* stage);
+Stage::SpawnObstacleInfo Stage::StageInfo01[] =
+{
+    {AreaInfo00,Stage::SpawnLevel::low}
+    ,{AreaInfo01,Stage::SpawnLevel::middle}
+    ,{AreaInfo02,Stage::SpawnLevel::high}
+
+    ,{nullptr,0} // END
+};
+Stage::SpawnObstacleInfo Stage::StageInfo02[] =
+{
+    {AreaInfo03,Stage::SpawnLevel::high}
+    ,{AreaInfo01,Stage::SpawnLevel::middle}
+    ,{AreaInfo02,Stage::SpawnLevel::low}
+
+    ,{nullptr,0} // END
+};
+
+// 生成するエリア情報(関数のポインタ)を返す
+Stage::AreaInfo Stage::RandSpawn(Stage::SpawnObstacleInfo* data)
+{
+    // 各出現する確率(合計100になるようにする)
+    int High = 60;       // 高 (0～High)
+    int Middle = 30;     // 中 (High～High + Middle)
+    int Low = 10;        // 低 (High + Middle～100)
+
+    // 生成レベル決定
+    int spawnLevel = 0;
+    int n = rand() % 100;
+    // Highより小さい(0～High以内)なのでレベルをhighに設定
+    if (n <= High) spawnLevel = SpawnLevel::high;
+    // [High+Middle]より大きい([High+Middle]～100以内)なのでレベルをlowに設定
+    else if (n >= High + Middle)spawnLevel = SpawnLevel::low;
+    // レベルをmiddleに設定
+    else spawnLevel = SpawnLevel::middle;
+
+    std::vector<AreaInfo> areaInfo;             // 生成レベルが同じだったエリア情報を格納するコンテナ
+    for (; data->info != nullptr; ++data)
+    {
+        // 生成レベルが同じなら[areaInfo]に追加
+        if (data->spawnRate == spawnLevel)
+        {
+            areaInfo.emplace_back(data->info);
+        }
+    }
+
+    // ランダムなエリア情報を返す
+    return areaInfo.at(rand() % areaInfo.size());
+}
+
 
 // コンストラクタ（nはステージの種類）
-Stage::Stage()
+Stage::Stage(int stageNo)
 {
+    stageNo = (std::min)(stageNo, StageMax);
+
     //ステージモデルを読み込み
     //model = std::make_unique<Model>("Data/Model/Debug/cube.mdl");
 
@@ -19,19 +69,9 @@ Stage::Stage()
     stageSideMax    = StageSideMax;
     stageDepthMax   = StageDepthMax;
 
-    // アイテム・障害物生成
-    int n = rand() % Stage::StageKindMax;
+    AreaInfo info = RandSpawn(stageInfo[stageNo]);
 
-    StageInfo stageInfo[Stage::StageKindMax] =
-    {
-        StageInfo01
-        ,StageInfo02
-    };
-
-    //stageInfo[1](this);
-
-    // デバッグ用
-    StageInfoDebug(this, ObstacleNumber);
+    info(this);
 }
 
 Stage::~Stage()
@@ -92,6 +132,18 @@ void Stage::Draw(RenderContext rc, ModelShader* shader)
     }
 }
 
+
+// ステージの生成
+void Stage::StageSpawn()
+{
+    // 奥行
+    if (DepthSpawn()) SpawnStageCount++;    // ステージ生成数増加
+    // 左
+    LeftSpawn();
+    // 右
+    RightSpawn();
+}
+
 // アイテム・障害物生成
 template<typename T>
 void SpawnObstacle(DirectX::XMFLOAT3 position, Stage* stage)
@@ -124,19 +176,24 @@ void SpawnObstacle(DirectX::XMFLOAT3 position, Stage* stage)
 }
 
 // ステージ01
-void Stage::StageInfo01(Stage* stage)
+void Stage::AreaInfo01(Stage* stage)
 {
     SpawnObstacle<Cola>({ -10.0f,0.0f,0.0f }, stage);
     SpawnObstacle<Cola>({ 0.0f,0.0f,0.0f }, stage);
-    SpawnObstacle<Pokey>({ 10.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Candy_gate>({ 10.0f,0.0f,0.0f }, stage);
 }
 
 // ステージ02
-void Stage::StageInfo02(Stage* stage)
+void Stage::AreaInfo02(Stage* stage)
 {
     SpawnObstacle<Marble_chocolate>({ 0.0f,0.0f,0.0f }, stage);
 }
 
+// エリア03
+void Stage::AreaInfo03(Stage* stage)
+{
+    SpawnObstacle<Cupcake_Choco>({ 0.0f,0.0f,0.0f }, stage);
+}
 
 
 // === 以下デバッグ用関数 ===

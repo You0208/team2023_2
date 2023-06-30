@@ -1,4 +1,5 @@
 #include "BaseStage.h"
+
 int BaseStage::SpawnStageCount = 0;
 
 // 初期化
@@ -36,6 +37,18 @@ void BaseStage::UpdateTransform()
 void BaseStage::StageSpawn()
 {
     // 奥行
+    DepthSpawn();
+
+    // 左
+    LeftSpawn();
+
+    // 右
+    RightSpawn();
+}
+
+// 奥行のステージ生成
+bool BaseStage::DepthSpawn()
+{
     float spawnLine = -(scale.z * modelSize.z);
     if (spawnLine >= position.z)
     {
@@ -44,23 +57,29 @@ void BaseStage::StageSpawn()
 
         // 生成処理
         spawnPosition = { position.x,position.y,position.z + (scale.z * modelSize.z * stageDepthMax) };
-        
-        SpawnStageCount++;
+        return true;
     }
+    return false;
+}
 
-    // 左
-    spawnLine = -(scale.x * modelSize.x * ((stageSideMax) * 0.5f));
+bool BaseStage::LeftSpawn()
+{
+    float spawnLine = -(scale.x * modelSize.x * ((stageSideMax) * 0.5f));
     if (spawnLine >= position.x)
     {
         // 生成フラグを立てる
         isSpawn = true;
 
         // 生成処理
-        spawnPosition = { position.x + (scale.x * modelSize.x * stageSideMax) ,position.y,position.z};
+        spawnPosition = { position.x + (scale.x * modelSize.x * stageSideMax) ,position.y,position.z };
+        return true;
     }
+    return false;
+}
 
-    // 右
-    spawnLine = (scale.x * modelSize.x * ((stageSideMax) * 0.5f));
+bool BaseStage::RightSpawn()
+{
+    float spawnLine = (scale.x * modelSize.x * ((stageSideMax) * 0.5f));
     if (spawnLine <= position.x)
     {
         // 生成フラグを立てる
@@ -68,7 +87,9 @@ void BaseStage::StageSpawn()
 
         // 生成処理
         spawnPosition = { position.x - (scale.x * modelSize.x * stageSideMax) ,position.y,position.z };
+        return true;
     }
+    return false;
 }
 
 // ステージの削除

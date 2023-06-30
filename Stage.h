@@ -9,15 +9,13 @@
 class Stage: public BaseStage
 {
 public:
-    static const int StageKindMax           = 2;        //ステージの種類の最大数
-    static const int ObsTypeMax             = 2;        //障害物の種類の最大数
-    static const int ObsMax                 = 30;       //障害物の最大数
+    static const int StageMax               = 2;        //ステージの最大数
     static const int StageSideMax           = 2;	    //ステージの最大数(左右)
     static const int StageDepthMax          = 3;	    //ステージの最大数(奥行)
     static constexpr float StageSize        = 500.0f;    //ステージのサイズ
 
 public:
-    Stage();
+    Stage(int stageNo);
     ~Stage();
 
     void DrawDebugGUI(){}
@@ -34,15 +32,56 @@ public:
     // アイテム・障害物の追加
     void AddObstacle(Obstacle* obstacle) { obstacles.emplace_back(obstacle); }
 
+private:
+    // ステージの生成
+    void StageSpawn()override;
+
 private:                  // 障害物
     float offset        = 0.2f;
 
 private:
+    // エリア情報
+    // エリア00
+    static void AreaInfo00(Stage* stage){}
+    // エリア01
+    static void AreaInfo01(Stage* stage);
+    // エリア02
+    static void AreaInfo02(Stage* stage);
+    // エリア03
+    static void AreaInfo03(Stage* stage);
+
+public:
+    typedef	void(*AreaInfo)(Stage* stage);
+    
+    // 生成レベル
+    enum SpawnLevel
+    {
+        high,
+        middle,
+        low,
+    };
+    // 生成する障害物の情報
+    struct SpawnObstacleInfo
+    {
+        AreaInfo info;          // 生成する障害物のデータ
+        int spawnRate;          // 生成する確率(高・中・低)
+    };
+
+    // 生成するエリア情報(関数ポインタ)を返す
+    AreaInfo RandSpawn(Stage::SpawnObstacleInfo* data);
+
+private:
     // ステージ情報
     // ステージ01
-    static void StageInfo01(Stage* stage);
+    static SpawnObstacleInfo StageInfo01[];
     // ステージ02
-    static void StageInfo02(Stage* stage);
+    static SpawnObstacleInfo StageInfo02[];
+
+    static constexpr SpawnObstacleInfo* stageInfo[StageMax]
+    {
+        StageInfo01
+        ,StageInfo02
+    };
 
     // Noneステージ
     //static void StageInfo

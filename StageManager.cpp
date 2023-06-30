@@ -8,6 +8,8 @@ StageManager::StageManager()
     // 初期速度設定
     stageScrollVelocity.z = MaxStageScrollVelocity[1];
     terrainScrollVelocity.z = MaxTerrainScrollVelocity[1];
+
+    scrollVelocityRate = ScrollVelocityRate;
 }
 
 // デストラクタ
@@ -30,6 +32,8 @@ void StageManager::DrawDebugGUI()
     }
 
     ImGui::Text("SpawnStageCount:%ld", GetSpawnStageCount());
+    ImGui::Text("stageNo:%ld", stageNo);
+    ImGui::Text("accelerationTimer:%d", static_cast<int>(accelerationTimer));
 
     ImGui::Text("[I][J][K][L] : camera");
     ImGui::Text("[A][D] : player");
@@ -44,6 +48,9 @@ void StageManager::Update(Player* player, float elapsedTIme)
 {
     // プレイヤーのダメージアニメ再生は以下の処理を行わない
     if(player->GetIsDamageAnim()) return;
+
+    // ステージ切り替え
+    ChangeStage();
 
     // 移動入力処理
     InputMove(elapsedTIme);
@@ -135,7 +142,7 @@ void StageManager::Clear()
 // ステージ生成
 void StageManager::StageSpawn(DirectX::XMFLOAT3 position)
 {
-    Stage* s = new Stage;                           //ステージを生成
+    Stage* s = new Stage(stageNo);                  //ステージを生成
     s->SetPosition(position);                       // ここでステージのポジションを決める
     s->SetScrollVelocity(&stageScrollVelocity);     // 共通のスクロール速度を設定
     s->Initialize();                                // 障害物生成
@@ -242,9 +249,11 @@ void StageManager::TerrainSpawn(DirectX::XMFLOAT3 position)
     terrains.emplace_back(s);
 }
 
-void StageManager::AddVelocity()
+void StageManager::AddVelocity(float addVelocity, float timer)
 {
-    stageScrollVelocity = { stageScrollVelocity.x * 1.5f,stageScrollVelocity.y * 1.5f ,stageScrollVelocity.z * 1.5f };
+    accelerationTimer = timer;
+    stageScrollVelocity.z -= addVelocity;
+    terrainScrollVelocity.z -= addVelocity;
 }
 
 // スティック入力値から移動ベクトルを取得
@@ -283,11 +292,21 @@ void StageManager::UpdateVelocity(float elapsedTime, Player* player)
 
     player->SetVelocity({ -stageScrollVelocity.x,0.0f,0.0f });
 
+    // 加速状態なら
+    if (accelerationTimer >= 0.0f)
+    {
+        accelerationTimer      -= elapsedTime;
+        scrollVelocityRate      = ScrollVelocityRate_ac;
+        stageScrollVelocity.z   = (std::max)(stageScrollVelocity.z, MaxVelocity);
+        terrainScrollVelocity.z = (std::max)(terrainScrollVelocity.z, MaxVelocity);
+    }
+    else scrollVelocityRate = ScrollVelocityRate;
+
     // ステージのスクロール速度更新
-    UpdateScrollVelocity(stageScrollVelocity, MaxStageScrollVelocity[player->GetHungerLevel()], ScrollVelocityRate);
+    UpdateScrollVelocity(stageScrollVelocity, MaxStageScrollVelocity[player->GetHungerLevel()], scrollVelocityRate);
     
     // 地形のスクロール速度更新
-    UpdateScrollVelocity(terrainScrollVelocity, MaxTerrainScrollVelocity[player->GetHungerLevel()], ScrollVelocityRate);
+    UpdateScrollVelocity(terrainScrollVelocity, MaxTerrainScrollVelocity[player->GetHungerLevel()], scrollVelocityRate);
 }
 
 // 水平速力更新処理
@@ -333,6 +352,19 @@ void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
 
     // 移動ベクトルをリセット
     moveVecX = 0.0f;
+}
+
+// ステージの切り替え
+void StageManager::ChangeStage()
+{
+    for (int i = stageNo ;i < 3;++i)
+    {
+        if (GetSpawnStageCount() >= StageChangeLine[i])
+        {
+            stageNo++;      // 次のステージに切り替え
+            return;
+        }
+    }
 }
 
 // スクロール速度更新
