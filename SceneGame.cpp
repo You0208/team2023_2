@@ -74,7 +74,7 @@ void SceneGame::Initialize()
 
 	// ヒットエフェクト読み込み
 	hitEffect = new Effect("Data/Effect/Hit.efk");
-	accelEffect = new Effect("Data/Effect/kasoku_kari_0629.efk");
+	accelEffect = new Effect("Data/e/wind.efk");
 
 
 	//-------------------------------------------------------------------------------------------------------
