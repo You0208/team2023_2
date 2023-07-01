@@ -36,6 +36,7 @@ public:
 
     // 位置設定
     void SetPosition(DirectX::XMFLOAT3 p)  { position = p; }
+    void SetOriginPosition(DirectX::XMFLOAT3* p)  { OriginPosition = p; }
 
     // 半径取得
     float GetRadius() const { return radius; }
@@ -56,17 +57,11 @@ private:
     // 速度処理更新
     void UpdateVelocity(float elapsedTime);
 
-    // 水平速力更新処理
-    void UpdataHorizontalVelocity(float elapsedFrame);
+    // 速度の追加更新
+    virtual void UpdataAdditionVelocity(float elapsedFrame) {}
 
-    // 水平移動更新処理
-    void UpdateHorizontalMove(float elapsedTime);
-
-    // 垂直速力更新処理
-    void UpdataVerticalVelocity(float elapsedFrame);
-
-    // 垂直移動更新処理
-    void UpdateVerticalMove(float elapsedTime);
+    // 移動更新処理
+    void UpdateMove(float elapsedTime);
 
     // デバッグプリミティブ描画
     virtual void DrawDebugPrimitive() {};
@@ -81,6 +76,7 @@ public:
     bool IsHit = false;
 protected:
     DirectX::XMFLOAT3   position        = { 0,0,0 };        // 位置
+    DirectX::XMFLOAT3*  OriginPosition  = nullptr;          // ステージの原点
     DirectX::XMFLOAT3   angle           = { 0,0,0 };        // 角度
     DirectX::XMFLOAT3   scale           = { 1,1,1 };        // スケール
     DirectX::XMFLOAT3   velocity        = { 0,0,0 };        // 速度
@@ -226,13 +222,32 @@ public:
     void DrawDebugPrimitive()override;
 };
 
-
-
 // フーセンガム
 class Husen_gum : public Obstacle
 {
 public:
+    static float constexpr MaxUp        = 10.0f;      // 上下移動の最大値      
+    static float constexpr MaxDown      = 0.0f;      // 上下移動の最小値 
+    static float constexpr MaxPos[2] =
+    {
+        MaxDown,
+        MaxUp
+    };
+
+    static float constexpr MoveSpeed    = 100.0f;      // 上下移動の速度
+
+public:
     Husen_gum();
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
+
+private:
+    // 追加の速力更新処理
+    void UpdataAdditionVelocity(float elapsedFrame) override;
+
+private:
+    bool isUp = true;
+    bool a[3] = {};
 };
 
 // キャンディーゲート
@@ -258,10 +273,21 @@ public:
 // マーブルチョコ
 class Marble_chocolate : public Obstacle
 {
+private:
+    static float constexpr MaxMoveDistance = 30.0f;     // 移動距離の最大値D
+    static float constexpr MoveSpeed = 50.0f;     // 移動距離の最大値D
+
 public:
     Marble_chocolate();
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;
+
+private:
+    // 速度の追加更新
+    void UpdataAdditionVelocity(float elapsedFrame)override;
+
+private:
+    bool isleft = false;
 };
 
 

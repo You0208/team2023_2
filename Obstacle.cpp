@@ -134,119 +134,24 @@ void Obstacle::UpdateVelocity(float elapsedTime)
     // 経過フレーム
     float elapsedFrame = 60.0f * elapsedTime;
 
+    // 速度初期設定
     velocity = *scrollVelocity;
 
-    // 垂直速力更新処理
-    //UpdataVerticalVelocity(elapsedFrame);
+    // 速度の追加更新
+    UpdataAdditionVelocity(elapsedFrame);
 
-    // 水平速力更新処理
-    //UpdataHorizontalVelocity(elapsedFrame);
-
-    // 垂直移動更新処理
-    //UpdateVerticalMove(elapsedTime);
-
-    // 水平移動更新処理
-    UpdateHorizontalMove(elapsedTime);
+    // 移動更新処理
+    UpdateMove(elapsedTime);
 }
 
-// 水平速力更新処理
-void Obstacle::UpdataHorizontalVelocity(float elapsedFrame)
-{
-    // XZ平面の速力を減速する
-    float length = sqrtf(velocity.x * velocity.x + velocity.z * velocity.z);
-    if (length > 0.0f)
-    {
-        // 摩擦力
-        float friction = this->friction * elapsedFrame;
-
-        // 空中にいるときは摩擦力を減らす
-        if (!isGround)friction *= airControl;
-
-        // 摩擦による横方向の減速処理
-        if (length > friction)
-        {
-            float vx = velocity.x / length;
-            float vz = velocity.z / length;
-
-            velocity.x -= vx * friction;
-            velocity.z -= vz * friction;
-        }
-        // 横方向の速力が摩擦力以下になったので速力を無効化
-        else
-        {
-            velocity.x = 0;
-            velocity.z = 0;
-        }
-    }
-
-    // XZ平面の速力を加速する
-    if (length <= maxMoveSpeed)
-    {
-        // 移動ベクトルがゼロベクトル出ないなら加速する
-        float moveVecLength = sqrtf(moveVecX * moveVecX + moveVecZ * moveVecZ);
-        if (moveVecLength > 0.0f)
-        {
-            // 加速力
-            float acceleration = this->acceleration * elapsedFrame;
-
-            // 空中にいるときは摩擦力を減らす
-            if (!isGround)acceleration *= airControl;
-
-            // 移動ベクトルによる加速処理
-            velocity.x += moveVecX * acceleration;
-            velocity.z += moveVecZ * acceleration;
-
-            // 最大速度制限
-            float length = sqrtf(velocity.x * velocity.x + velocity.z * velocity.z);
-            if (length > maxMoveSpeed)
-            {
-                float vx = velocity.x / length;
-                float vz = velocity.z / length;
-
-                velocity.x = vx * maxMoveSpeed;
-                velocity.z = vz * maxMoveSpeed;
-            }
-        }
-    }
-    // 移動ベクトルをリセット
-    moveVecX = 0.0f;
-    moveVecZ = 0.0f;
-}
-
-// 水平移動更新処理
-void Obstacle::UpdateHorizontalMove(float elapsedTime)
+// 移動更新処理
+void Obstacle::UpdateMove(float elapsedTime)
 {
     // 移動処理
     position.x += velocity.x * elapsedTime;
+    position.y += velocity.y * elapsedTime;
     position.z += velocity.z * elapsedTime;
 }
-
-// 垂直速力更新処理
-void Obstacle::UpdataVerticalVelocity(float elapsedFrame)
-{
-    // 重力処理
-    velocity.y += gravity * elapsedFrame;//グラビティと単位を合わせるためにelapsedFrameを使っている
-}
-
-// 垂直移動更新処理
-void Obstacle::UpdateVerticalMove(float elapsedTime)
-{
-    // 移動処理
-    position.y += velocity.y * elapsedTime;
-
-    // 地面判定
-    if (position.y < 0.0f)
-    {
-        position.y = 0.0f;
-        velocity.y = 0.0f;
-        isGround = true;
-    }
-    else
-    {
-        isGround = false;
-    }
-}
-
 
 // コーラ
 Cola::Cola()
@@ -435,6 +340,29 @@ Husen_gum::Husen_gum()
     model = std::make_unique<Model>("Data/Model/Obstacle/husen_gum/husen_gum.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
     scale = { 5.0f,5.0f ,5.0f };
+    height = 5.0f;
+    radius = 0.6f;
+    Type = TYPE::CYLINDER;
+    CollisionNum = 3;
+}
+
+void Husen_gum::DrawDebugPrimitive()
+{
+    DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
+    //衝突判定用のデバッグ円柱を描画
+    for (int n = 0; n < CollisionNum; ++n)
+    {
+        debugRenderer->DrawCylinder({ (position.x - (CollisionNum * 0.5f) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
+    }
+}
+
+// 追加の更新処理
+void Husen_gum::UpdataAdditionVelocity(float elapsedFrame)
+{
+    if (isUp && position.y >= MaxUp) isUp = false;
+    if (!isUp && position.y <= MaxDown) isUp = true;
+
+    velocity.y = isUp ? MoveSpeed * elapsedFrame : -MoveSpeed * elapsedFrame;
 }
 
 
@@ -524,6 +452,22 @@ void Marble_chocolate::DrawDebugPrimitive()
     {
         debugRenderer->DrawCylinder({ (position.x - (CollisionNum * 0.5f) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
     }
+}
+
+// 速度の追加更新
+void Marble_chocolate::UpdataAdditionVelocity(float elapsedFrame)
+{
+    // ステージ外に行くと
+    // 画面外に行かないように少し余裕を持って引き返している
+    if (
+        (position.x + (height * 0.5f) >= OriginPosition->x + 45.0f)
+        ||(position.x - (height * 0.5f) <= OriginPosition->x - 45.0f)
+        )
+    {
+        isleft = !isleft;
+    }
+
+    velocity.x += isleft ? -MoveSpeed : MoveSpeed;
 }
 
 

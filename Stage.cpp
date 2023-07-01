@@ -8,16 +8,16 @@
 
 Stage::SpawnObstacleInfo Stage::StageInfo01[] =
 {
-    {AreaInfo00,Stage::SpawnLevel::low}
-    ,{AreaInfo01,Stage::SpawnLevel::middle}
+    {AreaInfo02,Stage::SpawnLevel::low}
+    ,{AreaInfo02,Stage::SpawnLevel::middle}
     ,{AreaInfo02,Stage::SpawnLevel::high}
 
     ,{nullptr,0} // END
 };
 Stage::SpawnObstacleInfo Stage::StageInfo02[] =
 {
-    {AreaInfo03,Stage::SpawnLevel::high}
-    ,{AreaInfo01,Stage::SpawnLevel::middle}
+    {AreaInfo02,Stage::SpawnLevel::high}
+    ,{AreaInfo02,Stage::SpawnLevel::middle}
     ,{AreaInfo02,Stage::SpawnLevel::low}
 
     ,{nullptr,0} // END
@@ -156,21 +156,15 @@ void SpawnObstacle(DirectX::XMFLOAT3 position, Stage* stage)
         (position.z <= -Stage::StageSize)
         ) return;
 
-    float positionY = position.y;
-    // Šî’êƒNƒ‰ƒX‚ª[Marshmallow_Base]‚È‚ç
-    if (std::is_base_of<Marshmallow_Base,T>::value == true)     positionY += 1.0f;
-    if (std::is_base_of<Jellybeans_Base,T>::value == true)      positionY += 2.0f;
-    if (std::is_base_of<Cupcake_Base,T>::value == true)         positionY += 1.0f;
-
-
     Obstacle* obstacle = new T();
     DirectX::XMFLOAT3 Position =
     {
         position.x,
-        positionY,
+        position.y,
         position.z
     };
     obstacle->SetPosition(Position);
+    obstacle->SetOriginPosition(stage->GetPosition());
     obstacle->SetScrollVelocity(stage->GetAddressOfVelocity());
     stage->AddObstacle(obstacle);
 }
