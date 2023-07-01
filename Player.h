@@ -81,7 +81,7 @@ public:
     // 空腹レベル取得
     int GetHungerLevel() const { return hungerLevel; }
     // 空腹ポイント取得
-    int GetHungerPoint() const { return hungerPoint; }
+    float GetHungerPoint() const { return hungerPoint; }
 
     // ===== 非使用　後で使うかも？ =====
     

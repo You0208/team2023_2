@@ -6,6 +6,7 @@
 #include "Collision.h"
 #include "Input/Input.h"
 #include "Stage.h"
+#include "Tool.h"
 
 //-------------------------------------------------------------------------------------------------------
 // 
@@ -26,16 +27,19 @@ void SceneGame::Initialize()
 	sky = new Sky();
 
 
-	// 空腹ゲージ枠設定
+	// 空腹ゲージのフレーム設定
 	texture_hungerGageFrame = std::make_unique<Texture>("Data/Texture/UI/GaugeUI.png");
 	sprite_hungerGageFrame = std::make_unique<Sprite>();
 	sprite_hungerGageFrame->SetShaderResourceView(texture_hungerGageFrame->GetShaderResourceView(),
 		texture_hungerGageFrame->GetWidth(), texture_hungerGageFrame->GetHeight());
-	
 	// 空腹ゲージ設定
 	texture_hungerGage = std::make_unique<Texture>("Data/Texture/UI/white.png");
 	sprite_hungerGage = std::make_unique<Sprite>();
 	sprite_hungerGage->SetShaderResourceView(texture_hungerGage->GetShaderResourceView(),
+		texture_hungerGage->GetWidth(), texture_hungerGage->GetHeight());
+	// 空腹ゲージの背景設定
+	sprite_hungerGageBack = std::make_unique<Sprite>();
+	sprite_hungerGageBack->SetShaderResourceView(texture_hungerGage->GetShaderResourceView(),
 		texture_hungerGage->GetWidth(), texture_hungerGage->GetHeight());
 
 	// ステージマネージャー初期設定
@@ -285,6 +289,7 @@ void SceneGame::Render()
 		rc.deviceContext = dc;
 		SpriteShader* shader = graphics.GetShader(SpriteShaderId::Default);
 		shader->Begin(rc);
+		shader->Draw(rc, sprite_hungerGageBack.get());
 		shader->Draw(rc, sprite_hungerGage.get());
 		shader->Draw(rc, sprite_hungerGageFrame.get());
 		shader->End(rc);;
@@ -609,7 +614,11 @@ void SceneGame::UpdateHungerGage()
 
 	float dh = 9.0f * magnification;							// 枠の描画サイズ(y)
 	float dw_f = 35 * magnification;							// 枠の描画サイズ(x)
-	float dw_g = (dw_f - 9.15 * magnification) * (player->GetHungerPoint() / Player::MaxHungerPoint);					// ゲージの描画サイズ(x)
+	
+	
+	float dw_g = (dw_f - 9.15 * magnification) * (player->GetHungerPoint() / Player::MaxHungerPoint);			// 補間後のゲージの描画サイズ(x)
+	//static float dw_g = DW_G;					
+	//dw_g = lerp<float>(dw_g,DW_G,0.01f);
 
 	float x_g = 9.15 * magnification;							// ゲージの描画位置(x)
 	float x_f = 0.0f;											// ゲージの描画位置(x)	// ゲージの描画位置(x)
@@ -623,8 +632,16 @@ void SceneGame::UpdateHungerGage()
 		100.0f, 100.0f,
 		0.0f,
 		1.0f, 0.76f, 0.94f, 1.0f);
-	// 枠
+	// フレーム
 	sprite_hungerGageFrame->Update(
+		x_f, y,
+		dw_f, dh,
+		0.0f, static_cast<float>(texture_hungerGageFrame->GetHeight() / 3) * player->GetHungerLevel(),
+		static_cast<float>(texture_hungerGageFrame->GetWidth()), static_cast<float>(texture_hungerGageFrame->GetHeight() / 3),
+		0.0f,
+		1.0f, 1.0f, 1.0f, 1.0f);
+	// 背景
+	sprite_hungerGageBack->Update(
 		x_f, y,
 		dw_f, dh,
 		0.0f, static_cast<float>(texture_hungerGageFrame->GetHeight() / 3) * player->GetHungerLevel(),
