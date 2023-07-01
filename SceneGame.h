@@ -72,7 +72,9 @@ private:
 	Effect* hitEffect = nullptr;
 	Effect* accelEffect = nullptr;
 
-	std::unique_ptr<Texture>	texture_hungerGage; // 空腹ゲージ
+	std::unique_ptr<Texture>	texture_hungerGageFrame; // 空腹ゲージ
+	std::unique_ptr<Texture>	texture_hungerGage;
+	std::unique_ptr<Sprite>		sprite_hungerGageFrame;
 	std::unique_ptr<Sprite>		sprite_hungerGage;
 	//-------------------------------------------------------------------------------------------------------
 	// ↓　この下はシェーダー関連

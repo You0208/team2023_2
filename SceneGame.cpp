@@ -26,8 +26,14 @@ void SceneGame::Initialize()
 	sky = new Sky();
 
 
+	// ‹ó• ƒQ[ƒW˜gİ’è
+	texture_hungerGageFrame = std::make_unique<Texture>("Data/Texture/UI/GaugeUI.png");
+	sprite_hungerGageFrame = std::make_unique<Sprite>();
+	sprite_hungerGageFrame->SetShaderResourceView(texture_hungerGageFrame->GetShaderResourceView(),
+		texture_hungerGageFrame->GetWidth(), texture_hungerGageFrame->GetHeight());
+	
 	// ‹ó• ƒQ[ƒWİ’è
-	texture_hungerGage = std::make_unique<Texture>("Data/Texture/UI/GaugeUI.png");
+	texture_hungerGage = std::make_unique<Texture>("Data/Texture/UI/white.png");
 	sprite_hungerGage = std::make_unique<Sprite>();
 	sprite_hungerGage->SetShaderResourceView(texture_hungerGage->GetShaderResourceView(),
 		texture_hungerGage->GetWidth(), texture_hungerGage->GetHeight());
@@ -280,6 +286,7 @@ void SceneGame::Render()
 		SpriteShader* shader = graphics.GetShader(SpriteShaderId::Default);
 		shader->Begin(rc);
 		shader->Draw(rc, sprite_hungerGage.get());
+		shader->Draw(rc, sprite_hungerGageFrame.get());
 		shader->End(rc);;
 	}
 
@@ -598,14 +605,30 @@ void SceneGame::RenderShadowmap()
 // ‹ó• ƒQ[ƒW‚ÌXV
 void SceneGame::UpdateHungerGage()
 {
-	float magnification = 20.0f;		// ”{—¦
-	float dw = 35 * magnification;		// •`‰æƒTƒCƒY(x)
-	float dh = 9.0f * magnification;	// •`‰æƒTƒCƒY(y)
-	// ‹ó• ƒQ[ƒWXVˆ—
-	sprite_hungerGage->Update(0.0f, Graphics::Instance().GetScreenHeight() - dh,
-		dw, dh,
-		0.0f, static_cast<float>(texture_hungerGage->GetHeight() / 3) * player->GetHungerLevel(),
-		static_cast<float>(texture_hungerGage->GetWidth()), static_cast<float>(texture_hungerGage->GetHeight() / 3),
+	float magnification = 20.0f;								// ”{—¦
+
+	float dh = 9.0f * magnification;							// ˜g‚Ì•`‰æƒTƒCƒY(y)
+	float dw_f = 35 * magnification;							// ˜g‚Ì•`‰æƒTƒCƒY(x)
+	float dw_g = (dw_f - 9.15 * magnification) * (player->GetHungerPoint() / Player::MaxHungerPoint);					// ƒQ[ƒW‚Ì•`‰æƒTƒCƒY(x)
+
+	float x_g = 9.15 * magnification;							// ƒQ[ƒW‚Ì•`‰æˆÊ’u(x)
+	float x_f = 0.0f;											// ƒQ[ƒW‚Ì•`‰æˆÊ’u(x)	// ƒQ[ƒW‚Ì•`‰æˆÊ’u(x)
+	float y = Graphics::Instance().GetScreenHeight() - dh;		// •`‰æˆÊ’u(y)
+
+	// ƒQ[ƒW
+	sprite_hungerGage->Update(
+		x_g, y,
+		dw_g, dh,
+		0.0f, 0.0f,
+		100.0f, 100.0f,
+		0.0f,
+		1.0f, 0.76f, 0.94f, 1.0f);
+	// ˜g
+	sprite_hungerGageFrame->Update(
+		x_f, y,
+		dw_f, dh,
+		0.0f, static_cast<float>(texture_hungerGageFrame->GetHeight() / 3) * player->GetHungerLevel(),
+		static_cast<float>(texture_hungerGageFrame->GetWidth()), static_cast<float>(texture_hungerGageFrame->GetHeight() / 3),
 		0.0f,
 		1.0f, 1.0f, 1.0f, 1.0f);
 }
