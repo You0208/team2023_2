@@ -614,15 +614,19 @@ void SceneGame::UpdateHungerGage()
 
 	float dh = 9.0f * magnification;							// 枠の描画サイズ(y)
 	float dw_f = 35 * magnification;							// 枠の描画サイズ(x)
-	
-	
-	float dw_g = (dw_f - 9.15 * magnification) * (player->GetHungerPoint() / Player::MaxHungerPoint);			// 補間後のゲージの描画サイズ(x)
-	//static float dw_g = DW_G;					
-	//dw_g = lerp<float>(dw_g,DW_G,0.01f);
-
+	// ゲージの描画サイズ(x)
+	float dw_g = (dw_f - 9.15 * magnification) * (player->GetHungerPoint() / Player::MaxHungerPoint);
 	float x_g = 9.15 * magnification;							// ゲージの描画位置(x)
 	float x_f = 0.0f;											// ゲージの描画位置(x)	// ゲージの描画位置(x)
 	float y = Graphics::Instance().GetScreenHeight() - dh;		// 描画位置(y)
+
+	// ゲージの色
+	DirectX::XMFLOAT3 c[3] =
+	{
+		{0.65f,0.68f,1.0f},
+		{0.489f,1.0f,0.541f},
+		{1.0f,0.611f,0.56f}
+	};
 
 	// ゲージ
 	sprite_hungerGage->Update(
@@ -631,7 +635,7 @@ void SceneGame::UpdateHungerGage()
 		0.0f, 0.0f,
 		100.0f, 100.0f,
 		0.0f,
-		1.0f, 0.76f, 0.94f, 1.0f);
+		c[player->GetHungerLevel()].x, c[player->GetHungerLevel()].y, c[player->GetHungerLevel()].z, 1.0f);
 	// フレーム
 	sprite_hungerGageFrame->Update(
 		x_f, y,
