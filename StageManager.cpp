@@ -75,10 +75,10 @@ void StageManager::Draw(RenderContext rc, ModelShader* shader)
     }
 
     // ’nŒ`•`‰æ
-    for (BaseStage* terrain : terrains)
-    {
-        terrain->Draw(rc, shader);
-    }
+    //for (BaseStage* terrain : terrains)
+    //{
+    //    terrain->Draw(rc, shader);
+    //}
 }
 
 void StageManager::ObsDraw(RenderContext rc, ModelShader* shader)

@@ -62,7 +62,7 @@ Stage::Stage(int stageNo)
     stageNo = (std::min)(stageNo, StageMax);
 
     //ステージモデルを読み込み
-    //model = std::make_unique<Model>("Data/Model/Debug/cube.mdl");
+    model = std::make_unique<Model>("Data/Model/Debug/cube.mdl");
 
     // 初期設定
     scale           = { StageSize,0.5f ,StageSize };
@@ -181,6 +181,7 @@ void Stage::AreaInfo01(Stage* stage)
 void Stage::AreaInfo02(Stage* stage)
 {
     SpawnObstacle<Marble_chocolate>({ 0.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Cupcake_Choco>({ -10.0f,0.0f,0.0f }, stage);
 }
 
 // エリア03

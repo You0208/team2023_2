@@ -440,7 +440,8 @@ Marble_chocolate::Marble_chocolate()
     model = std::make_unique<Model>("Data/Model/Obstacle/marble_chocolate/marble_chocolate.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
     height = 7.0f;
-    Type = TYPE::CYLINDERS;
+    Type = TYPE::CYLINDER;
+    HitCheckTYpe = HIT_CHECK_TYPE::ACTIVE;
     CollisionNum = 1;
 }
 
@@ -457,14 +458,20 @@ void Marble_chocolate::DrawDebugPrimitive()
 // 速度の追加更新
 void Marble_chocolate::UpdataAdditionVelocity(float elapsedFrame)
 {
+    float size = 45.0f;
+
     // ステージ外に行くと
     // 画面外に行かないように少し余裕を持って引き返している
     if (
-        (position.x + (height * 0.5f) >= OriginPosition->x + 45.0f)
-        ||(position.x - (height * 0.5f) <= OriginPosition->x - 45.0f)
+        (position.x + (height * 0.5f) >= OriginPosition->x + size)
+        ||(position.x - (height * 0.5f) <= OriginPosition->x - size)
+        || IsHitVsObs
         )
     {
         isleft = !isleft;
+        IsHitVsObs = false;
+
+        position.x = (std::min)(OriginPosition->x + size - (height * 0.5f), (std::max)(position.x, OriginPosition->x - size + (height * 0.5f)));
     }
 
     velocity.x += isleft ? -MoveSpeed : MoveSpeed;

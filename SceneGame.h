@@ -47,6 +47,9 @@ public:
 	// áŠQ•¨‚ÆƒvƒŒƒCƒ„[‚Ì“–‚½‚è”»’è
 	void CollisionPlayerVsObs();
 
+	// áŠQ•¨‚ÆáŠQ•¨‚Ì“–‚½‚è”»’è
+	void CollisionObsVsObs();
+
 private:
 	// 3D‹óŠÔ‚Ì•`‰æ
 	void Render3DScene();

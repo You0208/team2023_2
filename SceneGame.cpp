@@ -216,6 +216,8 @@ void SceneGame::Update(float elapsedTime)
 	//ステージ更新処理
 	stageManager->Update(player, elapsedTime);
 
+	CollisionObsVsObs();
+
 	//空更新処理
 	sky->Update(elapsedTime);
 	sky->SetPosition({ player->GetPosition().x,player->GetPosition().y,player->GetPosition().z + sky->space });
@@ -460,6 +462,68 @@ void SceneGame::CollisionPlayerVsObs()
 			else if(it2->Type==TYPE::ITEMS)
 			{
 				it2->GetItem();
+			}
+		}
+	}
+}
+
+
+void SceneGame::CollisionObsVsObs()
+{
+	for (auto& it : stageManager->stages)
+	{
+		for (auto& Obs : it->obstacles)
+		{
+			// ACTIVEでないと飛ばす
+			if (Obs->IsHitVsObs != HIT_CHECK_TYPE::ACTIVE) continue;
+
+			DirectX::XMFLOAT3 obs1_position = Obs->GetPosition();
+			float obs1_radius = Obs->GetRadius();
+			float obs1_height = Obs->GetHeight();
+
+			for (auto& Obs2 : it->obstacles)
+			{
+				// 当たり判定を取らない場合は飛ばす
+				if (Obs2->IsHitVsObs == HIT_CHECK_TYPE::NOT) continue;
+
+				// 同じ場合は飛ばす
+				if (Obs == Obs2)continue;
+
+				DirectX::XMFLOAT3 obs2_position = Obs2->GetPosition();
+				float obs2_radius = Obs2->GetRadius();
+				float obs2_height = Obs2->GetHeight();
+				DirectX::XMFLOAT3 outPosition;
+
+				// どちらもアイテム(球)タイプの場合
+				if (Obs->Type == ITEMS && Obs2->Type == ITEMS)
+				{
+					if (Collision::IntersectSphereVsSphere(
+						obs1_position,
+						obs1_radius,
+						obs2_position,
+						obs2_radius,
+						outPosition
+					))
+					{
+						Obs->IsHitVsObs = true;
+					}
+				}
+				// Obs2がアイテム(球)の場合
+				else if (Obs2->Type == ITEMS)
+				{
+					if (Collision::IntersectSphereVsCylinder(
+						obs2_position,
+						obs2_radius,
+						obs1_position,
+						obs1_radius,
+						obs1_height,
+						outPosition
+					))
+					{
+						Obs->IsHitVsObs = true;
+						Obs->SetPosition(outPosition);
+					}
+				}
 			}
 		}
 	}

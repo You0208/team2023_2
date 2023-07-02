@@ -19,7 +19,7 @@ Player::Player()
     scale.x = scale.y = scale.z = 1.0f;
 
     // 初期位置浮かす
-    position.y = 5.0f;
+    position.y = 3.0f;
 
     // 待機ステートへ遷移
     TransitionIdleState();

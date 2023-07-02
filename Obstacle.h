@@ -11,6 +11,13 @@ enum TYPE
     GATE,
 };
 
+enum HIT_CHECK_TYPE
+{
+    ACTIVE,     // 積極的に当たり判定をとる
+    DEACTIVE,   // 非積極的に当たり判定をとる
+    NOT         // 当たり判定をとらない
+};
+
 // 障害物（基底クラス）
 class Obstacle 
 {
@@ -72,8 +79,10 @@ public:
     int score = 0;
     int hungerPoint = 0;
     int Type = 0;
+    int HitCheckTYpe = HIT_CHECK_TYPE::DEACTIVE;
     int CollisionNum = 0;
-    bool IsHit = false;
+    bool IsHit = false;                                     // 対プレイヤー
+    bool IsHitVsObs = false;                                // 対Obstacle
 protected:
     DirectX::XMFLOAT3   position        = { 0,0,0 };        // 位置
     DirectX::XMFLOAT3*  OriginPosition  = nullptr;          // ステージの原点
