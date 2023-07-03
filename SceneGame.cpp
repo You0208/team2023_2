@@ -339,10 +339,7 @@ void SceneGame::Render()
 		ImGui::Separator();
 		if (ImGui::TreeNode("SCORE"))
 		{
-			for (int i = 0; i < SeveMax; ++i)
-			{
-				ImGui::Text("rank%ld:%ld", (i + 1), ScoreRanking[SeveMax - 1 - i]);
-			}
+			ImGui::Text("HighScore:%ld", HighScore);
 			ImGui::TreePop();
 		}
 		ImGui::Separator();
@@ -804,17 +801,15 @@ void SceneGame::InputScoreRanking()
 	// 読み込めた場合
 	if (read_ScoreRanking)
 	{
-		int i = 0;
 		while (read_ScoreRanking)
 		{
 			read_ScoreRanking >> command;
-			if (0 == strcmp(command, "s"))					// 先頭の文字が"s"である場合
+			if (0 == strcmp(command, "hs"))					// 先頭の文字が"s"である場合
 			{
 				read_ScoreRanking.ignore(1);				// 1行開ける
-				read_ScoreRanking >> ScoreRanking[i];				// 数値代入
+				read_ScoreRanking >> HighScore;				// 数値代入
 				read_ScoreRanking.ignore(1024, '\n');       // [\n(改行)]まで文字を削除する(最大1024文字)⇒次の行まで削除
 			}
-			++i;
 		}
 	}
 	read_ScoreRanking.close();
@@ -823,53 +818,13 @@ void SceneGame::InputScoreRanking()
 // 最大スコアの出力
 void SceneGame::OutputScoreRanking(Player* player)
 {
-	//// ファイルの読み込み
-	//read_ScoreRanking.open(fileName);
-
-	//int score[SeveMax] = {};
-	//char command[256];
-
-	//// 読み込めた場合
-	//if (read_ScoreRanking)
-	//{
-	//	int i = 0;
-	//	while (read_ScoreRanking)
-	//	{
-	//		read_ScoreRanking >> command;
-	//		if (0 == strcmp(command, "s"))					// 先頭の文字が"s"である場合
-	//		{
-	//			read_ScoreRanking.ignore(1);				// 1行開ける
-	//			read_ScoreRanking >> score[i];				// 数値代入
-	//			read_ScoreRanking.ignore(1024, '\n');       // [\n(改行)]まで文字を削除する(最大1024文字)⇒次の行まで削除
-	//		}
-	//		++i;
-	//	}
-	//}
-	//read_ScoreRanking.close();
-
 	// score[最大値](一番小さい値)と今回のスコアの高い方を代入
-	ScoreRanking[0] = (std::max)(ScoreRanking[0], player->GetScore());
-
-	// ここで今回のスコアとの比較を取る
-	for (int i = 0 ; i < SeveMax - 1; ++i)
-	{
-		// 今回のスコアの方が低かったらループを抜ける
-		if (ScoreRanking[i + 1] > ScoreRanking[i]) break;
-
-		int a = ScoreRanking[i + 1];
-		ScoreRanking[i + 1] = ScoreRanking[i];
-		ScoreRanking[i] = a;
-	}
+	HighScore = (std::max)(HighScore, player->GetScore());
 
 
 	// ファイルの書き込み
 	writing_ScoreRanking.open(fileName);
-
-	for (int i = 0; i < SeveMax; ++i)
-	{
-		writing_ScoreRanking << "s " << ScoreRanking[i] << "\n";
-	}
-
+	writing_ScoreRanking << "hs " << HighScore << "\n";
 	writing_ScoreRanking.close();
 }
 

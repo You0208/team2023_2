@@ -63,14 +63,12 @@ private:
 	void UpdateHungerGage();
 
 private:	// スコア保存用SceneTitleに持っていく
-	static const int SeveMax = 5;						// 保存するデータの最大数
-
-	int ScoreRanking[SeveMax] = {};						// 読み込んだスコアを格納する
+	int HighScore = 0;									// 読み込んだ最大スコアを格納する
 	std::ofstream writing_ScoreRanking;					// 書き出し用変数
 	std::ifstream read_ScoreRanking;					// 読み出し用変数
-	static constexpr char* fileName = "Data/Save/ScoreRanking.txt";	// 開くファイル名
+	static constexpr char* fileName = "Data/Save/HighScore.txt";	// 開くファイル名
 
-	// スコアの読み取り
+	// 最大スコアの読み取り
 	void InputScoreRanking();
 
 	// 最大スコアの出力
