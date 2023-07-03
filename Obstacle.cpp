@@ -359,10 +359,10 @@ void Husen_gum::DrawDebugPrimitive()
 // ’Ç‰Á‚ÌXVˆ—
 void Husen_gum::UpdataAdditionVelocity(float elapsedFrame)
 {
-    if (isUp && position.y >= MaxUp) isUp = false;
-    if (!isUp && position.y <= MaxDown) isUp = true;
+    if (isUp && position.y >= OriginPosition->y + MaxUp) isUp = false;
+    if (!isUp && position.y <= OriginPosition->y + MaxDown) isUp = true;
 
-    velocity.y = isUp ? MoveSpeed * elapsedFrame : -MoveSpeed * elapsedFrame;
+    velocity.y = isUp ? MoveSpeed : -MoveSpeed;
 }
 
 

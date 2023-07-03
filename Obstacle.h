@@ -244,7 +244,7 @@ public:
         MaxUp
     };
 
-    static float constexpr MoveSpeed    = 200.0f;      // ã‰ºˆÚ“®‚Ì‘¬“x
+    static float constexpr MoveSpeed    = 20.0f;      // ã‰ºˆÚ“®‚Ì‘¬“x
 
 public:
     Husen_gum();

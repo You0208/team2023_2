@@ -182,7 +182,8 @@ void Stage::AreaInfo02(Stage* stage)
 {
     SpawnObstacle<Marble_chocolate>({ 0.0f,0.0f,0.0f }, stage);
     SpawnObstacle<Cupcake_Choco>({ 100.0f,0.0f,0.0f }, stage);
-    SpawnObstacle<Husen_gum>({ 0.0f,0.0f,50.0f }, stage);
+    
+    SpawnObstacle<Husen_gum>({ 0.0f,00.0f,20.0f }, stage);
 }
 
 // ÉGÉäÉA03
