@@ -35,4 +35,14 @@ public:
         float cylinderheigh,
         DirectX::XMFLOAT3& outCylinderPosition
     );
+
+    // ‰~’Œ‚Æ‹…‚ÌŒğ·”»’è
+    static bool IntersectCylinderVsSphere(
+        const DirectX::XMFLOAT3& cylinderPosition,
+        float cylinderradius,
+        float cylinderheigh,
+        const DirectX::XMFLOAT3& spherePosition,
+        float sphereradius,
+        DirectX::XMFLOAT3& outCylinderPosition
+    );
 };

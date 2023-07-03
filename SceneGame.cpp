@@ -474,8 +474,8 @@ void SceneGame::CollisionObsVsObs()
 	{
 		for (auto& Obs : it->obstacles)
 		{
-			// ACTIVEでないと飛ばす
-			if (Obs->IsHitVsObs != HIT_CHECK_TYPE::ACTIVE) continue;
+			// 積極的に当たり判定を取らないと飛ばす
+			if (Obs->HitCheckTYpe != HIT_CHECK_TYPE::ACTIVE) continue;
 
 			DirectX::XMFLOAT3 obs1_position = Obs->GetPosition();
 			float obs1_radius = Obs->GetRadius();
@@ -489,6 +489,9 @@ void SceneGame::CollisionObsVsObs()
 				// 同じ場合は飛ばす
 				if (Obs == Obs2)continue;
 
+				// 同じステージでなければ飛ばす
+				if (Obs->GetOriginPosition() != Obs->GetOriginPosition()) continue;
+
 				DirectX::XMFLOAT3 obs2_position = Obs2->GetPosition();
 				float obs2_radius = Obs2->GetRadius();
 				float obs2_height = Obs2->GetHeight();
@@ -498,31 +501,84 @@ void SceneGame::CollisionObsVsObs()
 				if (Obs->Type == ITEMS && Obs2->Type == ITEMS)
 				{
 					if (Collision::IntersectSphereVsSphere(
-						obs1_position,
-						obs1_radius,
-						obs2_position,
-						obs2_radius,
-						outPosition
-					))
-					{
-						Obs->IsHitVsObs = true;
-					}
-				}
-				// Obs2がアイテム(球)の場合
-				else if (Obs2->Type == ITEMS)
-				{
-					if (Collision::IntersectSphereVsCylinder(
 						obs2_position,
 						obs2_radius,
 						obs1_position,
 						obs1_radius,
-						obs1_height,
 						outPosition
 					))
 					{
 						Obs->IsHitVsObs = true;
 						Obs->SetPosition(outPosition);
 					}
+				}
+				// Obs2がアイテム(球)の場合
+				else if (Obs2->Type == ITEMS)
+				{
+					for (int n = 0; n < Obs->CollisionNum; ++n)
+					{
+						// 衝突判定
+						if (Collision::IntersectSphereVsCylinder
+						(
+							obs2_position,
+							obs2_radius,
+							{ (Obs->GetPosition().x - (Obs->CollisionNum * 0.5f) + Obs->GetRadius()) + (n * Obs->GetRadius() * 2.0f) ,Obs->GetPosition().y,Obs->GetPosition().z },
+							obs1_radius,
+							obs1_height,
+							outPosition))
+						{
+							Obs->IsHitVsObs = true;
+							Obs->SetPosition(outPosition);
+						}
+					}
+				}
+				// Obsがアイテム(球)の場合
+				else if (Obs->Type == ITEMS)
+				{
+					for (int n2 = 0; n2 < Obs2->CollisionNum; ++n2)
+					{
+						// 衝突判定
+						if (Collision::IntersectCylinderVsSphere
+						(
+							{ (Obs2->GetPosition().x - (Obs2->CollisionNum * 0.5f) + Obs2->GetRadius()) + (n2 * Obs2->GetRadius() * 2.0f) ,Obs2->GetPosition().y,Obs2->GetPosition().z },
+							obs2_radius,
+							obs2_height,
+							obs1_position,
+							obs1_radius,
+							outPosition)
+							)
+						{
+							Obs->IsHitVsObs = true;
+							Obs->SetPosition(outPosition);
+						}
+					}
+				}
+				// その他
+				else
+				{
+					for (int n1 = 0; n1 < Obs->CollisionNum; ++n1)
+					{
+						for (int n2 = 0; n2 < Obs2->CollisionNum; ++n2)
+						{
+
+							// 衝突判定
+							if (Collision::IntersectCylinderVsCylinder
+							(
+								{ (Obs2->GetPosition().x - (Obs2->CollisionNum * 0.5f) + Obs2->GetRadius()) + (n2 * Obs2->GetRadius() * 2.0f) ,Obs2->GetPosition().y,Obs2->GetPosition().z },
+								Obs2->GetRadius(),
+								Obs2->GetHeight(),
+								{ (Obs->GetPosition().x - (Obs->CollisionNum * 0.5f) + Obs->GetRadius()) + (n1 * Obs->GetRadius() * 2.0f) ,Obs->GetPosition().y,Obs->GetPosition().z },
+								Obs->GetRadius(),
+								Obs->GetHeight(),
+								outPosition)
+								)
+							{
+								Obs->IsHitVsObs = true;
+								Obs->SetPosition(outPosition);
+							}
+						}
+					}
+
 				}
 			}
 		}

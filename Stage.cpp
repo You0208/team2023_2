@@ -181,7 +181,7 @@ void Stage::AreaInfo01(Stage* stage)
 void Stage::AreaInfo02(Stage* stage)
 {
     SpawnObstacle<Marble_chocolate>({ 0.0f,0.0f,0.0f }, stage);
-    SpawnObstacle<Cupcake_Choco>({ -10.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Cupcake_Choco>({ 20.0f,0.0f,0.0f }, stage);
 }
 
 // ÉGÉäÉA03

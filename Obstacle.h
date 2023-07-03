@@ -44,6 +44,7 @@ public:
     // à íuê›íË
     void SetPosition(DirectX::XMFLOAT3 p)  { position = p; }
     void SetOriginPosition(DirectX::XMFLOAT3* p)  { OriginPosition = p; }
+    DirectX::XMFLOAT3* GetOriginPosition() { return OriginPosition; }
 
     // îºåaéÊìæ
     float GetRadius() const { return radius; }

@@ -202,7 +202,7 @@ void Pokey::DrawDebugPrimitive()
     //衝突判定用のデバッグ円柱を描画
     for (int n = 0; n < CollisionNum; ++n)
     {
-        debugRenderer->DrawCylinder({ (position.x - (5.0f * 0.5f) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
+        debugRenderer->DrawCylinder({ (position.x - (5.0f * 0.5f) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(1, 0, 0, 1));
     }
 }
 
