@@ -22,8 +22,13 @@ public:
 
     float getRange() { return range; }
 
+    DirectX::XMFLOAT3 getAngle() { return angle; }
+
     // カメラシェイク
     void Shake(int time,float);
+
+    // 死亡時のカメラ
+    void DeathCamera();
 
     bool flag=false;
 private:

@@ -80,9 +80,11 @@ void StageManager::StageSelectUpdate(float elapsedTIme)
 
 void StageManager::StageDeathUpdate(float elapsedTIme)
 {
-    VZ = lerp(VZ, 100.0f, 0.001f);
-    stageScrollVelocity = { 0,0,VZ };
-    terrainScrollVelocity = { 0,0,VZ };
+    //VZ = lerp(VZ, 100.0f, 0.001f);
+    //stageScrollVelocity = { 0,0,VZ };
+    //terrainScrollVelocity = { 0,0,VZ };
+    stageScrollVelocity = { 0,0,0 };
+    terrainScrollVelocity = { 0,0,0 };
     // ステージの更新
     StageUpdate(elapsedTIme);
 

@@ -2,6 +2,7 @@
 #include "Obstacle.h"
 #include "Tool.h"
 #include "Graphics/Graphics.h"
+#include "EffectManager.h"
 
 //-------------------------------------------------------------------------------------------------------
 // 
@@ -21,6 +22,7 @@ void Obstacle::Update(float elapsedTime)
 {
     if (Type == ITEMS)
     {
+
         angle.y += DirectX::XMConvertToRadians(1);//回す
     }
     // 速度処理更新
@@ -320,18 +322,26 @@ void Marshmallow_Base::Update(float elapsedTime)
     Type = TYPE::ITEMS;
     score = 5;
     hungerPoint = 5;
+    // ヒットエフェクト再生
+    {
+        // エフェクトの座標を変更
+        ItemEffect->SetPosition(handle, position);
+    }
 }
 void Marshmallow_Base::DrawDebugPrimitive()
 {
-    DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
-    //衝突判定用のデバッグ円柱を描画
-    debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
+    //DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
+    ////衝突判定用のデバッグ円柱を描画
+    //debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
 }
 // コンストラクタ
 Marshmallow_Blue::Marshmallow_Blue()
 {
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/marshmallow/marshmallow_blue.mdl");
+    // エフェクトの再生
+    handle = ItemEffect->Play(position);
+
 }
 // マシュマロ(ピンク)
 Marshmallow_Pink::Marshmallow_Pink()

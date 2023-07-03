@@ -83,10 +83,44 @@ void SceneGame::Initialize()
 	//-------------------------------------------------------------------------------------------------------
 	// テクスチャを読み込む
 	texture = std::make_unique<Texture>("Data/Texture/titleFrame.png");
-
 	// スプライト
 	sprite = std::make_unique<Sprite>();
 	sprite->SetShaderResourceView(texture->GetShaderResourceView(), texture->GetWidth(), texture->GetHeight());
+
+	// テクスチャを読み込む
+	texture_line = std::make_unique<Texture>("Data/Texture/syuchusen.png");
+	// スプライト
+	sprite_line = std::make_unique<Sprite>();
+	sprite_line->SetShaderResourceView(texture_line->GetShaderResourceView(), texture_line->GetWidth(), texture_line->GetHeight());
+
+	// 終わり
+// テクスチャを読み込む
+	t_finish = std::make_unique<Texture>("Data/Texture/owaru.png");
+	// スプライト
+	s_finish = std::make_unique<Sprite>();
+	s_finish->SetShaderResourceView(t_finish->GetShaderResourceView(), t_finish->GetWidth(), t_finish->GetHeight());
+
+	// プレイ
+	// テクスチャを読み込む
+	t_play = std::make_unique<Texture>("Data/Texture/play.png");
+	// スプライト
+	s_play = std::make_unique<Sprite>();
+	s_play->SetShaderResourceView(t_play->GetShaderResourceView(), t_play->GetWidth(), t_play->GetHeight());
+
+	// ルール
+	// テクスチャを読み込む
+	t_rulu = std::make_unique<Texture>("Data/Texture/rule.png");
+	// スプライト
+	s_rulu = std::make_unique<Sprite>();
+	s_rulu->SetShaderResourceView(t_rulu->GetShaderResourceView(), t_rulu->GetWidth(), t_rulu->GetHeight());
+
+	// セレクト
+	// テクスチャを読み込む
+	t_select = std::make_unique<Texture>("Data/Texture/select.png");
+	// スプライト
+	s_select = std::make_unique<Sprite>();
+	s_select->SetShaderResourceView(t_select->GetShaderResourceView(), t_select->GetWidth(), t_select->GetHeight());
+
 
 	// マスクテクスチャの読み込み
 	maskTexture = std::make_unique<Texture>("Data/Texture/dissolve_animation.png");
@@ -176,12 +210,16 @@ void SceneGame::Update(float elapsedTime)
 
 		if (gamePad.GetButtonDown() & GamePad::BTN_Y)
 		{
-			player->IsDeath = true;
+			//player->IsDeath = true;
+			//player->OnDead();
+			//DeathMoment();
+			accel = true;
 		}
+
 		if (cameraController->flag)
 		{
 			// カメラコントローラー更新処理化
-			cameraController->Shake(60, player->GetPosition().y + 0.5f);
+			cameraController->Shake(120, player->GetPosition().y + 0.5f);
 		}
 		else
 		{
@@ -198,6 +236,12 @@ void SceneGame::Update(float elapsedTime)
 		//空更新処理
 		sky->Update(elapsedTime);
 		sky->SetPosition({ player->GetPosition().x,player->GetPosition().y,player->GetPosition().z + sky->space });
+
+
+		if (accel)// 加速時
+		{
+			accelUpdate(elapsedTime);
+		}
 
 		if (!player->IsDeath)// プレイヤーが死んでいない時
 		{
@@ -220,16 +264,44 @@ void SceneGame::Update(float elapsedTime)
 	//-------------------------------------------------------------------------------------------------------
 
 	sprite->Update(0.0f, 0.0f,
-		100.0f, 100.0f,
+		Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
 		0.0f, 0.0f,
 		static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight()),
 		0.0f,
 		1.0f, 1.0f, 1.0f, 1.0f);
 
-	sprite->Update(0.0f, 0.0f,
+	sprite_line->Update(0.0f, 0.0f,
 		Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
-		0.0f, 0.0f,
+		p_w, 0.0f,
 		static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight()),
+		0.0f,
+		1.0f, 1.0f, 1.0f, 1.0f);
+
+	s_finish->Update(0.0f, 0.0f,
+		Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
+		p_w, 0.0f,
+		static_cast<float>(t_finish->GetWidth()), static_cast<float>(t_finish->GetHeight()),
+		0.0f,
+		1.0f, 1.0f, 1.0f, 1.0f);
+
+	s_play->Update(0.0f, 0.0f,
+		Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
+		p_w, 0.0f,
+		static_cast<float>(t_play->GetWidth()), static_cast<float>(t_play->GetHeight()),
+		0.0f,
+		1.0f, 1.0f, 1.0f, 1.0f);
+
+	s_rulu->Update(0.0f, 0.0f,
+		Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
+		p_w, 0.0f,
+		static_cast<float>(t_rulu->GetWidth()), static_cast<float>(t_rulu->GetHeight()),
+		0.0f,
+		1.0f, 1.0f, 1.0f, 1.0f);
+
+	s_select->Update(0.0f, 0.0f,
+		Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
+		p_w, 0.0f,
+		static_cast<float>(t_select->GetWidth()), static_cast<float>(t_select->GetHeight()),
 		0.0f,
 		1.0f, 1.0f, 1.0f, 1.0f);
 }
@@ -252,7 +324,7 @@ void SceneGame::Render()
 		ID3D11DepthStencilView* dsv = graphics.GetDepthStencilView();
 
 		// 画面クリア＆レンダーターゲット設定
-		FLOAT color[] = { 0.0f, 0.0f, 0.5f, 1.0f }; // RGBA(0.0～1.0)
+		FLOAT color[] = { 0.89f, 0.75f, 0.94f, 1.0f }; // RGBA(0.0～1.0)
 		dc->ClearRenderTargetView(rtv, color);
 		dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 		dc->OMSetRenderTargets(1, &rtv, dsv);
@@ -270,7 +342,17 @@ void SceneGame::Render()
 
 	}
 	// 2Dスプライト描画
-	{  
+	{ 
+		RenderContext rc;
+		rc.deviceContext = dc;
+		SpriteShader* shader = graphics.GetShader(SpriteShaderId::Default);
+		if (accel)
+		{
+			// 描画処理
+			shader->Begin(rc);
+			shader->Draw(rc, sprite_line.get());
+			shader->End(rc);
+		}
 	}
 
 	// デバッグ情報の表示
@@ -329,6 +411,7 @@ void SceneGame::DrawDebugParameter(DirectX::XMFLOAT4X4& transform, const char* l
 	ImGui::PopID();
 }
 
+// プレイヤー×障害物
 void SceneGame::CollisionPlayerVsObs()
 {
 	for (auto& it : stageManager->stages)
@@ -359,6 +442,7 @@ void SceneGame::CollisionPlayerVsObs()
 								hitEffect->Play(e);
 							}
 							player->OnDead();
+							DeathMoment();
 							it2->IsHit = true;
 						}
 					break;
@@ -382,6 +466,7 @@ void SceneGame::CollisionPlayerVsObs()
 									hitEffect->Play(e);
 								}
 								player->OnDead();
+								DeathMoment();
 								it2->IsHit = true;
 							}
 						}
@@ -422,6 +507,7 @@ void SceneGame::CollisionPlayerVsObs()
 							{
 								// 加速
 								stageManager->AddVelocity(50.0f,1.0f);
+								accel = true;
 								// ヒットエフェクト再生
 								{
 									DirectX::XMFLOAT3 e = player->GetPosition();
@@ -509,7 +595,16 @@ void SceneGame::TransUpdate(float elapsedTime)
 
 void SceneGame::DeathUpdate(float elapsedTime)
 {
+	postprocessingRenderer->UpdateShold();
+	cameraController->DeathCamera();
 	stageManager->StageDeathUpdate(elapsedTime);
+}
+
+void SceneGame::DeathMoment()
+{
+	postprocessingRenderer->setThreshold(0.0f);
+	cameraController->flag = true;
+	cameraController->setRange(cameraController->getRange() * 1.5f);
 }
 
 // グリッド描画
@@ -653,6 +748,26 @@ void SceneGame::RenderShadowmap()
 		shader->End(rc);
 	}
 }
+
+void SceneGame::accelUpdate(float elapsedTime)
+{
+	accelFrame -= 1.0f;
+	if (int(accelFrame) % 2 == 0)
+	{
+		p_w += 1920.0f;
+		if (p_w > 5760)
+		{
+			p_w = 0.0f;
+		}
+	}
+
+	if (accelFrame <= 0.0f)
+	{
+		accelFrame = 120.0f;
+		accel = false;
+	}
+}
+
 // 3D空間の描画
 void SceneGame::Render3DScene()
 {
@@ -661,7 +776,7 @@ void SceneGame::Render3DScene()
 	ID3D11RenderTargetView* rtv = renderTarget->GetRenderTargetView().Get();
 	ID3D11DepthStencilView* dsv = graphics.GetDepthStencilView();
 	// 画面クリア＆レンダーターゲット設定
-	FLOAT color[] = { 0.0f, 0.0f, 0.5f, 1.0f }; // RGBA(0.0～1.0)
+	FLOAT color[] = { 0.89f, 0.75f, 0.94f, 1.0f }; // RGBA(0.0～1.0)
 	dc->ClearRenderTargetView(rtv, color);
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	dc->OMSetRenderTargets(1, &rtv, dsv);

@@ -55,6 +55,9 @@ public:
 
 	// 死亡演出
 	void DeathUpdate(float elapsedTime);
+
+	// 死んだ瞬間の値変化
+	void DeathMoment();
 private:
 	// 3D空間の描画
 	void Render3DScene();
@@ -62,7 +65,13 @@ private:
 	// シャドウマップの描画
 	void RenderShadowmap();
 
+	void accelUpdate(float elapsedTime);
+
 private:
+	bool accel = false;
+	float accelFrame = 120.0f;
+	float p_w = 0.0f;
+
 	bool isTrans = false;// 遷移中か
 	DirectX::XMFLOAT3 target;// セレクト用
 	float range;// セレクト用
@@ -86,6 +95,20 @@ private:
 	std::unique_ptr<Sprite>	sprite;
 	std::unique_ptr<Texture> texture;
 
+	std::unique_ptr<Sprite>	sprite_line;
+	std::unique_ptr<Texture> texture_line;
+
+	std::unique_ptr<Sprite>	s_finish;
+	std::unique_ptr<Texture> t_finish;
+
+	std::unique_ptr<Sprite>	s_play;
+	std::unique_ptr<Texture> t_play;
+
+	std::unique_ptr<Sprite>	s_rulu;
+	std::unique_ptr<Texture> t_rulu;
+
+	std::unique_ptr<Sprite>	s_select;
+	std::unique_ptr<Texture> t_select;
 	// UVスクロールデータ
 	UVScrollData uvScrollData;
 

@@ -1,5 +1,6 @@
 #include "CameraController.h"
 #include "Camera.h"
+#include "Tool.h"
 #include"Input/Input.h"
 
 //更新処理
@@ -41,14 +42,14 @@ void CameraController::Update(float elapsedTime)
     }
 
     // Y軸の回転値を-3.14~3.14に収まるようにする
-    if (angle.y < -DirectX::XM_PI)
-    {
-        angle.y += DirectX::XM_2PI;
-    }
-    if (angle.y > -DirectX::XM_PI)
-    {
-        angle.y -= DirectX::XM_2PI;
-    }
+    //if (angle.y < -DirectX::XM_PI)
+    //{
+    //    angle.y += DirectX::XM_2PI;
+    //}
+    //if (angle.y > -DirectX::XM_PI)
+    //{
+    //    angle.y -= DirectX::XM_2PI;
+    //}
 
     //カメラの視点と注視点を設定
     Camera::Instance().SetLookAt(eye, target, DirectX::XMFLOAT3(0, 1, 0));
@@ -78,5 +79,19 @@ void CameraController::Shake(int t,float n)
                 flag = false;
             }
         }
+    }
+}
+
+void CameraController::DeathCamera()
+{
+    if (angle.x < DirectX::XMConvertToRadians(70.0f))
+        angle.x += DirectX::XMConvertToRadians(0.1f);
+    if (angle.y < DirectX::XMConvertToRadians(45.0f))
+    {
+        angle.y += DirectX::XMConvertToRadians(0.1f);
+    }
+    else
+    {
+
     }
 }

@@ -1,5 +1,7 @@
 #include "PostprocessingRenderer.h"
+#include "Tool.h"
 #include "Graphics/Graphics.h"
+
 PostprocessingRenderer::PostprocessingRenderer()
 {
     Graphics& graphics = Graphics::Instance();
@@ -144,4 +146,9 @@ void PostprocessingRenderer::DrawDebugGUI()
         }
         ImGui::TreePop();
     }
+}
+
+void PostprocessingRenderer::UpdateShold()
+{
+    bloomData.luminanceExtractionData.threshold=lerp(bloomData.luminanceExtractionData.threshold, 0.5f, 0.005f);
 }

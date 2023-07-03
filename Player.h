@@ -53,6 +53,7 @@ public:
     // €–S‚µ‚½‚ÉŒÄ‚Î‚ê‚é
     void OnDead() {
         IsDeath = true;
+        position.z -= 1.5f;
     }
 
     // ˆÊ’uXV

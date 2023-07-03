@@ -2,6 +2,7 @@
 #include <vector>
 #include "graphics/shader.h"
 #include "graphics/model.h"
+#include "Effect.h"
 
 enum TYPE
 {
@@ -15,7 +16,10 @@ enum TYPE
 class Obstacle 
 {
 public:
-    Obstacle(){}
+    Obstacle(){
+        // ヒットエフェクト読み込み
+       ItemEffect = new Effect("Data/e/accel.efk");
+    }
 
     ~Obstacle() {}
 
@@ -73,6 +77,9 @@ private:
 public:
     // モデルは呼び出すのでpublic
     std::unique_ptr<Model>  model       =    nullptr;        // モデル
+
+    Effect* ItemEffect = nullptr;
+    Effekseer::Handle handle;
 
     int score = 0;
     int hungerPoint = 0;

@@ -73,7 +73,6 @@ Stage::AreaInfo Stage::RandSpawn(Stage::SpawnObstacleInfo* data)
     return areaInfo.at(rand() % areaInfo.size());
 }
 
-
 // コンストラクタ（nはステージの種類）
 Stage::Stage(int stageNo)
 {
@@ -223,10 +222,10 @@ void Stage::AreaInfo03(Stage* stage)
 
 void Stage::AreaInfoDebug(Stage* stage)
 {
-    SpawnObstacle<Pokey>({ 0.0f,0.0f,0.0f }, stage);
-    SpawnObstacle<Pokey>({ 20.0f,0.0f,0.0f }, stage);
-    SpawnObstacle<Pokey>({ 40.0f,0.0f,0.0f }, stage);
-    SpawnObstacle<Pokey>({ 60.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Marshmallow_Blue>({ 0.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Marshmallow_Blue>({ 20.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Marshmallow_Blue>({ 40.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Marshmallow_Blue>({ 60.0f,0.0f,0.0f }, stage);
 }
 
 

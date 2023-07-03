@@ -7,7 +7,7 @@
 void SceneLoading::Initialize()
 {
     // テクスチャを読み込む
-    texture = std::make_unique<Texture>("Data/Texture/LoadingIcon.png");
+    texture = std::make_unique<Texture>("Data/Texture/Loading.png");
     // スプライト
     sprite = std::make_unique<Sprite>();
     sprite->SetShaderResourceView(texture->GetShaderResourceView(), texture->GetWidth(), texture->GetHeight());
@@ -31,7 +31,16 @@ void SceneLoading::Finalize()
 void SceneLoading::Update(float elapsedTime)
 {
     constexpr float speed = 180;
-    angle += speed * elapsedTime;
+    timer++;
+
+    if (timer % 3000 == 0)
+    {
+        p_w += 1920;
+        if (p_w > 5760)
+        {
+            p_w = 0.0f;
+        }
+    }
 
     // 次のシーンの準備が完了したらシーンを切り替える
     if (nextScene->IsReady())
@@ -41,8 +50,8 @@ void SceneLoading::Update(float elapsedTime)
     }
     sprite->Update(0.0f, 0.0f,
         Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
-        0.0f, 0.0f,
-        static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight()),
+        p_w, 0.0f,
+        1920, static_cast<float>(texture->GetHeight()),
         angle,
         1.0f, 1.0f, 1.0f, 1.0f);
 }

@@ -31,6 +31,9 @@ private:
     static void LoadingThread(SceneLoading* scene);
 
 private:
+    float p_w = 0;
+    int timer = 0;
+
     std::unique_ptr<Sprite>	sprite;
     std::unique_ptr<Texture> texture;
     float angle = 0.0f;

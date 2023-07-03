@@ -32,6 +32,10 @@ public:
     void SetSceneData(ShaderResourceViewData srvData);
     // デバッグ情報の表示
     void DrawDebugGUI();
+
+    void setThreshold(float i) { bloomData.luminanceExtractionData.threshold = i; }
+
+    void UpdateShold();
 private:
     // シーン描画データ
     ShaderResourceViewData sceneData;

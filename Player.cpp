@@ -37,27 +37,29 @@ void Player::SelectUpdate(float elapsedTime)
 //更新処理
 void Player::Update(float elapsedTime)
 {
-    // Bボタンでダメージ状態へ遷移(仮)
-    GamePad& gamePad = Input::Instance().GetGamePad();
-    if (gamePad.GetButtonDown() & GamePad::BTN_B)
+    if (!IsDeath)
     {
-        TransitionDamageState();
+        // Bボタンでダメージ状態へ遷移(仮)
+        GamePad& gamePad = Input::Instance().GetGamePad();
+        if (gamePad.GetButtonDown() & GamePad::BTN_B)
+        {
+            TransitionDamageState();
+        }
+
+        // 状態毎の更新処理(時間に余裕あれば変更したい)
+        switch (state)
+        {
+        case Player::State::Idle:
+            UpdateIdleState(elapsedTime);
+            break;
+        case Player::State::Damage:
+            UpdateDamageState(elapsedTime);
+            break;
+        }
+
+        //  空腹レベルの更新
+        UpdateHungerPoint(elapsedTime);
     }
-
-    // 状態毎の更新処理(時間に余裕あれば変更したい)
-    switch (state)
-    {
-    case Player::State::Idle:
-        UpdateIdleState(elapsedTime);
-        break;
-    case Player::State::Damage:
-        UpdateDamageState(elapsedTime);
-        break;
-    }
-
-    //  空腹レベルの更新
-    UpdateHungerPoint(elapsedTime);
-
     // スケールの更新
     UpdateScale(MaxScale[hungerLevel], ScaleRate);
 

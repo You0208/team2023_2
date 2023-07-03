@@ -13,6 +13,37 @@ void SceneTitle::Initialize()
     // スプライト
     sprite = std::make_unique<Sprite>();
     sprite->SetShaderResourceView(texture->GetShaderResourceView(), texture->GetWidth(), texture->GetHeight());
+
+    // スプライト初期化
+    t_back = std::make_unique<Texture>("Data/Texture/back.png");
+    // スプライト
+    s_back = std::make_unique<Sprite>();
+    s_back->SetShaderResourceView(t_back->GetShaderResourceView(), t_back->GetWidth(), t_back->GetHeight());
+
+    // スプライト初期化
+    t_frame = std::make_unique<Texture>("Data/Texture/frame.png");
+    // スプライト
+    s_frame = std::make_unique<Sprite>();
+    s_frame->SetShaderResourceView(t_frame->GetShaderResourceView(), t_frame->GetWidth(), t_frame->GetHeight());
+
+    // スプライト初期化
+    t_hamu = std::make_unique<Texture>("Data/Texture/hamster.png");
+    // スプライト
+    s_hamu = std::make_unique<Sprite>();
+    s_hamu->SetShaderResourceView(t_hamu->GetShaderResourceView(), t_hamu->GetWidth(), t_hamu->GetHeight());
+
+    // スプライト初期化
+    t_logo = std::make_unique<Texture>("Data/Texture/titlelogo.png");
+    // スプライト
+    s_logo = std::make_unique<Sprite>();
+    s_logo->SetShaderResourceView(t_logo->GetShaderResourceView(), t_logo->GetWidth(), t_logo->GetHeight());
+
+    // スプライト初期化
+    t_start = std::make_unique<Texture>("Data/Texture/start.png");
+    // スプライト
+    s_start = std::make_unique<Sprite>();
+    s_start->SetShaderResourceView(t_start->GetShaderResourceView(), t_start->GetWidth(), t_start->GetHeight());
+
     // マスクテクスチャの読み込み
     maskTexture = std::make_unique<Texture>("Data/Texture/dissolve_animation.png");
     dissolveThreshold = 1.0f;
@@ -40,15 +71,8 @@ void SceneTitle::Update(float elapsedTime)
         ;
     if (gamePad.GetButtonDown() & anyButton)
     {
-        SceneManager::Instance().ChangeScene(new SceneGame);
+        SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
     }
-
-    sprite->Update(0.0f, 0.0f,
-        100.0f, 100.0f,
-        0.0f, 0.0f,
-        static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight()),
-        0.0f,
-        1.0f, 1.0f, 1.0f, 1.0f);
 
     sprite->Update(0.0f, 0.0f,
         Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
@@ -56,6 +80,47 @@ void SceneTitle::Update(float elapsedTime)
         static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight()),
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
+
+    // 背景
+    s_back->Update(0.0f, 0.0f,
+        Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
+        0.0f, 0.0f,
+        static_cast<float>(t_back->GetWidth()), static_cast<float>(t_back->GetHeight()),
+        0.0f,
+        1.0f, 1.0f, 1.0f, 1.0f);
+
+    // フレーム
+    s_frame->Update(0.0f, 0.0f,
+        Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
+        0.0f, 0.0f,
+        static_cast<float>(t_frame->GetWidth()), static_cast<float>(t_frame->GetHeight()),
+        0.0f,
+        1.0f, 1.0f, 1.0f, 1.0f);
+
+    // ハム
+    s_hamu->Update(0.0f, 0.0f,
+        static_cast<float>(t_hamu->GetWidth()), static_cast<float>(t_hamu->GetHeight()),
+        0.0f, 0.0f,
+        static_cast<float>(t_hamu->GetWidth()), static_cast<float>(t_hamu->GetHeight()),
+        0.0f,
+        1.0f, 1.0f, 1.0f, 1.0f);
+
+    // ロゴ
+    s_logo->Update(0.0f, 0.0f,
+        static_cast<float>(t_logo->GetWidth()), static_cast<float>(t_logo->GetHeight()),
+        0.0f, 0.0f,
+        static_cast<float>(t_logo->GetWidth()), static_cast<float>(t_logo->GetHeight()),
+        0.0f,
+        1.0f, 1.0f, 1.0f, 1.0f);
+
+    // スタート
+    s_start->Update(0.0f, 0.0f,
+        static_cast<float>(t_start->GetWidth()), static_cast<float>(t_start->GetHeight()),
+        0.0f, 0.0f,
+        static_cast<float>(t_start->GetWidth()), static_cast<float>(t_start->GetHeight()),
+        0.0f,
+        1.0f, 1.0f, 1.0f, 1.0f);
+
 }
 
 // 描画処理
@@ -81,6 +146,11 @@ void SceneTitle::Render()
         SpriteShader* shader = graphics.GetShader(SpriteShaderId::Default);
         shader->Begin(rc);
         shader->Draw(rc, sprite.get());
+        shader->Draw(rc, s_back.get());
+        shader->Draw(rc, s_frame.get());
+        shader->Draw(rc, s_hamu.get());
+        shader->Draw(rc, s_logo.get());
+        shader->Draw(rc, s_start.get());
         shader->End(rc);
     }
 }
