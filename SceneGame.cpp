@@ -142,11 +142,18 @@ void SceneGame::Initialize()
 		srvData.height = renderTarget->GetHeight();
 		postprocessingRenderer->SetSceneData(srvData);
 	}
+
+
+	// スコア読み取り
+	InputScoreRanking();
 }
 
 // 終了化
 void SceneGame::Finalize()
 {
+	// ファイル書き込み(テスト)
+	OutputScoreRanking(player);
+
 	// ステージ終了
 	stageManager->Clear();
 	// プレイヤー終了
@@ -327,6 +334,20 @@ void SceneGame::Render()
 		stageManager->DrawDebugGUI();
 		postprocessingRenderer->DrawDebugGUI();
 	}
+	// スコア表示
+	{
+		ImGui::Separator();
+		if (ImGui::TreeNode("SCORE"))
+		{
+			for (int i = 0; i < SeveMax; ++i)
+			{
+				ImGui::Text("rank%ld:%ld", (i + 1), ScoreRanking[SeveMax - 1 - i]);
+			}
+			ImGui::TreePop();
+		}
+		ImGui::Separator();
+	}
+
 }
 
 void SceneGame::DrawDebugParameter(DirectX::XMFLOAT4X4& transform, const char* label)
@@ -772,6 +793,84 @@ void SceneGame::UpdateHungerGage()
 		static_cast<float>(texture_hungerGageFrame->GetWidth()), static_cast<float>(texture_hungerGageFrame->GetHeight() / 3),
 		0.0f,
 		1.0f, 1.0f, 1.0f, 1.0f);
+}
+
+void SceneGame::InputScoreRanking()
+{
+	// ファイルの読み込み
+	read_ScoreRanking.open(fileName);
+	char command[256];
+
+	// 読み込めた場合
+	if (read_ScoreRanking)
+	{
+		int i = 0;
+		while (read_ScoreRanking)
+		{
+			read_ScoreRanking >> command;
+			if (0 == strcmp(command, "s"))					// 先頭の文字が"s"である場合
+			{
+				read_ScoreRanking.ignore(1);				// 1行開ける
+				read_ScoreRanking >> ScoreRanking[i];				// 数値代入
+				read_ScoreRanking.ignore(1024, '\n');       // [\n(改行)]まで文字を削除する(最大1024文字)⇒次の行まで削除
+			}
+			++i;
+		}
+	}
+	read_ScoreRanking.close();
+}
+
+// 最大スコアの出力
+void SceneGame::OutputScoreRanking(Player* player)
+{
+	//// ファイルの読み込み
+	//read_ScoreRanking.open(fileName);
+
+	//int score[SeveMax] = {};
+	//char command[256];
+
+	//// 読み込めた場合
+	//if (read_ScoreRanking)
+	//{
+	//	int i = 0;
+	//	while (read_ScoreRanking)
+	//	{
+	//		read_ScoreRanking >> command;
+	//		if (0 == strcmp(command, "s"))					// 先頭の文字が"s"である場合
+	//		{
+	//			read_ScoreRanking.ignore(1);				// 1行開ける
+	//			read_ScoreRanking >> score[i];				// 数値代入
+	//			read_ScoreRanking.ignore(1024, '\n');       // [\n(改行)]まで文字を削除する(最大1024文字)⇒次の行まで削除
+	//		}
+	//		++i;
+	//	}
+	//}
+	//read_ScoreRanking.close();
+
+	// score[最大値](一番小さい値)と今回のスコアの高い方を代入
+	ScoreRanking[0] = (std::max)(ScoreRanking[0], player->GetScore());
+
+	// ここで今回のスコアとの比較を取る
+	for (int i = 0 ; i < SeveMax - 1; ++i)
+	{
+		// 今回のスコアの方が低かったらループを抜ける
+		if (ScoreRanking[i + 1] > ScoreRanking[i]) break;
+
+		int a = ScoreRanking[i + 1];
+		ScoreRanking[i + 1] = ScoreRanking[i];
+		ScoreRanking[i] = a;
+	}
+
+
+	// ファイルの書き込み
+	writing_ScoreRanking.open(fileName);
+
+	for (int i = 0; i < SeveMax; ++i)
+	{
+		writing_ScoreRanking << "s " << ScoreRanking[i] << "\n";
+	}
+
+	writing_ScoreRanking.close();
 }
 
 // 3D空間の描画

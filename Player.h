@@ -74,6 +74,8 @@ public:
     bool GetIsDamageAnim() const { return isDamageAnim; }
     // スコアを加算する
     void AddScore(int s) { score += s; }
+    // スコアを取得
+    int GetScore() { return score; }
     // 死亡した時に呼ばれる
     void OnDead() {
         SceneManager::Instance().ChangeScene(new SceneOver);
