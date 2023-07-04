@@ -76,6 +76,9 @@ private:
 	// 空腹ゲージの更新
 	void UpdateHungerGage();
 
+	// ステージレベル看板更新
+	void UpdateStageUI();
+
 private:	// スコア保存用SceneTitleに持っていく
 	int HighScore = 0;									// 読み込んだ最大スコアを格納する
 	std::ofstream writing_ScoreRanking;					// 書き出し用変数
@@ -107,16 +110,19 @@ private:
 	CameraController* cameraController = nullptr;
 
 	bool isPaused = false;//ポーズ
+	DirectX::XMFLOAT2 StageUI_Position = { 1920.0f ,0.0f};						// ステージレベルの看板の座標
 
 	Effect* hitEffect = nullptr;
 	Effect* accelEffect = nullptr;
 
 	std::unique_ptr<Texture>	texture_hungerGage;			// 空腹ゲージのテクスチャ(白)
 	std::unique_ptr<Texture>	texture_hungerGageFrame;	// 空腹ゲージのフレームのテクスチャ
+	std::unique_ptr<Texture>	texture_StageUI;			// ステージレベルの看板のテクスチャ
 	std::unique_ptr<Sprite>		sprite_hungerGage;			// 空腹ゲージ
 	std::unique_ptr<Sprite>		sprite_hungerGageFrame;		// 空腹ゲージのフレーム
 	std::unique_ptr<Sprite>		sprite_hungerGageBack;		// 空腹ゲージの背景
-	//-------------------------------------------------------------------------------------------------------
+	std::unique_ptr<Sprite>		sprite_StageUI;				// ステージレベルの看板
+															//-------------------------------------------------------------------------------------------------------
 	// ↓　この下はシェーダー関連
 	//-------------------------------------------------------------------------------------------------------
 	std::unique_ptr<Sprite>	sprite;

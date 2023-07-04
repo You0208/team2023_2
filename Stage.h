@@ -9,7 +9,7 @@
 class Stage: public BaseStage
 {
 public:
-    static const int StageMax               = 2;        //ステージの最大数
+    static const int StageMax               = 5;        //ステージの最大数
     static const int StageSideMax           = 2;	    //ステージの最大数(左右)
     static const int StageDepthMax          = 3;	    //ステージの最大数(奥行)
     static constexpr float StageSize        = 500.0f;    //ステージのサイズ
@@ -80,6 +80,12 @@ private:
     static SpawnObstacleInfo StageInfo01[];
     // ステージ02
     static SpawnObstacleInfo StageInfo02[];
+    // ステージ03
+    static SpawnObstacleInfo StageInfo03[];
+    // ステージ04
+    static SpawnObstacleInfo StageInfo04[];
+    // ステージ05
+    static SpawnObstacleInfo StageInfo05[];
 
     // ステージDebug
     static SpawnObstacleInfo stageDebug[];
@@ -88,12 +94,18 @@ private:
     {
         stageDebug
         ,stageDebug
+        ,stageDebug
+        ,stageDebug
+        ,stageDebug
     };
 
     static constexpr SpawnObstacleInfo* stageInfo[StageMax]
     {
         StageInfo01
         ,StageInfo02
+        ,StageInfo03
+        ,StageInfo04
+        ,StageInfo05
     };
 
 private:
@@ -108,6 +120,7 @@ private:
         jellybeans_Yellow,
         jellybeans_Pink,
         jellybeans_Green,
+        jellybeans_Orange,
         chocolate_ball,
         grape_can,
         orange_gum,
@@ -117,6 +130,9 @@ private:
         marble_chocolate,
         cupcake_Choco,
         cupcake_Pink,
+        pudding,
+        macaron_Maccha,
+        macaron_Ping,
 
         Max
     };

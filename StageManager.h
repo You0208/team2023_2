@@ -13,7 +13,8 @@ class StageManager
 private:
     static constexpr float ScrollVelocityRate = 0.01f;              // スクロール速度補間係数
     static constexpr float ScrollVelocityRate_ac = 0.001f;          // スクロール速度補間係数(加速状態)
-    static constexpr float MaxVelocity = -300.0f;                    // Velocityの最大値
+    static constexpr float MaxVelocity = -300.0f;                   // Velocityの最大値
+    static constexpr float MaxBreakTime = 5.0f;                    // 休憩タイムの最大値
 
     // 各空腹レベルでのプレイヤーの最大速度
     static constexpr float MaxPlayerVelocity[3] =
@@ -40,7 +41,10 @@ private:
     // ステージが切り替わる境目
     static constexpr int StageChangeLine[Stage::StageMax - 1] =
     {
-        3
+        1,      // ステージ2切り替え
+        3,      // ステージ3切り替え
+        5,      // ステージ4切り替え
+        7,      // ステージ5切り替え
     };
 
 public:
@@ -86,6 +90,9 @@ public:
 
     float getVelocityZ() { return stageScrollVelocity.z; }
 
+    // 今のステージ番号を返す
+    int GetStageNo() { return stageNo; }
+
 private:
     // ステージの更新
     void StageUpdate(float elapsedTIme);
@@ -108,6 +115,9 @@ private:
     // ステージの切り替え
     void ChangeStage();
 
+    // 休憩時間更新
+    void UpdateBreakTime(float elapsedFrame);
+
 public:
     bool IsStart = true;
     float VZ = 0;
@@ -115,6 +125,8 @@ public:
     std::vector<BaseStage*>             stages;                         // ステージリスト
     // ステージのスクロール速度更新
     void UpdateScrollVelocity(DirectX::XMFLOAT3& ScrollVelocity,float maxVelocity,float rate);
+
+    bool IsBreakTime = false;                                           // 休憩フラグ
 
 private:
     // ステージデータ
@@ -128,6 +140,7 @@ private:
     std::set<BaseStage*>                terrainRemoves;                 // 削除リスト
     std::vector<DirectX::XMFLOAT3>      terrainSpawns;                  // 生成リスト(位置だけ持っている)
 
+    float breakTimer = 0.0f;                                             // 休憩タイマー
 
     float moveVecX = 0.0f;                                              // 移動方向ベクトル
     float maxPlayerVelocity = 20.0f;                                    // プレイヤーの最大速度

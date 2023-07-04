@@ -32,6 +32,30 @@ Stage::SpawnObstacleInfo Stage::StageInfo02[] =
 
     ,{nullptr,0} // END
 };
+Stage::SpawnObstacleInfo Stage::StageInfo03[] =
+{
+    {AreaInfo02,Stage::SpawnLevel::high}
+    ,{AreaInfo02,Stage::SpawnLevel::middle}
+    ,{AreaInfo02,Stage::SpawnLevel::low}
+
+    ,{nullptr,0} // END
+};
+Stage::SpawnObstacleInfo Stage::StageInfo04[] =
+{
+    {AreaInfo02,Stage::SpawnLevel::high}
+    ,{AreaInfo02,Stage::SpawnLevel::middle}
+    ,{AreaInfo02,Stage::SpawnLevel::low}
+
+    ,{nullptr,0} // END
+};
+Stage::SpawnObstacleInfo Stage::StageInfo05[] =
+{
+    {AreaInfo02,Stage::SpawnLevel::high}
+    ,{AreaInfo02,Stage::SpawnLevel::middle}
+    ,{AreaInfo02,Stage::SpawnLevel::low}
+
+    ,{nullptr,0} // END
+};
 
 Stage::SpawnObstacleInfo Stage::stageDebug[] =
 {
@@ -86,7 +110,7 @@ Stage::Stage(int stageNo)
     stageSideMax = StageSideMax;
     stageDepthMax = StageDepthMax;
 
-    if (SceneManager::Instance().IsNoneStage)
+    if (SceneManager::Instance().IsNoneStage || stageNo < 0)
     {
         AreaInfo infoN = RandSpawn(StageNONE);
         infoN(this);
@@ -97,6 +121,8 @@ Stage::Stage(int stageNo)
         AreaInfo info = RandSpawn(StageDebug[stageNo]);
         info(this);
     }
+
+    //StageInfoDebug(this,ObstacleNumber);
 }
 
 Stage::~Stage()
@@ -261,6 +287,9 @@ void Stage::StageInfoDebug(Stage* stage,int n)
     case jellybeans_Green:
         SpawnObstacle<Jellybeans_Green>({ 0.0f,0.0f,0.0f }, stage);
         break;
+    case jellybeans_Orange:
+        SpawnObstacle<Jellybeans_Orange>({ 0.0f,5.0f,0.0f }, stage);
+        break;
     case chocolate_ball:
         SpawnObstacle<Chocolate_ball>({ 0.0f,0.0f,0.0f }, stage);
         break;
@@ -288,6 +317,15 @@ void Stage::StageInfoDebug(Stage* stage,int n)
     case cupcake_Pink:
         SpawnObstacle<Cupcake_Pink>({ 0.0f,0.0f,0.0f }, stage);
         break;
+    case pudding:
+        SpawnObstacle<Pudding>({ 0.0f,0.0f,0.0f }, stage);
+        break;
+    case macaron_Maccha:
+        SpawnObstacle<Macaron_Maccha>({ 0.0f,0.0f,0.0f }, stage);
+        break;
+    case macaron_Ping:
+        SpawnObstacle<Macaron_Pink>({ 0.0f,0.0f,0.0f }, stage);
+        break;
     }
 }
 
@@ -305,6 +343,7 @@ namespace
         "jellybeans_Yellow",
         "jellybeans_Pink",
         "jellybeans_Green",
+        "jellybeans_Orange",
         "chocolate_ball",
         "grape_can",
         "orange_gum",
@@ -313,7 +352,10 @@ namespace
         "orange_can",
         "marble_chocolate",
         "cupcake_Choco",
-        "cupcake_Pink"
+        "cupcake_Pink",
+        "pudding",
+        "macaron_Maccha",
+        "macaron_Pink",
     };  
     const char* OBSTACLE_NAME = obstacle_name[0];
 }

@@ -42,6 +42,12 @@ void SceneGame::Initialize()
 	sprite_hungerGageBack->SetShaderResourceView(texture_hungerGage->GetShaderResourceView(),
 		texture_hungerGage->GetWidth(), texture_hungerGage->GetHeight());
 
+	// ステージレベル看板
+	texture_StageUI = std::make_unique<Texture>("Data/Texture/UI/StageUI_sheet.png");
+	sprite_StageUI = std::make_unique<Sprite>();
+	sprite_StageUI->SetShaderResourceView(texture_StageUI->GetShaderResourceView(),
+		texture_StageUI->GetWidth(), texture_StageUI->GetHeight());
+
 	// ステージマネージャー初期設定
 	stageManager = new StageManager;
 
@@ -248,7 +254,7 @@ void SceneGame::Update(float elapsedTime)
 		{
 			// カメラコントローラー更新処理化
 			target = player->GetPosition();
-			target.y += 0.5f;
+			target.y += 3.0f;
 			cameraController->setTarget(target);
 		}
 		cameraController->Update(elapsedTime);
@@ -273,6 +279,7 @@ void SceneGame::Update(float elapsedTime)
 			CollisionPlayerVsObs();
 			CollisionObsVsObs();		// 障害物同士の当たり判定
 			UpdateHungerGage();			// 空腹ゲージの更新
+			UpdateStageUI();			// ステージレベル看板更新
 		}
 		else if (player->IsDeath)// プレイヤーが死んでいる時
 		{
@@ -385,6 +392,9 @@ void SceneGame::Render()
 		shader->Draw(rc, sprite_hungerGageBack.get());
 		shader->Draw(rc, sprite_hungerGage.get());
 		shader->Draw(rc, sprite_hungerGageFrame.get());
+
+		// ステージレベル看板
+		shader->Draw(rc, sprite_StageUI.get());
 
 		shader->End(rc);
 
@@ -934,15 +944,17 @@ void SceneGame::accelUpdate(float elapsedTime)
 // 空腹ゲージの更新
 void SceneGame::UpdateHungerGage()
 {
-	float magnification = 20.0f;								// 倍率
+	float margin = 0.0f;
+
+	float magnification = 19.0f;								// 倍率
 
 	float dh = 9.0f * magnification;							// 枠の描画サイズ(y)
 	float dw_f = 35 * magnification;							// 枠の描画サイズ(x)
 	// ゲージの描画サイズ(x)
 	float dw_g = (dw_f - 9.15 * magnification) * (player->GetHungerPoint() / Player::MaxHungerPoint);
-	float x_g = 9.15 * magnification;							// ゲージの描画位置(x)
-	float x_f = 0.0f;											// ゲージの描画位置(x)	// ゲージの描画位置(x)
-	float y = Graphics::Instance().GetScreenHeight() - dh;		// 描画位置(y)
+	float x_g = 9.15 * magnification + margin;							// ゲージの描画位置(x)
+	float x_f = margin;											// ゲージの描画位置(x)	// ゲージの描画位置(x)
+	float y = 1080.0f - dh - margin;		// 描画位置(y)
 
 	// ゲージの色
 	DirectX::XMFLOAT3 c[3] =
@@ -974,6 +986,63 @@ void SceneGame::UpdateHungerGage()
 		dw_f, dh,
 		0.0f, static_cast<float>(texture_hungerGageFrame->GetHeight() / 3) * player->GetHungerLevel(),
 		static_cast<float>(texture_hungerGageFrame->GetWidth()), static_cast<float>(texture_hungerGageFrame->GetHeight() / 3),
+		0.0f,
+		1.0f, 1.0f, 1.0f, 1.0f);
+}
+
+void SceneGame::UpdateStageUI()
+{
+	float screen_width = 1920.0f;
+
+	const int MaxFrame = 20;		// 1枚当たりの表示フレーム数
+	const int SpriteMax = 4;		// アニメのスプライトの最大数
+	static int frame = 0;			// 現在のフレーム
+	frame += 1;
+
+	// 最後のスプライトの表示が終わったら
+	if (MaxFrame * (SpriteMax + 1) <= frame)
+	{
+		frame = 0;
+	}
+
+	// アニメ番号
+	float anime = static_cast<float>(frame / MaxFrame);
+
+	// 切り抜きサイズ
+	float sw = 500.0f;
+	float sh = 300.0f;
+	// 描画位置
+	float dx_end = screen_width - sw; // 描画位置の終点
+	float dx = 1920.0f - sw;
+	float dy = 0.0f;
+	// 描画サイズ
+	float dw = sw;
+	float dh = sh;
+	// 切り抜き位置
+	float sx = anime * sw;
+	float sy = sh * (stageManager->GetStageNo() - 1);
+
+	// 速度
+	float speed = 10.0f;
+
+	// 休憩フラグが立っているとき
+	if (stageManager->IsBreakTime)
+	{
+		StageUI_Position.x = lerp<float>(StageUI_Position.x,dx_end,0.05f);
+
+		// アニメーションしたい
+	}
+	if (!stageManager->IsBreakTime)
+	{
+		StageUI_Position.x = lerp<float>(StageUI_Position.x, screen_width, 0.05f);
+	}
+
+	// 背景
+	sprite_StageUI->Update(
+		StageUI_Position.x, StageUI_Position.y,
+		dw, dh,
+		sx, sy,
+		sw, sh,
 		0.0f,
 		1.0f, 1.0f, 1.0f, 1.0f);
 }

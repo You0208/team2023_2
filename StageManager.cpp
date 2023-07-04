@@ -36,6 +36,11 @@ void StageManager::DrawDebugGUI()
     ImGui::Text("stageNo:%ld", stageNo);
     ImGui::Text("accelerationTimer:%d", static_cast<int>(accelerationTimer));
 
+    ImGui::Text("IsBreakTime:%d", static_cast<int>(IsBreakTime));
+
+    // 残り休憩時間
+    ImGui::Text("IsBreakTime:%lf", breakTimer);
+
     ImGui::Text("[I][J][K][L] : camera");
     ImGui::Text("[A][D] : player");
     ImGui::Text("[X] : HitAnime");
@@ -64,6 +69,9 @@ void StageManager::Update(Player* player, float elapsedTIme)
 
     // 地形更新
     TerrainUpdate(elapsedTIme);
+
+    // 休憩時間更新
+    UpdateBreakTime(elapsedTIme);
 }
 
 // セレクト更新
@@ -169,7 +177,9 @@ void StageManager::Clear()
 // ステージ生成
 void StageManager::StageSpawn(DirectX::XMFLOAT3 position)
 {
-    Stage* s = new Stage(stageNo);                  //ステージを生成
+    int No = IsBreakTime ? -1 : stageNo;            // Stageの引き数が0以下の場合StageNONEが生成される
+
+    Stage* s = new Stage(No);                       //ステージを生成
     s->SetPosition(position);                       // ここでステージのポジションを決める
     s->SetScrollVelocity(&stageScrollVelocity);     // 共通のスクロール速度を設定
     s->Initialize();                                // 障害物生成
@@ -388,8 +398,25 @@ void StageManager::ChangeStage()
     {
         if (GetSpawnStageCount() >= StageChangeLine[i])
         {
-            stageNo++;      // 次のステージに切り替え
+            IsBreakTime = true;             // 休憩フラグを立てる
+            breakTimer = MaxBreakTime;      // 休憩時間設定
+            stageNo++;                      // 次のステージに切り替え
             return;
+        }
+    }
+}
+
+// 休憩時間更新
+void StageManager::UpdateBreakTime(float elapsedFrame)
+{
+    if (IsBreakTime)
+    {
+        breakTimer -= elapsedFrame;
+        
+        // 0以下になったら休憩時間終了
+        if (breakTimer < 0)
+        {
+            IsBreakTime = false;
         }
     }
 }

@@ -159,7 +159,7 @@ private:
     };
 
     DirectX::XMFLOAT3   position       = { 0,0,0 };     // 位置
-    DirectX::XMFLOAT3   angle          = { 0,0,0 };     // 角度
+    DirectX::XMFLOAT3   angle          = { DirectX::XMConvertToRadians(25),0,0 };     // 角度
     DirectX::XMFLOAT3   scale          = { 1,1,1 };     // スケール
     DirectX::XMFLOAT3   velocity       = { 0,0,0 };     // 速度
     DirectX::XMFLOAT4X4   transform    = {

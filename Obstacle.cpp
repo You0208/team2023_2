@@ -160,6 +160,7 @@ Cola::Cola()
 {
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/cola/Cola.mdl");
+    scale.x = scale.y = scale.z = 5.0f;
     angle.y = DirectX::XMConvertToRadians(180);
     height = 3.8f;
     radius = 1.2f;
@@ -187,6 +188,8 @@ Pokey::Pokey()
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/pocky/pozky.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
+    scale.x = scale.y = scale.z = 5.0f;
+    // 当たり判定修正
     height = 7.0f;
     Type = TYPE::CYLINDERS;
     CollisionNum = 5;
@@ -214,6 +217,7 @@ Prits::Prits()
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/prits/prits.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
+    scale.x = scale.y = scale.z = 5.0f;
 }
 
 
@@ -255,10 +259,10 @@ Marshmallow_Pink::Marshmallow_Pink()
     model = std::make_unique<Model>("Data/Model/Obstacle/marshmallow/marshmallow_pink.mdl");
 }
 
-
+// ビーンズ
 Jellybeans_Base::Jellybeans_Base()
 {
-    scale = { 0.5f,0.5f ,0.5f };
+    scale.x = scale.y = scale.z = 0.3f;
 }
 // ビーンズ
 // 更新処理
@@ -312,6 +316,7 @@ Chocolate_ball::Chocolate_ball()
 {
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/chocolate_ball/chocolate_ball.mdl");
+    scale.x = scale.y = scale.z = 5.0f;
     angle.y = DirectX::XMConvertToRadians(180);
     height = 6.0f;
     Type = TYPE::CYLINDERS;
@@ -339,6 +344,7 @@ Grape_can::Grape_can()
 {
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/grape_can/grape_can.mdl");
+    scale.x = scale.y = scale.z = 5.0f;
     angle.y = DirectX::XMConvertToRadians(180);
     height = 3.8f;
     radius = 1.2f;
@@ -360,7 +366,7 @@ Husen_gum::Husen_gum()
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/husen_gum/husen_gum.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
-    scale = { 5.0f,5.0f ,5.0f };
+    scale.x = scale.y = scale.z = 9.0f;
     height = 5.0f;
     radius = 0.6f;
     Type = TYPE::CYLINDER;
@@ -393,7 +399,7 @@ Orange_gum::Orange_gum()
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/orange_gum/orange_gum.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
-    scale = { 3.0f,3.0f ,3.0f };
+    scale.x = scale.y = scale.z = 9.0f;
     height = 3.0f;
     radius = 0.5f;
     Type = TYPE::CYLINDERS;
@@ -417,7 +423,7 @@ Candy_gate::Candy_gate()
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/candy_gate/candy_gate.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
-    scale = { 3.0f,3.0f ,3.0f };
+    scale.x = scale.y = scale.z = 6.0f;
     height = 9.0f;
     Type = TYPE::GATE;
     CollisionNum = 9;
@@ -440,6 +446,7 @@ Orange_can::Orange_can()
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/orange_can/orange_can.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
+    scale.x = scale.y = scale.z = 5.0f;
     height = 3.8f;
     radius = 1.2f;
     Type = TYPE::CYLINDER;
@@ -459,6 +466,7 @@ Marble_chocolate::Marble_chocolate()
 {
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/marble_chocolate/marble_chocolate.mdl");
+    scale.x = scale.y = scale.z = 4.0f;
     angle.y = DirectX::XMConvertToRadians(180);
     height = 7.0f;
     Type = TYPE::CYLINDER;
