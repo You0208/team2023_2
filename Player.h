@@ -87,10 +87,6 @@ public:
 
     // スコアを取得
     int GetScore() { return score; }
-    // 死亡した時に呼ばれる
-    void OnDead() {
-        SceneManager::Instance().ChangeScene(new SceneOver);
-    };
     // 空腹レベル取得
     int GetHungerLevel() const { return hungerLevel; }
     // 空腹ポイント取得
