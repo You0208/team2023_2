@@ -374,19 +374,19 @@ void SceneGame::Render()
 		RenderContext rc;
 		rc.deviceContext = dc;
 		SpriteShader* shader = graphics.GetShader(SpriteShaderId::Default);
+		shader->Begin(rc);
 		if (accel)
 		{
 			// 描画処理
-			shader->Begin(rc);
 			shader->Draw(rc, sprite_line.get());
-
-			// 空腹ゲージ
-			shader->Draw(rc, sprite_hungerGageBack.get());
-			shader->Draw(rc, sprite_hungerGage.get());
-			shader->Draw(rc, sprite_hungerGageFrame.get());
-
-			shader->End(rc);
 		}
+
+		// 空腹ゲージ
+		shader->Draw(rc, sprite_hungerGageBack.get());
+		shader->Draw(rc, sprite_hungerGage.get());
+		shader->Draw(rc, sprite_hungerGageFrame.get());
+
+		shader->End(rc);
 
 		// デバッグ情報の表示
 		{
