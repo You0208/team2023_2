@@ -162,8 +162,8 @@ Cola::Cola()
     model = std::make_unique<Model>("Data/Model/Obstacle/cola/Cola.mdl");
     scale.x = scale.y = scale.z = 5.0f;
     angle.y = DirectX::XMConvertToRadians(180);
-    height = 3.8f;
-    radius = 1.2f;
+    height = 19.0f;
+    radius = 6.0f;
     Type = TYPE::CYLINDER;
     CollisionNum = 1;
 }
@@ -190,7 +190,8 @@ Pokey::Pokey()
     angle.y = DirectX::XMConvertToRadians(180);
     scale.x = scale.y = scale.z = 5.0f;
     // 当たり判定修正
-    height = 7.0f;
+    radius = 2.5f;
+    height = 35.0f;
     Type = TYPE::CYLINDERS;
     CollisionNum = 5;
 }
@@ -207,7 +208,7 @@ void Pokey::DrawDebugPrimitive()
     //衝突判定用のデバッグ円柱を描画
     for (int n = 0; n < CollisionNum; ++n)
     {
-        debugRenderer->DrawCylinder({ (position.x - (5.0f * 0.5f) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(1, 0, 0, 1));
+        debugRenderer->DrawCylinder({ (position.x - (CollisionNum * radius) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(1, 0, 0, 1));
     }
 }
 
@@ -218,6 +219,21 @@ Prits::Prits()
     model = std::make_unique<Model>("Data/Model/Obstacle/prits/prits.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
     scale.x = scale.y = scale.z = 5.0f;
+    // 当たり判定修正
+    height = 35.0f;
+    radius = 2.5;
+    Type = TYPE::CYLINDERS;
+    CollisionNum = 3;
+
+}
+void Prits::DrawDebugPrimitive()
+{
+    DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
+    //衝突判定用のデバッグ円柱を描画
+    for (int n = 0; n < CollisionNum; ++n)
+    {
+        debugRenderer->DrawCylinder({ (position.x - (CollisionNum * radius) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
+    }
 }
 
 
@@ -346,8 +362,8 @@ Grape_can::Grape_can()
     model = std::make_unique<Model>("Data/Model/Obstacle/grape_can/grape_can.mdl");
     scale.x = scale.y = scale.z = 5.0f;
     angle.y = DirectX::XMConvertToRadians(180);
-    height = 3.8f;
-    radius = 1.2f;
+    height = 19.0f;
+    radius = 6.0f;
     Type = TYPE::CYLINDER;
     CollisionNum = 1;
 }
@@ -412,7 +428,7 @@ void Orange_gum::DrawDebugPrimitive()
     //衝突判定用のデバッグ円柱を描画
     for (int n = 0; n < CollisionNum; ++n)
     {
-        debugRenderer->DrawCylinder({ (position.x - (CollisionNum * 0.5f) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
+        debugRenderer->DrawCylinder({ (position.x - (CollisionNum * radius) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
     }
 }
 
@@ -424,9 +440,9 @@ Candy_gate::Candy_gate()
     model = std::make_unique<Model>("Data/Model/Obstacle/candy_gate/candy_gate.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
     scale.x = scale.y = scale.z = 6.0f;
-    height = 9.0f;
+    height = 20.0f;
     Type = TYPE::GATE;
-    CollisionNum = 9;
+    CollisionNum = 19;
 }
 
 void Candy_gate::DrawDebugPrimitive()
@@ -468,10 +484,11 @@ Marble_chocolate::Marble_chocolate()
     model = std::make_unique<Model>("Data/Model/Obstacle/marble_chocolate/marble_chocolate.mdl");
     scale.x = scale.y = scale.z = 4.0f;
     angle.y = DirectX::XMConvertToRadians(180);
-    height = 7.0f;
-    Type = TYPE::CYLINDER;
+    height = 10.0f;
+    radius = 2.5f;
+    Type = TYPE::CYLINDERS;
     HitCheckTYpe = HIT_CHECK_TYPE::ACTIVE;
-    CollisionNum = 1;
+    CollisionNum = 8;
 }
 
 void Marble_chocolate::DrawDebugPrimitive()
@@ -480,7 +497,7 @@ void Marble_chocolate::DrawDebugPrimitive()
     //衝突判定用のデバッグ円柱を描画
     for (int n = 0; n < CollisionNum; ++n)
     {
-        debugRenderer->DrawCylinder({ (position.x - (CollisionNum * 0.5f) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
+        debugRenderer->DrawCylinder({ (position.x - (CollisionNum * radius) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
     }
 }
 

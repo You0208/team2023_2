@@ -9,7 +9,7 @@
 void SceneTitle::Initialize()
 {
     // スプライト初期化
-    texture = std::make_unique<Texture>("Data/Texture/Title.png");
+    texture = std::make_unique<Texture>("Data/Texture/black.png");
     // スプライト
     sprite = std::make_unique<Sprite>();
     sprite->SetShaderResourceView(texture->GetShaderResourceView(), texture->GetWidth(), texture->GetHeight());
@@ -71,7 +71,35 @@ void SceneTitle::Update(float elapsedTime)
         ;
     if (gamePad.GetButtonDown() & anyButton)
     {
-        SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
+        Trans = 1.0f;
+        next = true;
+    }
+
+    if (!next)
+    {
+        HamuY += cosf(Theta) * 1.0f;
+        Theta += 0.01f;
+        time += 60.0f * elapsedTime;
+
+        if (time >= 60)
+        {
+            time = 0;
+        }
+
+        if (time <= 30)
+        {
+            Trans = 0.0f;
+        }
+        else
+        {
+            Trans = 1.0f;
+        }
+    }
+    else
+    {
+        Trans_A += 1.0 * elapsedTime;
+        if (Trans_A >= 1.0f)
+            SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
     }
 
     sprite->Update(0.0f, 0.0f,
@@ -79,7 +107,7 @@ void SceneTitle::Update(float elapsedTime)
         0.0f, 0.0f,
         static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight()),
         0.0f,
-        1.0f, 1.0f, 1.0f, 1.0f);
+        1.0f, 1.0f, 1.0f, Trans_A);
 
     // 背景
     s_back->Update(0.0f, 0.0f,
@@ -98,7 +126,7 @@ void SceneTitle::Update(float elapsedTime)
         1.0f, 1.0f, 1.0f, 1.0f);
 
     // ハム
-    s_hamu->Update(0.0f, 0.0f,
+    s_hamu->Update(1095.0f, HamuY,
         static_cast<float>(t_hamu->GetWidth()), static_cast<float>(t_hamu->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_hamu->GetWidth()), static_cast<float>(t_hamu->GetHeight()),
@@ -114,12 +142,12 @@ void SceneTitle::Update(float elapsedTime)
         1.0f, 1.0f, 1.0f, 1.0f);
 
     // スタート
-    s_start->Update(0.0f, 0.0f,
+    s_start->Update(110.0f, 700.0f,
         static_cast<float>(t_start->GetWidth()), static_cast<float>(t_start->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_start->GetWidth()), static_cast<float>(t_start->GetHeight()),
         0.0f,
-        1.0f, 1.0f, 1.0f, 1.0f);
+        1.0f, 1.0f, 1.0f, Trans);
 
 }
 
@@ -132,7 +160,7 @@ void SceneTitle::Render()
     ID3D11DepthStencilView* dsv = graphics.GetDepthStencilView();
 
     // 画面クリア＆レンダーターゲット設定
-    FLOAT color[] = { 0.0f, 0.0f, 0.5f, 1.0f };	// RGBA(0.0～1.0)
+    FLOAT color[] = { 0.0f, 0.0f, 0.0f, 1.0f };	// RGBA(0.0～1.0)
     dc->ClearRenderTargetView(rtv, color);
     dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
     dc->OMSetRenderTargets(1, &rtv, dsv);
@@ -145,12 +173,12 @@ void SceneTitle::Render()
     {
         SpriteShader* shader = graphics.GetShader(SpriteShaderId::Default);
         shader->Begin(rc);
-        shader->Draw(rc, sprite.get());
         shader->Draw(rc, s_back.get());
         shader->Draw(rc, s_frame.get());
         shader->Draw(rc, s_hamu.get());
         shader->Draw(rc, s_logo.get());
         shader->Draw(rc, s_start.get());
+        shader->Draw(rc, sprite.get());
         shader->End(rc);
     }
 }
