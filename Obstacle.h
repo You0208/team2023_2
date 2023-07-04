@@ -151,6 +151,9 @@ class Prits : public Obstacle
 {
 public:
     Prits();
+
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
 };
 
 // マシュマロ(ベース)

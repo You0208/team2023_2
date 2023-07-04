@@ -48,6 +48,14 @@ private:
     // マスク画像
     std::unique_ptr<Texture> maskTexture;
 
+    float Trans = 0.0f;
+    float Trans_A = 0.0f;
+    float Theta = 0.0f;
+    float HamuY = 260.0f;
+    float time = 0;
+
+    bool next = false;
+
     float dissolveThreshold;
     float edgeThreshold; // 縁の閾値
     DirectX::XMFLOAT4 edgeColor; // 縁の色

@@ -33,9 +33,15 @@ private:
 private:
     float p_w = 0;
     int timer = 0;
+    bool next = false;
+    float Trans = 1.0f;
 
     std::unique_ptr<Sprite>	sprite;
     std::unique_ptr<Texture> texture;
+
+    std::unique_ptr<Sprite>	s_black;
+    std::unique_ptr<Texture> t_black;
+
     float angle = 0.0f;
     Scene* nextScene = nullptr;
     std::thread* thread = nullptr;

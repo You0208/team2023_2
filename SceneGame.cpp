@@ -509,7 +509,7 @@ void SceneGame::CollisionPlayerVsObs()
 							(player->GetPosition(),
 								player->GetRadius(),
 								player->GetHeight(),
-								{ (it2->GetPosition().x - (it2->CollisionNum * 0.5f) + it2->GetRadius()) + (n * it2->GetRadius() * 2.0f) ,it2->GetPosition().y,it2->GetPosition().z },
+								{ (it2->GetPosition().x - (it2->CollisionNum * it2->GetRadius()) + it2->GetRadius()) + (n * it2->GetRadius() * 2.0f) ,it2->GetPosition().y,it2->GetPosition().z },
 								it2->GetRadius(),
 								it2->GetHeight(),
 								outPosition))
@@ -555,7 +555,7 @@ void SceneGame::CollisionPlayerVsObs()
 							(player->GetPosition(),
 								player->GetRadius(),
 								player->GetHeight(),
-								{ (it2->GetPosition().x - (it2->CollisionNum * 0.5f) + it2->GetRadius()) + (n * it2->GetRadius() * 2.0f) ,it2->GetPosition().y,it2->GetPosition().z },
+								{ (it2->GetPosition().x - (it2->CollisionNum * it2->GetRadius()) + it2->GetRadius()) + (n * it2->GetRadius() * 2.0f) ,it2->GetPosition().y,it2->GetPosition().z },
 								it2->GetRadius(),
 								it2->GetHeight(),
 								outPosition))
@@ -717,7 +717,7 @@ void SceneGame::CollisionObsVsObs()
 						(
 							obs2_position,
 							obs2_radius,
-							{ (Obs->GetPosition().x - (Obs->CollisionNum * 0.5f) + Obs->GetRadius()) + (n * Obs->GetRadius() * 2.0f) ,Obs->GetPosition().y,Obs->GetPosition().z },
+							{ (Obs->GetPosition().x - (Obs->CollisionNum * Obs->GetRadius()) + Obs->GetRadius()) + (n * Obs->GetRadius() * 2.0f) ,Obs->GetPosition().y,Obs->GetPosition().z },
 							obs1_radius,
 							obs1_height,
 							outPosition))
@@ -735,7 +735,7 @@ void SceneGame::CollisionObsVsObs()
 						// Õ“Ë”»’è
 						if (Collision::IntersectCylinderVsSphere
 						(
-							{ (Obs2->GetPosition().x - (Obs2->CollisionNum * 0.5f) + Obs2->GetRadius()) + (n2 * Obs2->GetRadius() * 2.0f) ,Obs2->GetPosition().y,Obs2->GetPosition().z },
+							{ (Obs2->GetPosition().x - (Obs2->CollisionNum * Obs->GetRadius()) + Obs2->GetRadius()) + (n2 * Obs2->GetRadius() * 2.0f) ,Obs2->GetPosition().y,Obs2->GetPosition().z },
 							obs2_radius,
 							obs2_height,
 							obs1_position,
@@ -759,10 +759,10 @@ void SceneGame::CollisionObsVsObs()
 							// Õ“Ë”»’è
 							if (Collision::IntersectCylinderVsCylinder
 							(
-								{ (Obs2->GetPosition().x - (Obs2->CollisionNum * 0.5f) + Obs2->GetRadius()) + (n2 * Obs2->GetRadius() * 2.0f) ,Obs2->GetPosition().y,Obs2->GetPosition().z },
+								{ (Obs2->GetPosition().x - (Obs2->CollisionNum * Obs->GetRadius()) + Obs2->GetRadius()) + (n2 * Obs2->GetRadius() * 2.0f) ,Obs2->GetPosition().y,Obs2->GetPosition().z },
 								Obs2->GetRadius(),
 								Obs2->GetHeight(),
-								{ (Obs->GetPosition().x - (Obs->CollisionNum * 0.5f) + Obs->GetRadius()) + (n1 * Obs->GetRadius() * 2.0f) ,Obs->GetPosition().y,Obs->GetPosition().z },
+								{ (Obs->GetPosition().x - (Obs->CollisionNum * Obs->GetRadius()) + Obs->GetRadius()) + (n1 * Obs->GetRadius() * 2.0f) ,Obs->GetPosition().y,Obs->GetPosition().z },
 								Obs->GetRadius(),
 								Obs->GetHeight(),
 								outPosition)

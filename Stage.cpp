@@ -110,19 +110,19 @@ Stage::Stage(int stageNo)
     stageSideMax = StageSideMax;
     stageDepthMax = StageDepthMax;
 
-    if (SceneManager::Instance().IsNoneStage || stageNo < 0)
-    {
-        AreaInfo infoN = RandSpawn(StageNONE);
-        infoN(this);
-    }
-    else 
-    {
-        //AreaInfo info = RandSpawn(stageInfo[stageNo]);
-        AreaInfo info = RandSpawn(StageDebug[stageNo]);
-        info(this);
-    }
+    //if (SceneManager::Instance().IsNoneStage || stageNo < 0)
+    //{
+    //    AreaInfo infoN = RandSpawn(StageNONE);
+    //    infoN(this);
+    //}
+    //else 
+    //{
+    //    //AreaInfo info = RandSpawn(stageInfo[stageNo]);
+    //    AreaInfo info = RandSpawn(StageDebug[stageNo]);
+    //    info(this);
+    //}
 
-    //StageInfoDebug(this,ObstacleNumber);
+    StageInfoDebug(this,ObstacleNumber);
 }
 
 Stage::~Stage()
@@ -258,7 +258,7 @@ void Stage::AreaInfoDebug(Stage* stage)
 
 
 // === 以下デバッグ用関数 ===
-int Stage::ObstacleNumber = 0;
+int Stage::ObstacleNumber = marble_chocolate;
 void Stage::StageInfoDebug(Stage* stage,int n)
 {
     switch (n)
