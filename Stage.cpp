@@ -18,16 +18,16 @@ Stage::SpawnObstacleInfo Stage::StageNONE[] =
 
 Stage::SpawnObstacleInfo Stage::StageInfo01[] =
 {
-    {AreaInfo00,Stage::SpawnLevel::low}
-    ,{AreaInfo01,Stage::SpawnLevel::middle}
+    {AreaInfo02,Stage::SpawnLevel::low}
+    ,{AreaInfo02,Stage::SpawnLevel::middle}
     ,{AreaInfo02,Stage::SpawnLevel::high}
 
     ,{nullptr,0} // END
 };
 Stage::SpawnObstacleInfo Stage::StageInfo02[] =
 {
-    {AreaInfo03,Stage::SpawnLevel::high}
-    ,{AreaInfo01,Stage::SpawnLevel::middle}
+    {AreaInfo02,Stage::SpawnLevel::high}
+    ,{AreaInfo02,Stage::SpawnLevel::middle}
     ,{AreaInfo02,Stage::SpawnLevel::low}
 
     ,{nullptr,0} // END
@@ -97,6 +97,8 @@ Stage::Stage(int stageNo)
         AreaInfo info = RandSpawn(StageDebug[stageNo]);
         info(this);
     }
+
+    //StageInfoDebug(this,ObstacleNumber);
 }
 
 Stage::~Stage()
@@ -181,21 +183,15 @@ void SpawnObstacle(DirectX::XMFLOAT3 position, Stage* stage)
         (position.z <= -Stage::StageSize)
         ) return;
 
-    float positionY = position.y;
-    // 基底クラスが[Marshmallow_Base]なら
-    if (std::is_base_of<Marshmallow_Base,T>::value == true)     positionY += 1.0f;
-    if (std::is_base_of<Jellybeans_Base,T>::value == true)      positionY += 2.0f;
-    if (std::is_base_of<Cupcake_Base,T>::value == true)         positionY += 1.0f;
-
-
     Obstacle* obstacle = new T();
     DirectX::XMFLOAT3 Position =
     {
         position.x,
-        positionY,
+        position.y,
         position.z
     };
     obstacle->SetPosition(Position);
+    obstacle->SetOriginPosition(stage->GetPosition());
     obstacle->SetScrollVelocity(stage->GetAddressOfVelocity());
     stage->AddObstacle(obstacle);
 }
@@ -211,7 +207,10 @@ void Stage::AreaInfo01(Stage* stage)
 // ステージ02
 void Stage::AreaInfo02(Stage* stage)
 {
-    SpawnObstacle<Marble_chocolate>({ 0.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Pokey>({ 0.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Candy_gate>({ 100.0f,0.0f,0.0f }, stage);
+    
+    SpawnObstacle<Macaron_Maccha>({ 0.0f,3.0f,20.0f }, stage);
 }
 
 // エリア03
@@ -222,10 +221,15 @@ void Stage::AreaInfo03(Stage* stage)
 
 void Stage::AreaInfoDebug(Stage* stage)
 {
-    SpawnObstacle<Marshmallow_Blue>({ 0.0f,0.0f,0.0f }, stage);
-    SpawnObstacle<Marshmallow_Blue>({ 20.0f,0.0f,0.0f }, stage);
-    SpawnObstacle<Marshmallow_Blue>({ 40.0f,0.0f,0.0f }, stage);
-    SpawnObstacle<Marshmallow_Blue>({ 60.0f,0.0f,0.0f }, stage);
+    //SpawnObstacle<Marshmallow_Blue>({ 0.0f,0.0f,0.0f }, stage);
+    //SpawnObstacle<Marshmallow_Blue>({ 20.0f,0.0f,0.0f }, stage);
+    //SpawnObstacle<Marshmallow_Blue>({ 40.0f,0.0f,0.0f }, stage);
+    //SpawnObstacle<Marshmallow_Blue>({ 60.0f,0.0f,0.0f }, stage);
+
+    SpawnObstacle<Pokey>({ 0.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Candy_gate>({ 100.0f,0.0f,0.0f }, stage);
+
+    SpawnObstacle<Macaron_Maccha>({ 0.0f,3.0f,20.0f }, stage);
 }
 
 
@@ -259,6 +263,9 @@ void Stage::StageInfoDebug(Stage* stage,int n)
     case jellybeans_Green:
         SpawnObstacle<Jellybeans_Green>({ 0.0f,0.0f,0.0f }, stage);
         break;
+    case jellybeans_Orange:
+        SpawnObstacle<Jellybeans_Orange>({ 0.0f,5.0f,0.0f }, stage);
+        break;
     case chocolate_ball:
         SpawnObstacle<Chocolate_ball>({ 0.0f,0.0f,0.0f }, stage);
         break;
@@ -286,6 +293,15 @@ void Stage::StageInfoDebug(Stage* stage,int n)
     case cupcake_Pink:
         SpawnObstacle<Cupcake_Pink>({ 0.0f,0.0f,0.0f }, stage);
         break;
+    case pudding:
+        SpawnObstacle<Pudding>({ 0.0f,0.0f,0.0f }, stage);
+        break;
+    case macaron_Maccha:
+        SpawnObstacle<Macaron_Maccha>({ 0.0f,0.0f,0.0f }, stage);
+        break;
+    case macaron_Ping:
+        SpawnObstacle<Macaron_Pink>({ 0.0f,0.0f,0.0f }, stage);
+        break;
     }
 }
 
@@ -303,6 +319,7 @@ namespace
         "jellybeans_Yellow",
         "jellybeans_Pink",
         "jellybeans_Green",
+        "jellybeans_Orange",
         "chocolate_ball",
         "grape_can",
         "orange_gum",
@@ -311,7 +328,10 @@ namespace
         "orange_can",
         "marble_chocolate",
         "cupcake_Choco",
-        "cupcake_Pink"
+        "cupcake_Pink",
+        "pudding",
+        "macaron_Maccha",
+        "macaron_Pink",
     };  
     const char* OBSTACLE_NAME = obstacle_name[0];
 }

@@ -26,6 +26,28 @@ void SceneGame::Initialize()
 	// 空初期設定
 	sky = new Sky();
 
+
+	// 空腹ゲージのフレーム設定
+	texture_hungerGageFrame = std::make_unique<Texture>("Data/Texture/UI/GaugeUI.png");
+	sprite_hungerGageFrame = std::make_unique<Sprite>();
+	sprite_hungerGageFrame->SetShaderResourceView(texture_hungerGageFrame->GetShaderResourceView(),
+		texture_hungerGageFrame->GetWidth(), texture_hungerGageFrame->GetHeight());
+	// 空腹ゲージ設定
+	texture_hungerGage = std::make_unique<Texture>("Data/Texture/UI/white.png");
+	sprite_hungerGage = std::make_unique<Sprite>();
+	sprite_hungerGage->SetShaderResourceView(texture_hungerGage->GetShaderResourceView(),
+		texture_hungerGage->GetWidth(), texture_hungerGage->GetHeight());
+	// 空腹ゲージの背景設定
+	sprite_hungerGageBack = std::make_unique<Sprite>();
+	sprite_hungerGageBack->SetShaderResourceView(texture_hungerGage->GetShaderResourceView(),
+		texture_hungerGage->GetWidth(), texture_hungerGage->GetHeight());
+
+	// ステージレベル看板
+	texture_StageUI = std::make_unique<Texture>("Data/Texture/UI/StageUI_sheet.png");
+	sprite_StageUI = std::make_unique<Sprite>();
+	sprite_StageUI->SetShaderResourceView(texture_StageUI->GetShaderResourceView(),
+		texture_StageUI->GetWidth(), texture_StageUI->GetHeight());
+
 	// ステージマネージャー初期設定
 	stageManager = new StageManager;
 
@@ -160,11 +182,18 @@ void SceneGame::Initialize()
 		srvData.height = renderTarget->GetHeight();
 		postprocessingRenderer->SetSceneData(srvData);
 	}
+
+
+	// スコア読み取り
+	InputScoreRanking();
 }
 
 // 終了化
 void SceneGame::Finalize()
 {
+	// ファイル書き込み(テスト)
+	OutputScoreRanking(player);
+
 	// ステージ終了
 	stageManager->Clear();
 	// プレイヤー終了
@@ -225,7 +254,7 @@ void SceneGame::Update(float elapsedTime)
 		{
 			// カメラコントローラー更新処理化
 			target = player->GetPosition();
-			target.y += 0.5f;
+			target.y += 3.0f;
 			cameraController->setTarget(target);
 		}
 		cameraController->Update(elapsedTime);
@@ -248,6 +277,9 @@ void SceneGame::Update(float elapsedTime)
 			//ステージ更新処理
 			stageManager->Update(player, elapsedTime);
 			CollisionPlayerVsObs();
+			CollisionObsVsObs();		// 障害物同士の当たり判定
+			UpdateHungerGage();			// 空腹ゲージの更新
+			UpdateStageUI();			// ステージレベル看板更新
 		}
 		else if (player->IsDeath)// プレイヤーが死んでいる時
 		{
@@ -259,6 +291,8 @@ void SceneGame::Update(float elapsedTime)
 		// エフェクトの更新処理
 		EffectManager::Instance().Update(elapsedTime);
 	}
+
+
 	//-------------------------------------------------------------------------------------------------------
 	// ↓　この下はシェーダー関連
 	//-------------------------------------------------------------------------------------------------------
@@ -341,49 +375,70 @@ void SceneGame::Render()
 		postprocessingRenderer->Render(dc);
 
 	}
+
 	// 2Dスプライト描画
-	{ 
+	{
 		RenderContext rc;
 		rc.deviceContext = dc;
 		SpriteShader* shader = graphics.GetShader(SpriteShaderId::Default);
+		shader->Begin(rc);
 		if (accel)
 		{
 			// 描画処理
-			shader->Begin(rc);
 			shader->Draw(rc, sprite_line.get());
-			shader->End(rc);
 		}
-	}
 
-	// デバッグ情報の表示
-	{
-		ImGui::Separator();
-		if (ImGui::TreeNode("Mask"))
+		// 空腹ゲージ
+		shader->Draw(rc, sprite_hungerGageBack.get());
+		shader->Draw(rc, sprite_hungerGage.get());
+		shader->Draw(rc, sprite_hungerGageFrame.get());
+
+		// ステージレベル看板
+		//shader->Draw(rc, sprite_StageUI.get());
+
+		shader->End(rc);
+
+		// デバッグ情報の表示
 		{
-			ImGui::SliderFloat("Dissolve Threshold", &dissolveThreshold, 0.0f, 1.0f);
-			ImGui::TreePop();
+			ImGui::Separator();
+			if (ImGui::TreeNode("Mask"))
+			{
+				ImGui::SliderFloat("Dissolve Threshold", &dissolveThreshold, 0.0f, 1.0f);
+				ImGui::TreePop();
+			}
+			ImGui::Separator();
+			LightManager::Instane().DrawDebugGUI();
+			ImGui::Separator();
+			if (ImGui::TreeNode("Shadowmap"))
+			{
+				ImGui::SliderFloat("DrawRect", &shadowDrawRect, 1.0f, 2048.0f);
+				ImGui::ColorEdit3("Color", &shadowColor.x);
+				ImGui::SliderFloat("Bias", &shadowBias, 0.0f, 0.1f);
+				ImGui::Text("texture");
+				ImGui::Image(shadowmapDepthStencil->GetShaderResourceView().Get(), { 256, 256 }, { 0, 0 }, { 1, 1 },
+					{ 1, 1, 1, 1 });
+				ImGui::TreePop();
+			}
+			ImGui::Separator();
 		}
-		ImGui::Separator();
-		LightManager::Instane().DrawDebugGUI();
-		ImGui::Separator();
-		if (ImGui::TreeNode("Shadowmap"))
+		// 2DデバッグGUI描画
 		{
-			ImGui::SliderFloat("DrawRect", &shadowDrawRect, 1.0f, 2048.0f);
-			ImGui::ColorEdit3("Color", &shadowColor.x);
-			ImGui::SliderFloat("Bias", &shadowBias, 0.0f, 0.1f);
-			ImGui::Text("texture");
-			ImGui::Image(shadowmapDepthStencil->GetShaderResourceView().Get(), { 256, 256 }, { 0, 0 }, { 1, 1 },
-				{ 1, 1, 1, 1 });
-			ImGui::TreePop();
+			// stageManager
+			player->DrawDebugGUI();
+			stageManager->DrawDebugGUI();
+			postprocessingRenderer->DrawDebugGUI();
 		}
-		ImGui::Separator();
-	}
-	// 2DデバッグGUI描画
-	{
-		// stageManager
-		player->DrawDebugGUI();
-		stageManager->DrawDebugGUI();
-		postprocessingRenderer->DrawDebugGUI();
+		// スコア表示
+		{
+			ImGui::Separator();
+			if (ImGui::TreeNode("SCORE"))
+			{
+				ImGui::Text("HighScore:%ld", HighScore);
+				ImGui::TreePop();
+			}
+			ImGui::Separator();
+		}
+
 	}
 }
 
@@ -607,6 +662,124 @@ void SceneGame::DeathMoment()
 	cameraController->setRange(cameraController->getRange() * 1.5f);
 }
 
+// 障害物と障害物の当たり判定
+void SceneGame::CollisionObsVsObs()
+{
+	for (auto& it : stageManager->stages)
+	{
+		for (auto& Obs : it->obstacles)
+		{
+			// 積極的に当たり判定を取らないと飛ばす
+			if (Obs->HitCheckTYpe != HIT_CHECK_TYPE::ACTIVE) continue;
+
+			DirectX::XMFLOAT3 obs1_position = Obs->GetPosition();
+			float obs1_radius = Obs->GetRadius();
+			float obs1_height = Obs->GetHeight();
+
+			for (auto& Obs2 : it->obstacles)
+			{
+				// 当たり判定を取らない場合は飛ばす
+				if (Obs2->IsHitVsObs == HIT_CHECK_TYPE::NOT) continue;
+
+				// 同じ場合は飛ばす
+				if (Obs == Obs2)continue;
+
+				// 同じステージでなければ飛ばす
+				if (Obs->GetOriginPosition() != Obs->GetOriginPosition()) continue;
+
+				DirectX::XMFLOAT3 obs2_position = Obs2->GetPosition();
+				float obs2_radius = Obs2->GetRadius();
+				float obs2_height = Obs2->GetHeight();
+				DirectX::XMFLOAT3 outPosition;
+
+				// どちらもアイテム(球)タイプの場合
+				if (Obs->Type == ITEMS && Obs2->Type == ITEMS)
+				{
+					if (Collision::IntersectSphereVsSphere(
+						obs2_position,
+						obs2_radius,
+						obs1_position,
+						obs1_radius,
+						outPosition
+					))
+					{
+						Obs->IsHitVsObs = true;
+						Obs->SetPosition(outPosition);
+					}
+				}
+				// Obs2がアイテム(球)の場合
+				else if (Obs2->Type == ITEMS)
+				{
+					for (int n = 0; n < Obs->CollisionNum; ++n)
+					{
+						// 衝突判定
+						if (Collision::IntersectSphereVsCylinder
+						(
+							obs2_position,
+							obs2_radius,
+							{ (Obs->GetPosition().x - (Obs->CollisionNum * 0.5f) + Obs->GetRadius()) + (n * Obs->GetRadius() * 2.0f) ,Obs->GetPosition().y,Obs->GetPosition().z },
+							obs1_radius,
+							obs1_height,
+							outPosition))
+						{
+							Obs->IsHitVsObs = true;
+							Obs->SetPosition(outPosition);
+						}
+					}
+				}
+				// Obsがアイテム(球)の場合
+				else if (Obs->Type == ITEMS)
+				{
+					for (int n2 = 0; n2 < Obs2->CollisionNum; ++n2)
+					{
+						// 衝突判定
+						if (Collision::IntersectCylinderVsSphere
+						(
+							{ (Obs2->GetPosition().x - (Obs2->CollisionNum * 0.5f) + Obs2->GetRadius()) + (n2 * Obs2->GetRadius() * 2.0f) ,Obs2->GetPosition().y,Obs2->GetPosition().z },
+							obs2_radius,
+							obs2_height,
+							obs1_position,
+							obs1_radius,
+							outPosition)
+							)
+						{
+							Obs->IsHitVsObs = true;
+							Obs->SetPosition(outPosition);
+						}
+					}
+				}
+				// その他
+				else
+				{
+					for (int n1 = 0; n1 < Obs->CollisionNum; ++n1)
+					{
+						for (int n2 = 0; n2 < Obs2->CollisionNum; ++n2)
+						{
+
+							// 衝突判定
+							if (Collision::IntersectCylinderVsCylinder
+							(
+								{ (Obs2->GetPosition().x - (Obs2->CollisionNum * 0.5f) + Obs2->GetRadius()) + (n2 * Obs2->GetRadius() * 2.0f) ,Obs2->GetPosition().y,Obs2->GetPosition().z },
+								Obs2->GetRadius(),
+								Obs2->GetHeight(),
+								{ (Obs->GetPosition().x - (Obs->CollisionNum * 0.5f) + Obs->GetRadius()) + (n1 * Obs->GetRadius() * 2.0f) ,Obs->GetPosition().y,Obs->GetPosition().z },
+								Obs->GetRadius(),
+								Obs->GetHeight(),
+								outPosition)
+								)
+							{
+								Obs->IsHitVsObs = true;
+								Obs->SetPosition(outPosition);
+							}
+						}
+					}
+
+				}
+			}
+		}
+	}
+}
+
 // グリッド描画
 void SceneGame::DrawGrid(ID3D11DeviceContext* context, int subdivisions, float scale)
 {
@@ -766,6 +939,117 @@ void SceneGame::accelUpdate(float elapsedTime)
 		accelFrame = 120.0f;
 		accel = false;
 	}
+}
+
+// 空腹ゲージの更新
+void SceneGame::UpdateHungerGage()
+{
+	float margin = 0.0f;
+
+	float magnification = 19.0f;								// 倍率
+
+	float dh = 9.0f * magnification;							// 枠の描画サイズ(y)
+	float dw_f = 35 * magnification;							// 枠の描画サイズ(x)
+	// ゲージの描画サイズ(x)
+	float dw_g = (dw_f - 9.15 * magnification) * (player->GetHungerPoint() / Player::MaxHungerPoint);
+	float x_g = 9.15 * magnification + margin;							// ゲージの描画位置(x)
+	float x_f = margin;											// ゲージの描画位置(x)	// ゲージの描画位置(x)
+	float y = 1080.0f - dh - margin;		// 描画位置(y)
+
+	// ゲージの色
+	DirectX::XMFLOAT3 c[3] =
+	{
+		{0.65f,0.68f,1.0f},
+		{0.489f,1.0f,0.541f},
+		{1.0f,0.611f,0.56f}
+	};
+
+	// ゲージ
+	sprite_hungerGage->Update(
+		x_g, y,
+		dw_g, dh,
+		0.0f, 0.0f,
+		100.0f, 100.0f,
+		0.0f,
+		c[player->GetHungerLevel()].x, c[player->GetHungerLevel()].y, c[player->GetHungerLevel()].z, 1.0f);
+	// フレーム
+	sprite_hungerGageFrame->Update(
+		x_f, y,
+		dw_f, dh,
+		0.0f, static_cast<float>(texture_hungerGageFrame->GetHeight() / 3) * player->GetHungerLevel(),
+		static_cast<float>(texture_hungerGageFrame->GetWidth()), static_cast<float>(texture_hungerGageFrame->GetHeight() / 3),
+		0.0f,
+		1.0f, 1.0f, 1.0f, 1.0f);
+	// 背景
+	sprite_hungerGageBack->Update(
+		x_f, y,
+		dw_f, dh,
+		0.0f, static_cast<float>(texture_hungerGageFrame->GetHeight() / 3) * player->GetHungerLevel(),
+		static_cast<float>(texture_hungerGageFrame->GetWidth()), static_cast<float>(texture_hungerGageFrame->GetHeight() / 3),
+		0.0f,
+		1.0f, 1.0f, 1.0f, 1.0f);
+}
+
+void SceneGame::UpdateStageUI()
+{
+	// 切り抜きサイズ
+	float sw = 400.0f;
+	float sh = 300.0f;
+	// 描画位置
+	float dx = 1920.0f - sw;
+	float dy = 500.0f;
+	// 描画サイズ
+	float dw = sw;
+	float dh = sh;
+	// 切り抜き位置
+	float sx = 0.0f;
+	float sy = 0.0f;
+
+	// 背景
+	sprite_StageUI->Update(
+		dx, dy,
+		dw, dh,
+		sx, sy,
+		sw, sh,
+		0.0f,
+		1.0f, 1.0f, 1.0f, 1.0f);
+}
+
+// 最大スコアの読み取り(仮)
+void SceneGame::InputScoreRanking()
+{
+	// ファイルの読み込み
+	read_ScoreRanking.open(fileName);
+	char command[256];
+
+	// 読み込めた場合
+	if (read_ScoreRanking)
+	{
+		while (read_ScoreRanking)
+		{
+			read_ScoreRanking >> command;
+			if (0 == strcmp(command, "hs"))					// 先頭の文字が"s"である場合
+			{
+				read_ScoreRanking.ignore(1);				// 1行開ける
+				read_ScoreRanking >> HighScore;				// 数値代入
+				read_ScoreRanking.ignore(1024, '\n');       // [\n(改行)]まで文字を削除する(最大1024文字)⇒次の行まで削除
+			}
+		}
+	}
+	read_ScoreRanking.close();
+}
+
+// 最大スコアの出力(仮)
+void SceneGame::OutputScoreRanking(Player* player)
+{
+	// score[最大値](一番小さい値)と今回のスコアの高い方を代入
+	HighScore = (std::max)(HighScore, player->GetScore());
+
+
+	// ファイルの書き込み
+	writing_ScoreRanking.open(fileName);
+	writing_ScoreRanking << "hs " << HighScore << "\n";
+	writing_ScoreRanking.close();
 }
 
 // 3D空間の描画

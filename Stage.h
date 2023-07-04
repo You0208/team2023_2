@@ -108,6 +108,7 @@ private:
         jellybeans_Yellow,
         jellybeans_Pink,
         jellybeans_Green,
+        jellybeans_Orange,
         chocolate_ball,
         grape_can,
         orange_gum,
@@ -117,6 +118,9 @@ private:
         marble_chocolate,
         cupcake_Choco,
         cupcake_Pink,
+        pudding,
+        macaron_Maccha,
+        macaron_Ping,
 
         Max
     };

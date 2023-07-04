@@ -13,13 +13,13 @@
 //コンストラクタ   
 Player::Player()
 {
-    model = std::make_unique< Model>("Data/Model/Player/Hamster.mdl");
+    model = std::make_unique<Model>("Data/Model/Player/Hamster.mdl");
 
     //モデルが大きいのでスケーリング
     scale.x = scale.y = scale.z = 1.0f;
 
     // 初期位置浮かす
-    position.y = 5.0f;
+    position.y = 3.0f;
 
     // 待機ステートへ遷移
     TransitionIdleState();
@@ -145,6 +145,9 @@ void Player::DrawDebugGUI()
             // 速度
             ImGui::InputFloat3("velocity", &velocity.x);
             ImGui::InputInt("score", &score);
+
+            // スコア
+            ImGui::Text("score:%ld", score);
         }
     }
 

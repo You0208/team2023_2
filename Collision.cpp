@@ -103,3 +103,37 @@ bool Collision::IntersectSphereVsCylinder(
 
     return true;
 }
+
+// 円柱と球の交差判定
+bool Collision::IntersectCylinderVsSphere(
+    const DirectX::XMFLOAT3& cylinderPosition,
+    float cylinderRadius,
+    float cylinderHeight,
+    const DirectX::XMFLOAT3& spherePosition,
+    float sphereRadius,
+    DirectX::XMFLOAT3& outCylinderPosition
+)
+{
+    // y軸当たり判定
+    if (spherePosition.y - sphereRadius > cylinderPosition.y + cylinderHeight)return false;
+    if (spherePosition.y + sphereRadius < cylinderPosition.y)return false;
+
+    // xz平面当たり判定
+    float vx = spherePosition.x - cylinderPosition.x;//ベクトルを求める
+    float vz = spherePosition.z - cylinderPosition.z;//ベクトルを求める
+    float radius = cylinderRadius + sphereRadius;//半径の合計を求める
+    float distXZ = sqrtf(vx * vx + vz * vz);//距離を求める
+    if (distXZ > radius)//比べる
+    {
+        return false;
+    }
+
+    // 円柱が球を押し出す
+    vx = vx / distXZ;//単位ベクトル化
+    vz = vz / distXZ;//単位ベクトル化
+    outCylinderPosition.x = cylinderPosition.x + (vx * radius);// Aから単位ベクトル方向に半径の合計分だけ移動する
+    outCylinderPosition.y = spherePosition.y;
+    outCylinderPosition.z = cylinderPosition.z + (vz * radius);// Aから単位ベクトル方向に半径の合計分だけ移動する
+
+    return true;
+}
