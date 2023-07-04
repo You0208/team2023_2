@@ -19,9 +19,9 @@ public:
     // 各空腹レベルでのスケール
     static constexpr float MaxScale[3] =
     {
-        0.5f,       // 空腹レベル：低
+        0.7f,       // 空腹レベル：低
         1.0f,       // 空腹レベル：中
-        2.0f        // 空腹レベル：高
+        1.3f        // 空腹レベル：高
     };
     // 空腹レベルが切り替わる境目
     static constexpr float HungerLevelLine[2] =
@@ -84,8 +84,19 @@ public:
     bool GetIsDamageAnim() const { return isDamageAnim; }
     // スコアを加算する
     void AddScore(int s) { score += s; }
+<<<<<<< HEAD
+=======
+    // スコアを取得
+    int GetScore() { return score; }
+    // 死亡した時に呼ばれる
+    void OnDead() {
+        SceneManager::Instance().ChangeScene(new SceneOver);
+    };
+>>>>>>> maeyamaSub
     // 空腹レベル取得
     int GetHungerLevel() const { return hungerLevel; }
+    // 空腹ポイント取得
+    float GetHungerPoint() const { return hungerPoint; }
 
     // ===== 非使用　後で使うかも？ =====
     
@@ -148,7 +159,7 @@ private:
     };
     enum Anination
     {
-        Anim_Idle,     // 待機
+        Anim_Idle,      // 待機
         Anim_Nod,       // 頷く
         Anim_Damage,    // ダメージ
     };

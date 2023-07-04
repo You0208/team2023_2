@@ -40,7 +40,7 @@ private:
     // ステージが切り替わる境目
     static constexpr int StageChangeLine[Stage::StageMax - 1] =
     {
-        10
+        3
     };
 
 public:

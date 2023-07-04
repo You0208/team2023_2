@@ -12,6 +12,13 @@ enum TYPE
     GATE,
 };
 
+enum HIT_CHECK_TYPE
+{
+    ACTIVE,     // 積極的に当たり判定をとる
+    DEACTIVE,   // 非積極的に当たり判定をとる
+    NOT         // 当たり判定をとらない
+};
+
 // 障害物（基底クラス）
 class Obstacle 
 {
@@ -40,6 +47,8 @@ public:
 
     // 位置設定
     void SetPosition(DirectX::XMFLOAT3 p)  { position = p; }
+    void SetOriginPosition(DirectX::XMFLOAT3* p)  { OriginPosition = p; }
+    DirectX::XMFLOAT3* GetOriginPosition() { return OriginPosition; }
 
     // 半径取得
     float GetRadius() const { return radius; }
@@ -60,17 +69,11 @@ private:
     // 速度処理更新
     void UpdateVelocity(float elapsedTime);
 
-    // 水平速力更新処理
-    void UpdataHorizontalVelocity(float elapsedFrame);
+    // 速度の追加更新
+    virtual void UpdataAdditionVelocity(float elapsedFrame) {}
 
-    // 水平移動更新処理
-    void UpdateHorizontalMove(float elapsedTime);
-
-    // 垂直速力更新処理
-    void UpdataVerticalVelocity(float elapsedFrame);
-
-    // 垂直移動更新処理
-    void UpdateVerticalMove(float elapsedTime);
+    // 移動更新処理
+    void UpdateMove(float elapsedTime);
 
     // デバッグプリミティブ描画
     virtual void DrawDebugPrimitive() {};
@@ -84,10 +87,13 @@ public:
     int score = 0;
     int hungerPoint = 0;
     int Type = 0;
+    int HitCheckTYpe = HIT_CHECK_TYPE::DEACTIVE;
     int CollisionNum = 0;
-    bool IsHit = false;
+    bool IsHit = false;                                     // 対プレイヤー
+    bool IsHitVsObs = false;                                // 対Obstacle
 protected:
     DirectX::XMFLOAT3   position        = { 0,0,0 };        // 位置
+    DirectX::XMFLOAT3*  OriginPosition  = nullptr;          // ステージの原点
     DirectX::XMFLOAT3   angle           = { 0,0,0 };        // 角度
     DirectX::XMFLOAT3   scale           = { 1,1,1 };        // スケール
     DirectX::XMFLOAT3   velocity        = { 0,0,0 };        // 速度
@@ -176,7 +182,7 @@ public:
 class Jellybeans_Base : public Obstacle
 {
 public:
-    Jellybeans_Base() { scale = { 0.5f,0.5f ,0.5f }; }
+    Jellybeans_Base();
     // 更新処理
     void Update(float elapsedTime)override;
     // デバッグプリミティブ描画
@@ -199,6 +205,12 @@ class Jellybeans_Green : public Jellybeans_Base
 {
 public:
     Jellybeans_Green();
+};
+// ビーンズ(オレンジ)
+class Jellybeans_Orange : public Jellybeans_Base
+{
+public:
+    Jellybeans_Orange();
 };
 
 
@@ -233,13 +245,32 @@ public:
     void DrawDebugPrimitive()override;
 };
 
-
-
 // フーセンガム
 class Husen_gum : public Obstacle
 {
 public:
+    static float constexpr MaxUp        = 20.0f;      // 上下移動の最大値      
+    static float constexpr MaxDown      = 0.0f;      // 上下移動の最小値 
+    static float constexpr MaxPos[2] =
+    {
+        MaxDown,
+        MaxUp
+    };
+
+    static float constexpr MoveSpeed    = 20.0f;      // 上下移動の速度
+
+public:
     Husen_gum();
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
+
+private:
+    // 追加の速力更新処理
+    void UpdataAdditionVelocity(float elapsedFrame) override;
+
+private:
+    bool isUp = true;
+    bool a[3] = {};
 };
 
 // キャンディーゲート
@@ -265,10 +296,21 @@ public:
 // マーブルチョコ
 class Marble_chocolate : public Obstacle
 {
+private:
+    static float constexpr MaxMoveDistance = 30.0f;     // 移動距離の最大値
+    static float constexpr MoveSpeed = 80.0f;           // 移動距離の最大値
+
 public:
     Marble_chocolate();
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;
+
+private:
+    // 速度の追加更新
+    void UpdataAdditionVelocity(float elapsedFrame)override;
+
+private:
+    bool isleft = false;
 };
 
 
@@ -276,7 +318,7 @@ public:
 class Cupcake_Base : public Obstacle
 {
 public:
-    Cupcake_Base(){}
+    Cupcake_Base();
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;
 };
@@ -291,4 +333,34 @@ class Cupcake_Pink : public Cupcake_Base
 {
 public:
     Cupcake_Pink();
+};
+
+// プリン
+class Pudding : public Obstacle
+{
+public:
+    Pudding();
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
+};
+
+// マカロン
+class Macaron_Base : public Obstacle
+{
+public:
+    Macaron_Base();
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
+};
+// 抹茶
+class Macaron_Maccha : public Macaron_Base
+{
+public:
+    Macaron_Maccha();
+};
+// ピンク
+class Macaron_Pink : public Macaron_Base
+{
+public:
+    Macaron_Pink();
 };

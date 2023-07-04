@@ -27,6 +27,7 @@ public:
     bool GetIsSpawn() { return isSpawn; }                                   // 生成フラグ取得
     DirectX::XMFLOAT3 GetSpawnPosition() { return spawnPosition; }          // 生成位置取得
     DirectX::XMFLOAT3* GetAddressOfVelocity() { return &velocity; }         // velocityのポインター取得
+    DirectX::XMFLOAT3* GetPosition() { return &position; }
 
     static const int GetSpawnStageCount() { return SpawnStageCount; }               // ステージの生成数を返す
     static void clear();                                                           // 初期化

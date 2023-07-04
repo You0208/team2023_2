@@ -26,6 +26,22 @@ void SceneGame::Initialize()
 	// 空初期設定
 	sky = new Sky();
 
+
+	// 空腹ゲージのフレーム設定
+	texture_hungerGageFrame = std::make_unique<Texture>("Data/Texture/UI/GaugeUI.png");
+	sprite_hungerGageFrame = std::make_unique<Sprite>();
+	sprite_hungerGageFrame->SetShaderResourceView(texture_hungerGageFrame->GetShaderResourceView(),
+		texture_hungerGageFrame->GetWidth(), texture_hungerGageFrame->GetHeight());
+	// 空腹ゲージ設定
+	texture_hungerGage = std::make_unique<Texture>("Data/Texture/UI/white.png");
+	sprite_hungerGage = std::make_unique<Sprite>();
+	sprite_hungerGage->SetShaderResourceView(texture_hungerGage->GetShaderResourceView(),
+		texture_hungerGage->GetWidth(), texture_hungerGage->GetHeight());
+	// 空腹ゲージの背景設定
+	sprite_hungerGageBack = std::make_unique<Sprite>();
+	sprite_hungerGageBack->SetShaderResourceView(texture_hungerGage->GetShaderResourceView(),
+		texture_hungerGage->GetWidth(), texture_hungerGage->GetHeight());
+
 	// ステージマネージャー初期設定
 	stageManager = new StageManager;
 
@@ -160,11 +176,18 @@ void SceneGame::Initialize()
 		srvData.height = renderTarget->GetHeight();
 		postprocessingRenderer->SetSceneData(srvData);
 	}
+
+
+	// スコア読み取り
+	InputScoreRanking();
 }
 
 // 終了化
 void SceneGame::Finalize()
 {
+	// ファイル書き込み(テスト)
+	OutputScoreRanking(player);
+
 	// ステージ終了
 	stageManager->Clear();
 	// プレイヤー終了
@@ -259,6 +282,32 @@ void SceneGame::Update(float elapsedTime)
 		// エフェクトの更新処理
 		EffectManager::Instance().Update(elapsedTime);
 	}
+<<<<<<< HEAD
+=======
+	cameraController->Update(elapsedTime);
+
+
+	//プレイヤー更新処理
+	player->Update(elapsedTime);
+
+	CollisionPlayerVsObs();
+
+	//ステージ更新処理
+	stageManager->Update(player, elapsedTime);
+
+	CollisionObsVsObs();
+
+	//空更新処理
+	sky->Update(elapsedTime);
+	sky->SetPosition({ player->GetPosition().x,player->GetPosition().y,player->GetPosition().z + sky->space });
+
+	// エフェクトの更新処理
+	EffectManager::Instance().Update(elapsedTime);
+
+	// 空腹ゲージの更新
+	UpdateHungerGage();
+
+>>>>>>> maeyamaSub
 	//-------------------------------------------------------------------------------------------------------
 	// ↓　この下はシェーダー関連
 	//-------------------------------------------------------------------------------------------------------
@@ -341,7 +390,9 @@ void SceneGame::Render()
 		postprocessingRenderer->Render(dc);
 
 	}
+
 	// 2Dスプライト描画
+<<<<<<< HEAD
 	{ 
 		RenderContext rc;
 		rc.deviceContext = dc;
@@ -353,6 +404,18 @@ void SceneGame::Render()
 			shader->Draw(rc, sprite_line.get());
 			shader->End(rc);
 		}
+=======
+	{  
+		// 描画処理
+		RenderContext rc;
+		rc.deviceContext = dc;
+		SpriteShader* shader = graphics.GetShader(SpriteShaderId::Default);
+		shader->Begin(rc);
+		shader->Draw(rc, sprite_hungerGageBack.get());
+		shader->Draw(rc, sprite_hungerGage.get());
+		shader->Draw(rc, sprite_hungerGageFrame.get());
+		shader->End(rc);;
+>>>>>>> maeyamaSub
 	}
 
 	// デバッグ情報の表示
@@ -385,6 +448,17 @@ void SceneGame::Render()
 		stageManager->DrawDebugGUI();
 		postprocessingRenderer->DrawDebugGUI();
 	}
+	// スコア表示
+	{
+		ImGui::Separator();
+		if (ImGui::TreeNode("SCORE"))
+		{
+			ImGui::Text("HighScore:%ld", HighScore);
+			ImGui::TreePop();
+		}
+		ImGui::Separator();
+	}
+
 }
 
 void SceneGame::DrawDebugParameter(DirectX::XMFLOAT4X4& transform, const char* label)
@@ -529,6 +603,7 @@ void SceneGame::CollisionPlayerVsObs()
 	}
 }
 
+<<<<<<< HEAD
 void SceneGame::SelectUpdate(float elapsedTime)
 {
 	if (!isTrans)
@@ -605,6 +680,124 @@ void SceneGame::DeathMoment()
 	postprocessingRenderer->setThreshold(0.0f);
 	cameraController->flag = true;
 	cameraController->setRange(cameraController->getRange() * 1.5f);
+=======
+
+void SceneGame::CollisionObsVsObs()
+{
+	for (auto& it : stageManager->stages)
+	{
+		for (auto& Obs : it->obstacles)
+		{
+			// 積極的に当たり判定を取らないと飛ばす
+			if (Obs->HitCheckTYpe != HIT_CHECK_TYPE::ACTIVE) continue;
+
+			DirectX::XMFLOAT3 obs1_position = Obs->GetPosition();
+			float obs1_radius = Obs->GetRadius();
+			float obs1_height = Obs->GetHeight();
+
+			for (auto& Obs2 : it->obstacles)
+			{
+				// 当たり判定を取らない場合は飛ばす
+				if (Obs2->IsHitVsObs == HIT_CHECK_TYPE::NOT) continue;
+
+				// 同じ場合は飛ばす
+				if (Obs == Obs2)continue;
+
+				// 同じステージでなければ飛ばす
+				if (Obs->GetOriginPosition() != Obs->GetOriginPosition()) continue;
+
+				DirectX::XMFLOAT3 obs2_position = Obs2->GetPosition();
+				float obs2_radius = Obs2->GetRadius();
+				float obs2_height = Obs2->GetHeight();
+				DirectX::XMFLOAT3 outPosition;
+
+				// どちらもアイテム(球)タイプの場合
+				if (Obs->Type == ITEMS && Obs2->Type == ITEMS)
+				{
+					if (Collision::IntersectSphereVsSphere(
+						obs2_position,
+						obs2_radius,
+						obs1_position,
+						obs1_radius,
+						outPosition
+					))
+					{
+						Obs->IsHitVsObs = true;
+						Obs->SetPosition(outPosition);
+					}
+				}
+				// Obs2がアイテム(球)の場合
+				else if (Obs2->Type == ITEMS)
+				{
+					for (int n = 0; n < Obs->CollisionNum; ++n)
+					{
+						// 衝突判定
+						if (Collision::IntersectSphereVsCylinder
+						(
+							obs2_position,
+							obs2_radius,
+							{ (Obs->GetPosition().x - (Obs->CollisionNum * 0.5f) + Obs->GetRadius()) + (n * Obs->GetRadius() * 2.0f) ,Obs->GetPosition().y,Obs->GetPosition().z },
+							obs1_radius,
+							obs1_height,
+							outPosition))
+						{
+							Obs->IsHitVsObs = true;
+							Obs->SetPosition(outPosition);
+						}
+					}
+				}
+				// Obsがアイテム(球)の場合
+				else if (Obs->Type == ITEMS)
+				{
+					for (int n2 = 0; n2 < Obs2->CollisionNum; ++n2)
+					{
+						// 衝突判定
+						if (Collision::IntersectCylinderVsSphere
+						(
+							{ (Obs2->GetPosition().x - (Obs2->CollisionNum * 0.5f) + Obs2->GetRadius()) + (n2 * Obs2->GetRadius() * 2.0f) ,Obs2->GetPosition().y,Obs2->GetPosition().z },
+							obs2_radius,
+							obs2_height,
+							obs1_position,
+							obs1_radius,
+							outPosition)
+							)
+						{
+							Obs->IsHitVsObs = true;
+							Obs->SetPosition(outPosition);
+						}
+					}
+				}
+				// その他
+				else
+				{
+					for (int n1 = 0; n1 < Obs->CollisionNum; ++n1)
+					{
+						for (int n2 = 0; n2 < Obs2->CollisionNum; ++n2)
+						{
+
+							// 衝突判定
+							if (Collision::IntersectCylinderVsCylinder
+							(
+								{ (Obs2->GetPosition().x - (Obs2->CollisionNum * 0.5f) + Obs2->GetRadius()) + (n2 * Obs2->GetRadius() * 2.0f) ,Obs2->GetPosition().y,Obs2->GetPosition().z },
+								Obs2->GetRadius(),
+								Obs2->GetHeight(),
+								{ (Obs->GetPosition().x - (Obs->CollisionNum * 0.5f) + Obs->GetRadius()) + (n1 * Obs->GetRadius() * 2.0f) ,Obs->GetPosition().y,Obs->GetPosition().z },
+								Obs->GetRadius(),
+								Obs->GetHeight(),
+								outPosition)
+								)
+							{
+								Obs->IsHitVsObs = true;
+								Obs->SetPosition(outPosition);
+							}
+						}
+					}
+
+				}
+			}
+		}
+	}
+>>>>>>> maeyamaSub
 }
 
 // グリッド描画
@@ -749,6 +942,7 @@ void SceneGame::RenderShadowmap()
 	}
 }
 
+<<<<<<< HEAD
 void SceneGame::accelUpdate(float elapsedTime)
 {
 	accelFrame -= 1.0f;
@@ -766,6 +960,89 @@ void SceneGame::accelUpdate(float elapsedTime)
 		accelFrame = 120.0f;
 		accel = false;
 	}
+=======
+// 空腹ゲージの更新
+void SceneGame::UpdateHungerGage()
+{
+	float magnification = 20.0f;								// 倍率
+
+	float dh = 9.0f * magnification;							// 枠の描画サイズ(y)
+	float dw_f = 35 * magnification;							// 枠の描画サイズ(x)
+	// ゲージの描画サイズ(x)
+	float dw_g = (dw_f - 9.15 * magnification) * (player->GetHungerPoint() / Player::MaxHungerPoint);
+	float x_g = 9.15 * magnification;							// ゲージの描画位置(x)
+	float x_f = 0.0f;											// ゲージの描画位置(x)	// ゲージの描画位置(x)
+	float y = Graphics::Instance().GetScreenHeight() - dh;		// 描画位置(y)
+
+	// ゲージの色
+	DirectX::XMFLOAT3 c[3] =
+	{
+		{0.65f,0.68f,1.0f},
+		{0.489f,1.0f,0.541f},
+		{1.0f,0.611f,0.56f}
+	};
+
+	// ゲージ
+	sprite_hungerGage->Update(
+		x_g, y,
+		dw_g, dh,
+		0.0f, 0.0f,
+		100.0f, 100.0f,
+		0.0f,
+		c[player->GetHungerLevel()].x, c[player->GetHungerLevel()].y, c[player->GetHungerLevel()].z, 1.0f);
+	// フレーム
+	sprite_hungerGageFrame->Update(
+		x_f, y,
+		dw_f, dh,
+		0.0f, static_cast<float>(texture_hungerGageFrame->GetHeight() / 3) * player->GetHungerLevel(),
+		static_cast<float>(texture_hungerGageFrame->GetWidth()), static_cast<float>(texture_hungerGageFrame->GetHeight() / 3),
+		0.0f,
+		1.0f, 1.0f, 1.0f, 1.0f);
+	// 背景
+	sprite_hungerGageBack->Update(
+		x_f, y,
+		dw_f, dh,
+		0.0f, static_cast<float>(texture_hungerGageFrame->GetHeight() / 3) * player->GetHungerLevel(),
+		static_cast<float>(texture_hungerGageFrame->GetWidth()), static_cast<float>(texture_hungerGageFrame->GetHeight() / 3),
+		0.0f,
+		1.0f, 1.0f, 1.0f, 1.0f);
+}
+
+void SceneGame::InputScoreRanking()
+{
+	// ファイルの読み込み
+	read_ScoreRanking.open(fileName);
+	char command[256];
+
+	// 読み込めた場合
+	if (read_ScoreRanking)
+	{
+		while (read_ScoreRanking)
+		{
+			read_ScoreRanking >> command;
+			if (0 == strcmp(command, "hs"))					// 先頭の文字が"s"である場合
+			{
+				read_ScoreRanking.ignore(1);				// 1行開ける
+				read_ScoreRanking >> HighScore;				// 数値代入
+				read_ScoreRanking.ignore(1024, '\n');       // [\n(改行)]まで文字を削除する(最大1024文字)⇒次の行まで削除
+			}
+		}
+	}
+	read_ScoreRanking.close();
+}
+
+// 最大スコアの出力
+void SceneGame::OutputScoreRanking(Player* player)
+{
+	// score[最大値](一番小さい値)と今回のスコアの高い方を代入
+	HighScore = (std::max)(HighScore, player->GetScore());
+
+
+	// ファイルの書き込み
+	writing_ScoreRanking.open(fileName);
+	writing_ScoreRanking << "hs " << HighScore << "\n";
+	writing_ScoreRanking.close();
+>>>>>>> maeyamaSub
 }
 
 // 3D空間の描画

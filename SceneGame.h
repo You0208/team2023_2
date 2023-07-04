@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <fstream>
+#include <string>
 #include "Graphics/Model.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/Texture.h"
@@ -58,6 +60,10 @@ public:
 
 	// 死んだ瞬間の値変化
 	void DeathMoment();
+
+	// 障害物と障害物の当たり判定
+	void CollisionObsVsObs();
+
 private:
 	// 3D空間の描画
 	void Render3DScene();
@@ -66,6 +72,21 @@ private:
 	void RenderShadowmap();
 
 	void accelUpdate(float elapsedTime);
+
+	// 空腹ゲージの更新
+	void UpdateHungerGage();
+
+private:	// スコア保存用SceneTitleに持っていく
+	int HighScore = 0;									// 読み込んだ最大スコアを格納する
+	std::ofstream writing_ScoreRanking;					// 書き出し用変数
+	std::ifstream read_ScoreRanking;					// 読み出し用変数
+	static constexpr char* fileName = "Data/Save/HighScore.txt";	// 開くファイル名
+
+	// 最大スコアの読み取り
+	void InputScoreRanking();
+
+	// 最大スコアの出力
+	void OutputScoreRanking(Player* player);
 
 private:
 	bool accel = false;
@@ -89,6 +110,12 @@ private:
 
 	Effect* hitEffect = nullptr;
 	Effect* accelEffect = nullptr;
+
+	std::unique_ptr<Texture>	texture_hungerGage;			// 空腹ゲージのテクスチャ(白)
+	std::unique_ptr<Texture>	texture_hungerGageFrame;	// 空腹ゲージのフレームのテクスチャ
+	std::unique_ptr<Sprite>		sprite_hungerGage;			// 空腹ゲージ
+	std::unique_ptr<Sprite>		sprite_hungerGageFrame;		// 空腹ゲージのフレーム
+	std::unique_ptr<Sprite>		sprite_hungerGageBack;		// 空腹ゲージの背景
 	//-------------------------------------------------------------------------------------------------------
 	// ↓　この下はシェーダー関連
 	//-------------------------------------------------------------------------------------------------------
