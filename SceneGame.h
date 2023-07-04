@@ -82,10 +82,10 @@ private:	// スコア保存用SceneTitleに持っていく
 	std::ifstream read_ScoreRanking;					// 読み出し用変数
 	static constexpr char* fileName = "Data/Save/HighScore.txt";	// 開くファイル名
 
-	// 最大スコアの読み取り
+	// 最大スコアの読み取り(仮)
 	void InputScoreRanking();
 
-	// 最大スコアの出力
+	// 最大スコアの出力(仮)
 	void OutputScoreRanking(Player* player);
 
 private:

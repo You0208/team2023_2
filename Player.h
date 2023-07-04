@@ -84,15 +84,13 @@ public:
     bool GetIsDamageAnim() const { return isDamageAnim; }
     // スコアを加算する
     void AddScore(int s) { score += s; }
-<<<<<<< HEAD
-=======
+
     // スコアを取得
     int GetScore() { return score; }
     // 死亡した時に呼ばれる
     void OnDead() {
         SceneManager::Instance().ChangeScene(new SceneOver);
     };
->>>>>>> maeyamaSub
     // 空腹レベル取得
     int GetHungerLevel() const { return hungerLevel; }
     // 空腹ポイント取得

@@ -271,6 +271,8 @@ void SceneGame::Update(float elapsedTime)
 			//ステージ更新処理
 			stageManager->Update(player, elapsedTime);
 			CollisionPlayerVsObs();
+			CollisionObsVsObs();		// 障害物同士の当たり判定
+			UpdateHungerGage();			// 空腹ゲージの更新
 		}
 		else if (player->IsDeath)// プレイヤーが死んでいる時
 		{
@@ -282,32 +284,8 @@ void SceneGame::Update(float elapsedTime)
 		// エフェクトの更新処理
 		EffectManager::Instance().Update(elapsedTime);
 	}
-<<<<<<< HEAD
-=======
-	cameraController->Update(elapsedTime);
 
 
-	//プレイヤー更新処理
-	player->Update(elapsedTime);
-
-	CollisionPlayerVsObs();
-
-	//ステージ更新処理
-	stageManager->Update(player, elapsedTime);
-
-	CollisionObsVsObs();
-
-	//空更新処理
-	sky->Update(elapsedTime);
-	sky->SetPosition({ player->GetPosition().x,player->GetPosition().y,player->GetPosition().z + sky->space });
-
-	// エフェクトの更新処理
-	EffectManager::Instance().Update(elapsedTime);
-
-	// 空腹ゲージの更新
-	UpdateHungerGage();
-
->>>>>>> maeyamaSub
 	//-------------------------------------------------------------------------------------------------------
 	// ↓　この下はシェーダー関連
 	//-------------------------------------------------------------------------------------------------------
@@ -392,8 +370,7 @@ void SceneGame::Render()
 	}
 
 	// 2Dスプライト描画
-<<<<<<< HEAD
-	{ 
+	{
 		RenderContext rc;
 		rc.deviceContext = dc;
 		SpriteShader* shader = graphics.GetShader(SpriteShaderId::Default);
@@ -402,63 +379,57 @@ void SceneGame::Render()
 			// 描画処理
 			shader->Begin(rc);
 			shader->Draw(rc, sprite_line.get());
+
+			// 空腹ゲージ
+			shader->Draw(rc, sprite_hungerGageBack.get());
+			shader->Draw(rc, sprite_hungerGage.get());
+			shader->Draw(rc, sprite_hungerGageFrame.get());
+
 			shader->End(rc);
 		}
-=======
-	{  
-		// 描画処理
-		RenderContext rc;
-		rc.deviceContext = dc;
-		SpriteShader* shader = graphics.GetShader(SpriteShaderId::Default);
-		shader->Begin(rc);
-		shader->Draw(rc, sprite_hungerGageBack.get());
-		shader->Draw(rc, sprite_hungerGage.get());
-		shader->Draw(rc, sprite_hungerGageFrame.get());
-		shader->End(rc);;
->>>>>>> maeyamaSub
-	}
 
-	// デバッグ情報の表示
-	{
-		ImGui::Separator();
-		if (ImGui::TreeNode("Mask"))
+		// デバッグ情報の表示
 		{
-			ImGui::SliderFloat("Dissolve Threshold", &dissolveThreshold, 0.0f, 1.0f);
-			ImGui::TreePop();
+			ImGui::Separator();
+			if (ImGui::TreeNode("Mask"))
+			{
+				ImGui::SliderFloat("Dissolve Threshold", &dissolveThreshold, 0.0f, 1.0f);
+				ImGui::TreePop();
+			}
+			ImGui::Separator();
+			LightManager::Instane().DrawDebugGUI();
+			ImGui::Separator();
+			if (ImGui::TreeNode("Shadowmap"))
+			{
+				ImGui::SliderFloat("DrawRect", &shadowDrawRect, 1.0f, 2048.0f);
+				ImGui::ColorEdit3("Color", &shadowColor.x);
+				ImGui::SliderFloat("Bias", &shadowBias, 0.0f, 0.1f);
+				ImGui::Text("texture");
+				ImGui::Image(shadowmapDepthStencil->GetShaderResourceView().Get(), { 256, 256 }, { 0, 0 }, { 1, 1 },
+					{ 1, 1, 1, 1 });
+				ImGui::TreePop();
+			}
+			ImGui::Separator();
 		}
-		ImGui::Separator();
-		LightManager::Instane().DrawDebugGUI();
-		ImGui::Separator();
-		if (ImGui::TreeNode("Shadowmap"))
+		// 2DデバッグGUI描画
 		{
-			ImGui::SliderFloat("DrawRect", &shadowDrawRect, 1.0f, 2048.0f);
-			ImGui::ColorEdit3("Color", &shadowColor.x);
-			ImGui::SliderFloat("Bias", &shadowBias, 0.0f, 0.1f);
-			ImGui::Text("texture");
-			ImGui::Image(shadowmapDepthStencil->GetShaderResourceView().Get(), { 256, 256 }, { 0, 0 }, { 1, 1 },
-				{ 1, 1, 1, 1 });
-			ImGui::TreePop();
+			// stageManager
+			player->DrawDebugGUI();
+			stageManager->DrawDebugGUI();
+			postprocessingRenderer->DrawDebugGUI();
 		}
-		ImGui::Separator();
-	}
-	// 2DデバッグGUI描画
-	{
-		// stageManager
-		player->DrawDebugGUI();
-		stageManager->DrawDebugGUI();
-		postprocessingRenderer->DrawDebugGUI();
-	}
-	// スコア表示
-	{
-		ImGui::Separator();
-		if (ImGui::TreeNode("SCORE"))
+		// スコア表示
 		{
-			ImGui::Text("HighScore:%ld", HighScore);
-			ImGui::TreePop();
+			ImGui::Separator();
+			if (ImGui::TreeNode("SCORE"))
+			{
+				ImGui::Text("HighScore:%ld", HighScore);
+				ImGui::TreePop();
+			}
+			ImGui::Separator();
 		}
-		ImGui::Separator();
-	}
 
+	}
 }
 
 void SceneGame::DrawDebugParameter(DirectX::XMFLOAT4X4& transform, const char* label)
@@ -603,7 +574,6 @@ void SceneGame::CollisionPlayerVsObs()
 	}
 }
 
-<<<<<<< HEAD
 void SceneGame::SelectUpdate(float elapsedTime)
 {
 	if (!isTrans)
@@ -680,8 +650,9 @@ void SceneGame::DeathMoment()
 	postprocessingRenderer->setThreshold(0.0f);
 	cameraController->flag = true;
 	cameraController->setRange(cameraController->getRange() * 1.5f);
-=======
+}
 
+// 障害物と障害物の当たり判定
 void SceneGame::CollisionObsVsObs()
 {
 	for (auto& it : stageManager->stages)
@@ -797,7 +768,6 @@ void SceneGame::CollisionObsVsObs()
 			}
 		}
 	}
->>>>>>> maeyamaSub
 }
 
 // グリッド描画
@@ -942,7 +912,6 @@ void SceneGame::RenderShadowmap()
 	}
 }
 
-<<<<<<< HEAD
 void SceneGame::accelUpdate(float elapsedTime)
 {
 	accelFrame -= 1.0f;
@@ -960,7 +929,8 @@ void SceneGame::accelUpdate(float elapsedTime)
 		accelFrame = 120.0f;
 		accel = false;
 	}
-=======
+}
+
 // 空腹ゲージの更新
 void SceneGame::UpdateHungerGage()
 {
@@ -1008,6 +978,7 @@ void SceneGame::UpdateHungerGage()
 		1.0f, 1.0f, 1.0f, 1.0f);
 }
 
+// 最大スコアの読み取り(仮)
 void SceneGame::InputScoreRanking()
 {
 	// ファイルの読み込み
@@ -1031,7 +1002,7 @@ void SceneGame::InputScoreRanking()
 	read_ScoreRanking.close();
 }
 
-// 最大スコアの出力
+// 最大スコアの出力(仮)
 void SceneGame::OutputScoreRanking(Player* player)
 {
 	// score[最大値](一番小さい値)と今回のスコアの高い方を代入
@@ -1042,7 +1013,6 @@ void SceneGame::OutputScoreRanking(Player* player)
 	writing_ScoreRanking.open(fileName);
 	writing_ScoreRanking << "hs " << HighScore << "\n";
 	writing_ScoreRanking.close();
->>>>>>> maeyamaSub
 }
 
 // 3D空間の描画
