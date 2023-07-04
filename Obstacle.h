@@ -175,7 +175,7 @@ public:
 class Jellybeans_Base : public Obstacle
 {
 public:
-    Jellybeans_Base() { scale = { 0.5f,0.5f ,0.5f }; }
+    Jellybeans_Base();
     // 更新処理
     void Update(float elapsedTime)override;
     // デバッグプリミティブ描画
@@ -198,6 +198,12 @@ class Jellybeans_Green : public Jellybeans_Base
 {
 public:
     Jellybeans_Green();
+};
+// ビーンズ(オレンジ)
+class Jellybeans_Orange : public Jellybeans_Base
+{
+public:
+    Jellybeans_Orange();
 };
 
 
@@ -305,7 +311,7 @@ private:
 class Cupcake_Base : public Obstacle
 {
 public:
-    Cupcake_Base(){}
+    Cupcake_Base();
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;
 };
@@ -320,4 +326,34 @@ class Cupcake_Pink : public Cupcake_Base
 {
 public:
     Cupcake_Pink();
+};
+
+// プリン
+class Pudding : public Obstacle
+{
+public:
+    Pudding();
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
+};
+
+// マカロン
+class Macaron_Base : public Obstacle
+{
+public:
+    Macaron_Base();
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
+};
+// 抹茶
+class Macaron_Maccha : public Macaron_Base
+{
+public:
+    Macaron_Maccha();
+};
+// ピンク
+class Macaron_Pink : public Macaron_Base
+{
+public:
+    Macaron_Pink();
 };

@@ -246,6 +246,10 @@ Marshmallow_Pink::Marshmallow_Pink()
 }
 
 
+Jellybeans_Base::Jellybeans_Base()
+{
+    scale = { 0.5f,0.5f ,0.5f };
+}
 // ビーンズ
 // 更新処理
 void Jellybeans_Base::Update(float elapsedTime)
@@ -283,6 +287,13 @@ Jellybeans_Green::Jellybeans_Green()
     Jellybeans_Base();
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/jellybeans/jellybeans_green.mdl");
+}
+// ビーンズ(オレンジ)
+Jellybeans_Orange::Jellybeans_Orange()
+{
+    Jellybeans_Base();
+    //モデルを読み込み
+    model = std::make_unique<Model>("Data/Model/Obstacle/jellybeans/jellybeans_orange.mdl");
 }
 
 
@@ -478,23 +489,24 @@ void Marble_chocolate::UpdataAdditionVelocity(float elapsedFrame)
 }
 
 
-// カップケーキ(チョコ)
-Cupcake_Choco::Cupcake_Choco()
+Cupcake_Base::Cupcake_Base()
 {
-    model = std::make_unique<Model>("Data/Model/Obstacle/cupcake/cupcake_choco.mdl");
     radius = 2.5f;
     Type = TYPE::ITEMS;
     hungerPoint = 10;
     score = 10;
 }
+// カップケーキ(チョコ)
+Cupcake_Choco::Cupcake_Choco()
+{
+    model = std::make_unique<Model>("Data/Model/Obstacle/cupcake/cupcake_choco.mdl");
+    Cupcake_Base();
+}
 // カップケーキ(ピンク)
 Cupcake_Pink::Cupcake_Pink()
 {
     model = std::make_unique<Model>("Data/Model/Obstacle/cupcake/cupcake_pink.mdl");
-    radius = 2.5f;
-    Type = TYPE::ITEMS;
-    score = 10;
-    hungerPoint = 10;
+    Cupcake_Base();
 }
 
 void Cupcake_Base::DrawDebugPrimitive()
@@ -502,4 +514,47 @@ void Cupcake_Base::DrawDebugPrimitive()
     DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
     //衝突判定用のデバッグ円柱を描画
     debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
+}
+
+// プリン
+Pudding::Pudding()
+{
+    model = std::make_unique<Model>("Data/Model/Obstacle/pudding/pudding.mdl");
+    radius = 2.5f;
+    Type = TYPE::ITEMS;
+    hungerPoint = 50;
+    score = 50;
+}
+void Pudding::DrawDebugPrimitive()
+{
+    DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
+    //衝突判定用のデバッグ円柱を描画
+    debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
+}
+
+// マカロン
+Macaron_Base::Macaron_Base()
+{
+    radius = 2.5f;
+    Type = TYPE::ITEMS;
+    hungerPoint = 10;
+    score = 10;
+}
+void Macaron_Base::DrawDebugPrimitive()
+{
+    DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
+    //衝突判定用のデバッグ円柱を描画
+    debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
+}
+// 抹茶
+Macaron_Maccha::Macaron_Maccha()
+{
+    model = std::make_unique<Model>("Data/Model/Obstacle/macaron/macaron_maccha.mdl");
+    Macaron_Base();
+}
+// ピンク
+Macaron_Pink::Macaron_Pink()
+{
+    model = std::make_unique<Model>("Data/Model/Obstacle/macaron/macaron_pink.mdl");
+    Macaron_Base();
 }
