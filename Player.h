@@ -145,6 +145,8 @@ public:
     std::unique_ptr<Model>  model      = nullptr;       // モデル
 
     bool IsDeath = false;
+
+    bool IsBreakTime = false;        // ブレイクタイムであるか
 private:
     enum class State
     {

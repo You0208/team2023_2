@@ -103,7 +103,7 @@ Stage::Stage(int stageNo)
     stageNo = (std::min)(stageNo, StageMax);
 
     //ステージモデルを読み込み
-    //model = std::make_unique<Model>("Data/Model/Debug/cube.mdl");
+    model = std::make_unique<Model>("Data/Model/Debug/cube.mdl");
 
     // 初期設定
     scale = { StageSize,0.5f ,StageSize };

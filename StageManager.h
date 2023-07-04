@@ -14,7 +14,8 @@ private:
     static constexpr float ScrollVelocityRate = 0.01f;              // スクロール速度補間係数
     static constexpr float ScrollVelocityRate_ac = 0.001f;          // スクロール速度補間係数(加速状態)
     static constexpr float MaxVelocity = -300.0f;                   // Velocityの最大値
-    static constexpr float MaxBreakTime = 5.0f;                    // 休憩タイムの最大値
+    static const int Gap = 2;                                       // プレイヤーの位置とステージを削除する位置の差
+    static const int MaxBreakTime = 3;                                       // 
 
     // 各空腹レベルでのプレイヤーの最大速度
     static constexpr float MaxPlayerVelocity[3] =
@@ -41,9 +42,9 @@ private:
     // ステージが切り替わる境目
     static constexpr int StageChangeLine[Stage::StageMax - 1] =
     {
-        1,      // ステージ2切り替え
-        3,      // ステージ3切り替え
-        5,      // ステージ4切り替え
+        6,      // ステージ2切り替え
+        6,      // ステージ3切り替え
+        7,      // ステージ4切り替え
         7,      // ステージ5切り替え
     };
 
@@ -83,8 +84,8 @@ public:
     // 加速処理
     void AddVelocity(float addVelocity,float timer);
 
-    // 生成したステージ数を返す
-    int GetSpawnStageCount() { return BaseStage::GetSpawnStageCount() / Stage::StageSideMax; }
+    // プレイヤーが超えたステージの数を返す
+    int GetDoneStageNum() { return doneStageNum; }
 
     void setVelocityZ(int i) { stageScrollVelocity.z = i; }
 
@@ -112,11 +113,14 @@ private:
     // 水平速力更新処理
     void UpdataHorizontalVelocity(float elapsedFrame);
 
-    // ステージの切り替え
-    void ChangeStage();
+    // BreakTime_Stateをセット
+    void SetBreakTime_State();
 
     // 休憩時間更新
     void UpdateBreakTime(float elapsedFrame);
+
+    // doneStageNumの加算
+    void AddDoneStageNum(float elapsedTIme);
 
 public:
     bool IsStart = true;
@@ -127,6 +131,7 @@ public:
     void UpdateScrollVelocity(DirectX::XMFLOAT3& ScrollVelocity,float maxVelocity,float rate);
 
     bool IsBreakTime = false;                                           // 休憩フラグ
+    bool IsSpawnNone = false;                                           // 何もないステージを生成するフラグ
 
 private:
     // ステージデータ
@@ -141,11 +146,16 @@ private:
     std::vector<DirectX::XMFLOAT3>      terrainSpawns;                  // 生成リスト(位置だけ持っている)
 
     float breakTimer = 0.0f;                                             // 休憩タイマー
+    int breakTime = 0;                                                   // 休憩タイマー
+    int breakTime_State = 0;                                             // ブレイクタイム開始するステージ
+    int breakTime_End = 0;                                               // ブレイクタイム終了するステージ
 
     float moveVecX = 0.0f;                                              // 移動方向ベクトル
     float maxPlayerVelocity = 20.0f;                                    // プレイヤーの最大速度
     int   stageNo           = 0;                                        // 現在のステージ
-                                                                        // ===== 非使用　後で使うかも？ =====
+    int doneStageNum        = 0;                                        // プレイヤーが超えたステージの数
+
+   // ===== 非使用　後で使うかも？ =====
     float friction = 0.5f;                                              // 減速
     float acceleration = 10.0f;                                         // 加速力
 

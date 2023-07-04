@@ -32,11 +32,12 @@ void StageManager::DrawDebugGUI()
         ImGui::SliderFloat("terrainScrollVelocityZ", &terrainScrollVelocity.z, 0.0f, -300.0f);
     }
 
-    ImGui::Text("SpawnStageCount:%ld", GetSpawnStageCount());
+    ImGui::Text("DoneStageNu:%ld", doneStageNum);
     ImGui::Text("stageNo:%ld", stageNo);
     ImGui::Text("accelerationTimer:%d", static_cast<int>(accelerationTimer));
 
     ImGui::Text("IsBreakTime:%d", static_cast<int>(IsBreakTime));
+    ImGui::Text("IsSpawnNone:%d", static_cast<int>(IsSpawnNone));
 
     // 残り休憩時間
     ImGui::Text("IsBreakTime:%lf", breakTimer);
@@ -56,13 +57,16 @@ void StageManager::Update(Player* player, float elapsedTIme)
     if(player->GetIsDamageAnim()) return;
 
     // ステージ切り替え
-    ChangeStage();
+    SetBreakTime_State();
 
     // 移動入力処理
     InputMove(elapsedTIme);
 
     // 速度処理更新
     UpdateVelocity(elapsedTIme, player);
+
+    // doneStageNumの加算
+    AddDoneStageNum(elapsedTIme);
 
     // ステージの更新
     StageUpdate(elapsedTIme);
@@ -72,6 +76,7 @@ void StageManager::Update(Player* player, float elapsedTIme)
 
     // 休憩時間更新
     UpdateBreakTime(elapsedTIme);
+    player->IsBreakTime = IsBreakTime;
 }
 
 // セレクト更新
@@ -110,10 +115,10 @@ void StageManager::Draw(RenderContext rc, ModelShader* shader)
     }
 
     // 地形描画
-    for (BaseStage* terrain : terrains)
-    {
-        terrain->Draw(rc, shader);
-    }
+    //for (BaseStage* terrain : terrains)
+    //{
+    //    terrain->Draw(rc, shader);
+    //}
 }
 
 void StageManager::ObsDraw(RenderContext rc, ModelShader* shader)
@@ -177,7 +182,7 @@ void StageManager::Clear()
 // ステージ生成
 void StageManager::StageSpawn(DirectX::XMFLOAT3 position)
 {
-    int No = IsBreakTime ? -1 : stageNo;            // Stageの引き数が0以下の場合StageNONEが生成される
+    int No = IsSpawnNone ? -1 : stageNo;            // Stageの引き数が0以下の場合StageNONEが生成される
 
     Stage* s = new Stage(No);                       //ステージを生成
     s->SetPosition(position);                       // ここでステージのポジションを決める
@@ -279,9 +284,9 @@ void StageManager::TerrainUpdate(float elapsedTIme)
 // 地形生成
 void StageManager::TerrainSpawn(DirectX::XMFLOAT3 position)
 {
-    Terrain* s = new Terrain;           //地形を生成
-    s->SetPosition(position);// ここでステージのポジションを決める
-    s->SetScrollVelocity(&terrainScrollVelocity);  // 共通のスクロール速度を設定
+    Terrain* s = new Terrain;                       //地形を生成
+    s->SetPosition(position);                       // ここでステージのポジションを決める
+    s->SetScrollVelocity(&terrainScrollVelocity);   // 共通のスクロール速度を設定
     s->Initialize();
     terrains.emplace_back(s);
 }
@@ -391,33 +396,64 @@ void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
     moveVecX = 0.0f;
 }
 
-// ステージの切り替え
-void StageManager::ChangeStage()
+// BreakTime_Stateをセット
+void StageManager::SetBreakTime_State()
 {
+    //　ブレイクタイムは以下の処理をしない
+    if (IsBreakTime) return;
+
     for (int i = stageNo ;i < Stage::StageMax - 1;++i)
     {
-        if (GetSpawnStageCount() >= StageChangeLine[i])
+        if (doneStageNum >= StageChangeLine[i] - (Stage::StageDepthMax - 1))    // 1枚は自機の後ろに行くので
         {
-            IsBreakTime = true;             // 休憩フラグを立てる
-            breakTimer = MaxBreakTime;      // 休憩時間設定
-            stageNo++;                      // 次のステージに切り替え
-            return;
+            IsSpawnNone = true;             // 休憩フラグを立てる
+            breakTime_State = StageChangeLine[i];
+            break;
         }
-    }
+    }       
 }
 
 // 休憩時間更新
 void StageManager::UpdateBreakTime(float elapsedFrame)
 {
-    if (IsBreakTime)
+    if (IsSpawnNone)
     {
-        breakTimer -= elapsedFrame;
-        
-        // 0以下になったら休憩時間終了
-        if (breakTimer < 0)
+        // ブレイクタイム開始するステージを超えた　かつ　ブレイクタイムでないとき
+        if (!IsBreakTime && breakTime_State <= doneStageNum)
         {
-            IsBreakTime = false;
+            stageNo++;                  // 次のステージに切り替え
+            IsBreakTime = true;
+            breakTime_End = doneStageNum + Stage::StageDepthMax;
         }
+
+        // ステージの生成再開
+        if (IsBreakTime && breakTime_End - (Stage::StageDepthMax - 1) <= doneStageNum)
+        {
+            IsSpawnNone = false;
+        }
+    }
+    // ブレイクタイムなら
+    else if (IsBreakTime && breakTime_End <= doneStageNum)
+    {
+        IsBreakTime = false;
+        doneStageNum = 0;
+    }
+
+
+}
+
+// doneStageNumの加算
+void StageManager::AddDoneStageNum(float elapsedTIme)
+{
+    // ステージの位置(z)
+    static float z = + (Stage::StageSize*0.5f);     // 初期が画面の中心から始まるため
+    z -= stageScrollVelocity.z * elapsedTIme;
+
+    // ステージより大きくなると
+    if (z >= Stage::StageSize)
+    {
+        z = 0.0f;
+        ++doneStageNum;
     }
 }
 

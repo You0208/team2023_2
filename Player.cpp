@@ -1,5 +1,6 @@
 #include<imgui.h>
 #include "Camera.h"
+#include "Tool.h"
 #include "Player.h"
 #include "Input/Input.h"
 #include "Graphics/Graphics.h"
@@ -304,9 +305,20 @@ void Player::AddHungerPoint(float add)
 
 void Player::RemoveHungerPoint(float elapsedTime,float Remove)
 {
-    // 0以下ならreturnする
-    if (hungerPoint <= 0.0f) return;
-    hungerPoint -= Remove * elapsedTime;
-    // 超過修正
-    hungerPoint = (std::max)(hungerPoint, 0.0f);
+    // ブレイクタイム中なら回復する
+    if (IsBreakTime)
+    {
+        float target = MaxHungerPoint * 0.5f;
+
+        hungerPoint = lerp<float>(hungerPoint, target, 0.01f);
+    }
+    // ブレイクタイムでないなら減少する
+    else
+    { 
+        // 0以下ならreturnする
+        if (hungerPoint <= 0.0f) return;
+        hungerPoint -= Remove * elapsedTime;
+        // 超過修正
+        hungerPoint = (std::max)(hungerPoint, 0.0f);
+    }
 }
