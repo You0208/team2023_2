@@ -110,19 +110,6 @@ Stage::Stage(int stageNo)
     stageSideMax = StageSideMax;
     stageDepthMax = StageDepthMax;
 
-<<<<<<< HEAD
-    //if (SceneManager::Instance().IsNoneStage || stageNo < 0)
-    //{
-    //    AreaInfo infoN = RandSpawn(StageNONE);
-    //    infoN(this);
-    //}
-    //else 
-    //{
-    //    //AreaInfo info = RandSpawn(stageInfo[stageNo]);
-    //    AreaInfo info = RandSpawn(StageDebug[stageNo]);
-    //    info(this);
-    //}
-=======
     if (SceneManager::Instance().IsNoneStage)
     {
         AreaInfo infoN = RandSpawn(StageNONE);
@@ -130,11 +117,10 @@ Stage::Stage(int stageNo)
     }
     else 
     {
-        //AreaInfo info = RandSpawn(stageInfo[stageNo]);
-        AreaInfo info = RandSpawn(StageDebug[stageNo]);
+        AreaInfo info = RandSpawn(stageInfo[stageNo]);
+        //AreaInfo info = RandSpawn(StageDebug[stageNo]);
         info(this);
     }
->>>>>>> muta
 
     //StageInfoDebug(this,ObstacleNumber);
 }

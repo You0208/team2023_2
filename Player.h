@@ -147,13 +147,9 @@ public:
     std::unique_ptr<Model>  model      = nullptr;       // モデル
 
     bool IsDeath = false;
-<<<<<<< HEAD
 
     bool IsBreakTime = false;        // ブレイクタイムであるか
-=======
     bool Gashi = false;// 餓死
-
->>>>>>> muta
 private:
     enum class State
     {
