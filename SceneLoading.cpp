@@ -33,8 +33,10 @@ void SceneLoading::Update(float elapsedTime)
     constexpr float speed = 180;
     if (!next) {
         timer++;
+        Trans += 1.0 * elapsedTime;
+        if (Trans >= 1.0f)Trans = 1.0f;
 
-        if (timer % 3000 == 0)
+        if (timer % 300 == 0)
         {
             p_w += 1920;
             if (p_w > 5760)
@@ -46,12 +48,12 @@ void SceneLoading::Update(float elapsedTime)
         // 次のシーンの準備が完了したらシーンを切り替える
         if (nextScene->IsReady())
         {
+            if(timer>=1000)
             next = true;
         }
     }
     else
     {
-
         Trans -= 1.0 * elapsedTime;
         if (Trans <= 0.0f)
         {

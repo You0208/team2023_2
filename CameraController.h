@@ -30,6 +30,9 @@ public:
     // €–S‚ÌƒJƒƒ‰
     void DeathCamera();
 
+    // ‰ì€‚ÌƒJƒƒ‰
+    void DidFromHungerCamera();
+
     bool flag=false;
 private:
     int time;

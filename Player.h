@@ -56,6 +56,8 @@ public:
         position.z -= 1.5f;
     }
 
+    void DidFromHunger();
+
     // 位置更新
     void SetPosition(const DirectX::XMFLOAT3& position) { this->position = position; }
     // 回転更新
@@ -145,8 +147,13 @@ public:
     std::unique_ptr<Model>  model      = nullptr;       // モデル
 
     bool IsDeath = false;
+<<<<<<< HEAD
 
     bool IsBreakTime = false;        // ブレイクタイムであるか
+=======
+    bool Gashi = false;// 餓死
+
+>>>>>>> muta
 private:
     enum class State
     {

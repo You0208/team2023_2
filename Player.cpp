@@ -38,7 +38,7 @@ void Player::SelectUpdate(float elapsedTime)
 //更新処理
 void Player::Update(float elapsedTime)
 {
-    if (!IsDeath)
+    if (!IsDeath&&!Gashi)
     {
         // Bボタンでダメージ状態へ遷移(仮)
         GamePad& gamePad = Input::Instance().GetGamePad();
@@ -61,6 +61,9 @@ void Player::Update(float elapsedTime)
         //  空腹レベルの更新
         UpdateHungerPoint(elapsedTime);
     }
+
+    if (Gashi)DidFromHunger();
+
     // スケールの更新
     UpdateScale(MaxScale[hungerLevel], ScaleRate);
 
@@ -187,6 +190,13 @@ void Player::UpdateTransform()
     DirectX::XMStoreFloat4x4(&transform, W);
 }
 
+// 餓死演出
+void Player::DidFromHunger()
+{
+    if (angle.x > DirectX::XMConvertToRadians(-90.0f))
+        angle.x -= DirectX::XMConvertToRadians(0.5f);
+}
+
 
 // スティック入力値から移動ベクトルを取得
 float Player::GetMoveVecX() const
@@ -278,6 +288,8 @@ void Player::UpdateScale(float maxScale, float rate)
 
 void Player::UpdateHungerPoint(float elapsedTime)
 {
+    if (hungerPoint <= 0.0f) Gashi = true;
+
     // 常時空腹量が減少する
     RemoveHungerPoint(elapsedTime, 1.0f);
 

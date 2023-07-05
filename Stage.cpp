@@ -110,6 +110,7 @@ Stage::Stage(int stageNo)
     stageSideMax = StageSideMax;
     stageDepthMax = StageDepthMax;
 
+<<<<<<< HEAD
     //if (SceneManager::Instance().IsNoneStage || stageNo < 0)
     //{
     //    AreaInfo infoN = RandSpawn(StageNONE);
@@ -121,8 +122,21 @@ Stage::Stage(int stageNo)
     //    AreaInfo info = RandSpawn(StageDebug[stageNo]);
     //    info(this);
     //}
+=======
+    if (SceneManager::Instance().IsNoneStage)
+    {
+        AreaInfo infoN = RandSpawn(StageNONE);
+        infoN(this);
+    }
+    else 
+    {
+        //AreaInfo info = RandSpawn(stageInfo[stageNo]);
+        AreaInfo info = RandSpawn(StageDebug[stageNo]);
+        info(this);
+    }
+>>>>>>> muta
 
-    StageInfoDebug(this,ObstacleNumber);
+    //StageInfoDebug(this,ObstacleNumber);
 }
 
 Stage::~Stage()
@@ -258,7 +272,7 @@ void Stage::AreaInfoDebug(Stage* stage)
 
 
 // === 以下デバッグ用関数 ===
-int Stage::ObstacleNumber = marble_chocolate;
+int Stage::ObstacleNumber = husen_gum;
 void Stage::StageInfoDebug(Stage* stage,int n)
 {
     switch (n)
