@@ -117,8 +117,8 @@ Stage::Stage(int stageNo)
     }
     else 
     {
-        AreaInfo info = RandSpawn(stageInfo[stageNo]);
-        //AreaInfo info = RandSpawn(StageDebug[stageNo]);
+        //AreaInfo info = RandSpawn(stageInfo[stageNo]);
+        AreaInfo info = RandSpawn(StageDebug[stageNo]);
         info(this);
     }
 
@@ -250,8 +250,8 @@ void Stage::AreaInfoDebug(Stage* stage)
     //SpawnObstacle<Marshmallow_Blue>({ 40.0f,0.0f,0.0f }, stage);
     //SpawnObstacle<Marshmallow_Blue>({ 60.0f,0.0f,0.0f }, stage);
 
-    SpawnObstacle<Pokey>({ 0.0f,0.0f,0.0f }, stage);
-    SpawnObstacle<Candy_gate>({ 100.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Macaron_Maccha>({ 0.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Macaron_Maccha>({ 100.0f,0.0f,0.0f }, stage);
 
     SpawnObstacle<Macaron_Maccha>({ 0.0f,3.0f,20.0f }, stage);
 }

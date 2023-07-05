@@ -3,6 +3,7 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <string>
 #include "Graphics/Model.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/Texture.h"
@@ -106,6 +107,11 @@ private:
 	float range;// セレクト用
 	float rotation;// セレクト用
 
+	int fontNo = 4;	// フォント番号
+	DirectX::XMFLOAT2 text_size = { 50.0f,50.0f };
+	DirectX::XMFLOAT2 text_pos = { 0.0f,105.0f };
+	DirectX::XMFLOAT4 text_color = { 0.0f,1.0f,0.0f,1.0f };
+
 	Player* player = nullptr;
 
 	Sky* sky = nullptr;
@@ -127,6 +133,8 @@ private:
 	std::unique_ptr<Sprite>		sprite_hungerGageFrame;		// 空腹ゲージのフレーム
 	std::unique_ptr<Sprite>		sprite_hungerGageBack;		// 空腹ゲージの背景
 	std::unique_ptr<Sprite>		sprite_StageUI;				// ステージレベルの看板
+	std::unique_ptr<Texture>	texture_fonts[7];			// フォントテクスチャ
+	std::unique_ptr<Text>		text[7];					// フォント
 	//-------------------------------------------------------------------------------------------------------
 	// ↓　この下はシェーダー関連
 	//-------------------------------------------------------------------------------------------------------

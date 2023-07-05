@@ -287,3 +287,34 @@ void Sprite::SetShaderResourceView(const Microsoft::WRL::ComPtr<ID3D11ShaderReso
 	textureWidth = texWidth;
 	textureHeight = texHeight;
 }
+
+// テキスト描画
+
+void Text::textOut(const RenderContext& immediate_context
+	, std::string s
+	, float dx, float dy
+	, float dw, float dh
+	, float r, float g, float b, float a
+)
+{
+	float sw = static_cast<float>(textureWidth / 16);
+	float sh = static_cast<float>(textureHeight / 16);
+	float carriage = 0;		// 文字が被らないように幅文位置をずらす
+	for (char c : s)
+	{
+		float W = (sw * (c & 0x0F));
+		float H = (sh * (c >> 4));
+
+		Render(immediate_context,
+			(dx + carriage), dy,
+			dw, dh,
+			(sw * (c & 0x0F)), (sh * (c >> 4)),
+			sw, sh,
+			0.0f,
+			r, g, b, a
+		);
+
+		// 文字が被らないように幅文位置をずらす
+		carriage += dw;
+	}
+}

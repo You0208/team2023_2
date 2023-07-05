@@ -26,6 +26,21 @@ void SceneGame::Initialize()
 	// 空初期設定
 	sky = new Sky();
 
+	// fonts
+	// フォント読み込み
+	texture_fonts[0] = std::make_unique<Texture>("Data/fonts/font0.png");
+	texture_fonts[1] = std::make_unique<Texture>("Data/fonts/font1.png");
+	texture_fonts[2] = std::make_unique<Texture>("Data/fonts/font2.png");
+	texture_fonts[3] = std::make_unique<Texture>("Data/fonts/font3.png");
+	texture_fonts[4] = std::make_unique<Texture>("Data/fonts/font4.png");
+	texture_fonts[5] = std::make_unique<Texture>("Data/fonts/font5.png");
+	texture_fonts[6] = std::make_unique<Texture>("Data/fonts/font6.png");
+	for (int i = 0; i < 7; ++i)
+	{
+		text[i] = std::make_unique<Text>();
+		text[i]->SetShaderResourceView(texture_fonts[i]->GetShaderResourceView(),
+			texture_fonts[i]->GetWidth(), texture_fonts[i]->GetHeight());
+	}
 
 	// 空腹ゲージのフレーム設定
 	texture_hungerGageFrame = std::make_unique<Texture>("Data/Texture/UI/GaugeUI.png");
@@ -408,6 +423,14 @@ void SceneGame::Render()
 		// ステージレベル看板
 		shader->Draw(rc, sprite_StageUI.get());
 
+		// スコア表示(仮)
+		text[fontNo]->textOut(rc
+			, "Score:" + std::to_string(player->GetScore())
+			, text_pos.x, text_pos.y
+			, text_size.x, text_size.y
+			, text_color.x, text_color.y, text_color.z, text_color.w
+		);
+
 		shader->End(rc);
 
 		// デバッグ情報の表示
@@ -439,6 +462,19 @@ void SceneGame::Render()
 			player->DrawDebugGUI();
 			stageManager->DrawDebugGUI();
 			postprocessingRenderer->DrawDebugGUI();
+		}
+		// テキスト
+		{
+			if (ImGui::TreeNode("Text"))
+			{
+				ImGui::SliderInt("fontNo", &fontNo, 0, 6);
+				ImGui::SliderFloat("posX", &text_pos.x, 0.0f, 1920.0f);
+				ImGui::SliderFloat("posY", &text_pos.y, 0.0f, 1080.0f);
+				ImGui::SliderFloat("size", &text_size.x, 0.0f, 500.0f);
+				text_size.y = text_size.x;
+				ImGui::ColorPicker4("color", &text_color.x);
+				ImGui::TreePop();
+			}
 		}
 		// スコア表示
 		{

@@ -3,6 +3,7 @@
 #include <wrl.h>
 #include <d3d11.h>
 #include <DirectXMath.h>
+#include <string>
 #include "RenderContext.h"
 
 // スプライト
@@ -52,10 +53,24 @@ public:
 	// テクスチャ高さ取得
 	int GetTextureHeight() const { return textureHeight; }
 
-private:
+protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer>				vertexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	shaderResourceView;
 
 	int textureWidth = 0;
 	int textureHeight = 0;
+};
+
+class Text : public Sprite
+{
+public:
+	Text(){}
+
+	// テキスト描画
+	void textOut(const RenderContext& immediate_context
+		, std::string s
+		, float dx, float dy
+		, float dw, float dh
+		, float r, float g, float b, float a
+	);
 };
