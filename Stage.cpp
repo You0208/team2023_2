@@ -110,7 +110,7 @@ Stage::Stage(int stageNo)
     stageSideMax = StageSideMax;
     stageDepthMax = StageDepthMax;
 
-    if (SceneManager::Instance().IsNoneStage)
+    if (SceneManager::Instance().IsNoneStage || stageNo < 0)
     {
         AreaInfo infoN = RandSpawn(StageNONE);
         infoN(this);
