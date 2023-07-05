@@ -61,6 +61,10 @@ public:
 	// 死んだ瞬間の値変化
 	void DeathMoment();
 
+	// 餓死演出
+	void DidFromHunger(float elapsedTime);
+
+
 	// 障害物と障害物の当たり判定
 	void CollisionObsVsObs();
 
@@ -92,6 +96,7 @@ private:	// スコア保存用SceneTitleに持っていく
 	void OutputScoreRanking(Player* player);
 
 private:
+	int DeathTimer = 0;
 	bool accel = false;
 	float accelFrame = 120.0f;
 	float p_w = 0.0f;

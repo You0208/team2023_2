@@ -90,8 +90,15 @@ void CameraController::DeathCamera()
     {
         angle.y += DirectX::XMConvertToRadians(0.1f);
     }
-    else
-    {
+}
 
+void CameraController::DidFromHungerCamera()
+{
+    range = lerp(range, 15.0f, 0.01f);
+    if (angle.x < DirectX::XMConvertToRadians(70.0f))
+        angle.x += DirectX::XMConvertToRadians(0.1f);
+    if (angle.y < DirectX::XMConvertToRadians(45.0f))
+    {
+        angle.y += DirectX::XMConvertToRadians(0.1f);
     }
 }

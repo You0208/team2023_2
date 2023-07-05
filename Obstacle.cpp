@@ -334,9 +334,10 @@ Chocolate_ball::Chocolate_ball()
     model = std::make_unique<Model>("Data/Model/Obstacle/chocolate_ball/chocolate_ball.mdl");
     scale.x = scale.y = scale.z = 5.0f;
     angle.y = DirectX::XMConvertToRadians(180);
-    height = 6.0f;
+    height = 30.0f;
+    radius = 3.0f;
     Type = TYPE::CYLINDERS;
-    CollisionNum = 3;
+    CollisionNum = 2;
 }
 void Chocolate_ball::Update(float elapsedTime)
 {
@@ -350,7 +351,7 @@ void Chocolate_ball::DrawDebugPrimitive()
     //衝突判定用のデバッグ円柱を描画
     for (int n = 0; n < CollisionNum; ++n)
     {
-        debugRenderer->DrawCylinder({ (position.x - (CollisionNum * 0.5f) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
+        debugRenderer->DrawCylinder({ (position.x - (CollisionNum * radius) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
     }
 }
 
@@ -375,7 +376,6 @@ void Grape_can::DrawDebugPrimitive()
     debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
 }
 
-
 // フーセンガム
 Husen_gum::Husen_gum()
 {
@@ -384,9 +384,9 @@ Husen_gum::Husen_gum()
     angle.y = DirectX::XMConvertToRadians(180);
     scale.x = scale.y = scale.z = 9.0f;
     height = 5.0f;
-    radius = 0.6f;
-    Type = TYPE::CYLINDER;
-    CollisionNum = 3;
+    radius = 3.0f;
+    Type = TYPE::CYLINDERS;
+    CollisionNum = 1;
 }
 
 void Husen_gum::DrawDebugPrimitive()
@@ -395,7 +395,7 @@ void Husen_gum::DrawDebugPrimitive()
     //衝突判定用のデバッグ円柱を描画
     for (int n = 0; n < CollisionNum; ++n)
     {
-        debugRenderer->DrawCylinder({ (position.x - (CollisionNum * 0.5f) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
+        debugRenderer->DrawCylinder({ (position.x - (CollisionNum * radius) + radius) + (n * radius * 2.0f) ,position.y,position.z }, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
     }
 }
 
@@ -416,10 +416,10 @@ Orange_gum::Orange_gum()
     model = std::make_unique<Model>("Data/Model/Obstacle/orange_gum/orange_gum.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
     scale.x = scale.y = scale.z = 9.0f;
-    height = 3.0f;
-    radius = 0.5f;
+    height = 5.0f;
+    radius = 3.0f;
     Type = TYPE::CYLINDERS;
-    CollisionNum = 3;
+    CollisionNum = 1;
 }
 
 void Orange_gum::DrawDebugPrimitive()
@@ -485,10 +485,10 @@ Marble_chocolate::Marble_chocolate()
     scale.x = scale.y = scale.z = 4.0f;
     angle.y = DirectX::XMConvertToRadians(180);
     height = 10.0f;
-    radius = 2.5f;
+    radius = 4.0f;
     Type = TYPE::CYLINDERS;
     HitCheckTYpe = HIT_CHECK_TYPE::ACTIVE;
-    CollisionNum = 8;
+    CollisionNum = 5;
 }
 
 void Marble_chocolate::DrawDebugPrimitive()

@@ -30,8 +30,8 @@ public:
     void ChangeScene(Scene* scene);
 
 public:
-    bool IsNoneStage = false;
-    bool IsSelect = false;
+    bool IsNoneStage = true;
+    bool IsSelect = true;
 
 private:
     Scene* currentScene = nullptr;

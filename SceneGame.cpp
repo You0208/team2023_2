@@ -242,7 +242,8 @@ void SceneGame::Update(float elapsedTime)
 			//player->IsDeath = true;
 			//player->OnDead();
 			//DeathMoment();
-			accel = true;
+			player->Gashi = true;
+			//accel = true;
 		}
 
 		if (cameraController->flag)
@@ -272,7 +273,7 @@ void SceneGame::Update(float elapsedTime)
 			accelUpdate(elapsedTime);
 		}
 
-		if (!player->IsDeath)// プレイヤーが死んでいない時
+		if (!player->IsDeath&&!player->Gashi)// プレイヤーが死んでいない時
 		{
 			//ステージ更新処理
 			stageManager->Update(player, elapsedTime);
@@ -284,6 +285,17 @@ void SceneGame::Update(float elapsedTime)
 		else if (player->IsDeath)// プレイヤーが死んでいる時
 		{
 			DeathUpdate(elapsedTime);
+		}
+		else if (player->Gashi)
+		{
+			DidFromHunger(elapsedTime);
+		}
+
+		if (player->IsDeath || player->Gashi)
+		{
+			DeathTimer++;
+			if (DeathTimer >= 800)
+				SceneManager::Instance().ChangeScene(new SceneOver);
 		}
 	}
 	if (!player->IsDeath)
@@ -660,6 +672,11 @@ void SceneGame::DeathMoment()
 	postprocessingRenderer->setThreshold(0.0f);
 	cameraController->flag = true;
 	cameraController->setRange(cameraController->getRange() * 1.5f);
+}
+
+void SceneGame::DidFromHunger(float elapsedTime)
+{
+	cameraController->DidFromHungerCamera();
 }
 
 // 障害物と障害物の当たり判定

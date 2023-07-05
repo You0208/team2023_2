@@ -34,7 +34,7 @@ private:
     float p_w = 0;
     int timer = 0;
     bool next = false;
-    float Trans = 1.0f;
+    float Trans = 0.0f;
 
     std::unique_ptr<Sprite>	sprite;
     std::unique_ptr<Texture> texture;
