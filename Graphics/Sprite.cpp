@@ -1,5 +1,6 @@
 #include <stdio.h> 
 #include <WICTextureLoader.h>
+#include <math.h>
 #include "Sprite.h"
 #include "Misc.h"
 #include "Graphics/Graphics.h"
@@ -317,4 +318,30 @@ void Text::textOut(const RenderContext& immediate_context
 		// •¶š‚ª”í‚ç‚È‚¢‚æ‚¤‚É••¶ˆÊ’u‚ğ‚¸‚ç‚·
 		carriage += dw;
 	}
+}
+
+// ”š•`‰æ
+void Text::textOut(const RenderContext& immediate_context, int num, float dx, float dy, float dw, float dh, float r, float g, float b, float a)
+{
+	float sw = static_cast<float>(textureWidth / 10);
+	float sh = static_cast<float>(textureHeight / 10);
+	float carriage = 0;		// •¶š‚ª”í‚ç‚È‚¢‚æ‚¤‚É••¶ˆÊ’u‚ğ‚¸‚ç‚·
+	//
+	//for (1)
+	//{
+	//	float wx = 0;
+	//	float wy = 0;
+	//
+	//	Render(immediate_context,
+	//		(dx + carriage), dy,
+	//		dw, dh,
+	//		(sw * (c & 0x0F)), (sh * (c >> 4)),
+	//		sw, sh,
+	//		0.0f,
+	//		r, g, b, a
+	//	);
+	//
+	//	// •¶š‚ª”í‚ç‚È‚¢‚æ‚¤‚É••¶ˆÊ’u‚ğ‚¸‚ç‚·
+	//	carriage += dw;
+	//}
 }

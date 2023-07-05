@@ -73,4 +73,12 @@ public:
 		, float dw, float dh
 		, float r, float g, float b, float a
 	);
+
+	// ”š•`‰æ
+	void textOut(const RenderContext& immediate_context
+		, int num
+		, float dx, float dy
+		, float dw, float dh
+		, float r, float g, float b, float a
+	);
 };

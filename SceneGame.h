@@ -21,6 +21,7 @@
 #include "Effect.h"
 #include "Obstacle.h"
 #include "sky.h"
+#include "Audio/Audio.h"
 
 // ゲームシーン
 class SceneGame :public Scene
@@ -125,6 +126,8 @@ private:
 
 	Effect* hitEffect = nullptr;
 	Effect* accelEffect = nullptr;
+
+	std::unique_ptr<AudioSource> audio;
 
 	std::unique_ptr<Texture>	texture_hungerGage;			// 空腹ゲージのテクスチャ(白)
 	std::unique_ptr<Texture>	texture_hungerGageFrame;	// 空腹ゲージのフレームのテクスチャ

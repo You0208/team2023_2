@@ -28,6 +28,7 @@ public:
 private:
 	const HWND				hWnd;
 	HighResolutionTimer		timer;
+	Audio					audio;
 	Graphics				graphics;
 	Input					input;
 	SceneGame*				scene;
