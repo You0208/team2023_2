@@ -47,6 +47,11 @@ void SceneGame::Initialize()
 		text[i]->SetShaderResourceView(texture_fonts[i]->GetShaderResourceView(),
 			texture_fonts[i]->GetWidth(), texture_fonts[i]->GetHeight());
 	}
+	texture_fonts_number = std::make_unique<Texture>("Data/fonts/font7.png");
+	text_number = std::make_unique<Text>();
+	text_number->SetShaderResourceView(texture_fonts_number->GetShaderResourceView(),
+		texture_fonts_number->GetWidth(), texture_fonts_number->GetHeight());
+
 
 	// 空腹ゲージのフレーム設定
 	texture_hungerGageFrame = std::make_unique<Texture>("Data/Texture/UI/GaugeUI.png");
@@ -430,12 +435,18 @@ void SceneGame::Render()
 		shader->Draw(rc, sprite_StageUI.get());
 
 		// スコア表示(仮)
-		text[fontNo]->textOut(rc
-			, "Score:" + std::to_string(player->GetScore())
-			, text_pos.x, text_pos.y
-			, text_size.x, text_size.y
-			, text_color.x, text_color.y, text_color.z, text_color.w
-		);
+		//text[fontNo]->textOut(rc
+		//	, "Score:" + std::to_string(player->GetScore())
+		//	, text_pos.x, text_pos.y
+		//	, text_size.x, text_size.y
+		//	, text_color.x, text_color.y, text_color.z, text_color.w
+		//);
+		text_number ->textOut(rc
+				, player->GetScore()
+				, text_pos.x, text_pos.y
+				, text_size.x, text_size.y
+				, text_color.x, text_color.y, text_color.z, text_color.w
+			);
 
 		shader->End(rc);
 
