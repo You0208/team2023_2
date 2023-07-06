@@ -130,7 +130,6 @@ private:
     // 空腹ポイント減算
     void RemoveHungerPoint(float elapsedTime,float Remove);
 
-
     // ===== 非使用　後で使うかも？ =====
 
     // スティック入力値から移動ベクトルを取得

@@ -56,6 +56,9 @@ void StageManager::Update(Player* player, float elapsedTIme)
     // プレイヤーのダメージアニメ再生は以下の処理を行わない
     if(player->GetIsDamageAnim()) return;
 
+    // スコアの更新(常時加算)
+    UpdateScore(player, elapsedTIme);
+
     // ステージ切り替え
     SetBreakTime_State();
 
@@ -454,6 +457,24 @@ void StageManager::AddDoneStageNum(float elapsedTIme)
     {
         z = 0.0f;
         ++doneStageNum;
+    }
+}
+
+// スコアの更新(常時加算)
+void StageManager::UpdateScore(Player* player, float elapsedTime)
+{
+    // ブレイクタイム中なら加算しない
+    if (IsBreakTime) return;
+    // 加算量
+    static float s = 0.0f;
+
+    s += MaxAlwaysAddScore[stageNo] * MaxAlwaysAddScoreMagnification[player->GetHungerLevel()] * elapsedTime;
+    
+    // 加算量が1を超えるとスコアを加算する
+    if (s >= 1.0f)
+    {
+        player->AddScore(1);    // スコア加算
+        s -= 1.0f;
     }
 }
 

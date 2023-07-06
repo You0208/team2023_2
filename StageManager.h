@@ -48,6 +48,23 @@ private:
         12,      // ステージ5切り替え
     };
 
+    // 各ステージレベルでのスコアの常時加算量
+    static constexpr float MaxAlwaysAddScore[Stage::StageMax] =
+    {
+        1.0f,       // ステージ:1
+        2.0f,       // ステージ:2
+        3.0f,       // ステージ:3
+        4.0f,       // ステージ:4
+        6.0f        // ステージ:5
+    };
+    // 各空腹レベルでのスコアの常時加算量の倍率
+    static constexpr float MaxAlwaysAddScoreMagnification[3] =
+    {
+        2.0f,       // 空腹レベル：低 
+        1.0f,       // 空腹レベル：中 
+        0.5f        // 空腹レベル：高 
+    };
+
 public:
     StageManager();
     ~StageManager();
@@ -121,6 +138,9 @@ private:
 
     // doneStageNumの加算
     void AddDoneStageNum(float elapsedTIme);
+
+    // スコアの更新(常時加算)
+    void UpdateScore(Player* player,float elapsedTime);
 
 public:
     bool IsStart = true;
