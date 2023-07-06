@@ -41,14 +41,38 @@ private:                  // 障害物
 
 private:
     // エリア情報
-    // エリア00
-    static void AreaInfo00(Stage* stage){}
+      // エリア00
+    static void AreaInfo00(Stage* stage) {}
     // エリア01
     static void AreaInfo01(Stage* stage);
     // エリア02
     static void AreaInfo02(Stage* stage);
     // エリア03
     static void AreaInfo03(Stage* stage);
+    // エリア04
+    static void AreaInfo04(Stage* stage);
+    // エリア05
+    static void AreaInfo05(Stage* stage);
+    // エリア06
+    static void AreaInfo06(Stage* stage);
+    // エリア07
+    static void AreaInfo07(Stage* stage);
+    // エリア08
+    static void AreaInfo08(Stage* stage);
+    // エリア09
+    static void AreaInfo09(Stage* stage);
+    // エリア10
+    static void AreaInfo10(Stage* stage);
+    // エリア11
+    static void AreaInfo11(Stage* stage);
+    // エリア12
+    static void AreaInfo12(Stage* stage);
+    // エリア13
+    static void AreaInfo13(Stage* stage);
+    // エリア14
+    static void AreaInfo14(Stage* stage);
+    // エリア15
+    static void AreaInfo15(Stage* stage);
 
     // デバッグ用INFO
     static void  AreaInfoDebug(Stage* stage);
