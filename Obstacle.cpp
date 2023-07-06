@@ -20,18 +20,9 @@ void Obstacle::Draw(RenderContext rc, ModelShader* shader)
 //更新処理
 void Obstacle::Update(float elapsedTime)
 {
-    if (once) {
-        // エフェクトの再生
-        handle = ItemEffect->Play(position);
-        once = false;
-    }
-    // ヒットエフェクト再生
-    {
-        // エフェクトの座標を変更
-        ItemEffect->SetPosition(handle, position);
-    }
     if (Type == ITEMS)
     {
+
         angle.y += DirectX::XMConvertToRadians(1);//回す
     }
     // 速度処理更新
@@ -92,7 +83,7 @@ void Obstacle::GetItem()
 {
     if (Type == TYPE::ITEMS)
     {
-        position.y=lerp(position.y, 5.0f, 0.03f);
+        position.y = lerp(position.y, 5.0f, 0.03f);
         angle.y += DirectX::XMConvertToRadians(1);
         //オブジェクト行列を更新
         UpdateTransform();
@@ -199,7 +190,7 @@ Pokey::Pokey()
     angle.y = DirectX::XMConvertToRadians(180);
     scale.x = scale.y = scale.z = 5.0f;
     // 当たり判定修正
-    radius = 2.5f;
+    radius = 2.1f;
     height = 35.0f;
     Type = TYPE::CYLINDERS;
     CollisionNum = 5;
@@ -230,9 +221,9 @@ Prits::Prits()
     scale.x = scale.y = scale.z = 5.0f;
     // 当たり判定修正
     height = 35.0f;
-    radius = 2.5;
+    radius = 2.7;
     Type = TYPE::CYLINDERS;
-    CollisionNum = 3;
+    CollisionNum = 4;
 
 }
 void Prits::DrawDebugPrimitive()
@@ -252,10 +243,11 @@ void Marshmallow_Base::Update(float elapsedTime)
 {
     // 基底クラス描画処理
     Obstacle::Update(elapsedTime);
-    radius = 1.0f;
+    radius = 2.0f;
     Type = TYPE::ITEMS;
     score = 5;
     hungerPoint = 5;
+    scale.x = scale.y = scale.z = 3.0f;
     // ヒットエフェクト再生
     {
         // エフェクトの座標を変更
@@ -273,7 +265,8 @@ Marshmallow_Blue::Marshmallow_Blue()
 {
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/marshmallow/marshmallow_blue.mdl");
-
+    // エフェクトの再生
+    handle = ItemEffect->Play(position);
 
 }
 // マシュマロ(ピンク)
@@ -286,7 +279,7 @@ Marshmallow_Pink::Marshmallow_Pink()
 // ビーンズ
 Jellybeans_Base::Jellybeans_Base()
 {
-    scale.x = scale.y = scale.z = 0.3f;
+    scale.x = scale.y = scale.z = 0.6f;
 }
 // ビーンズ
 // 更新処理
@@ -343,9 +336,9 @@ Chocolate_ball::Chocolate_ball()
     scale.x = scale.y = scale.z = 5.0f;
     angle.y = DirectX::XMConvertToRadians(180);
     height = 30.0f;
-    radius = 3.0f;
+    radius = 2.5f;
     Type = TYPE::CYLINDERS;
-    CollisionNum = 2;
+    CollisionNum = 3;
 }
 void Chocolate_ball::Update(float elapsedTime)
 {
@@ -391,10 +384,10 @@ Husen_gum::Husen_gum()
     model = std::make_unique<Model>("Data/Model/Obstacle/husen_gum/husen_gum.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
     scale.x = scale.y = scale.z = 9.0f;
-    height = 5.0f;
-    radius = 3.0f;
+    height = 9.0f;
+    radius = 1.5f;
     Type = TYPE::CYLINDERS;
-    CollisionNum = 1;
+    CollisionNum = 3;
 }
 
 void Husen_gum::DrawDebugPrimitive()
@@ -424,10 +417,10 @@ Orange_gum::Orange_gum()
     model = std::make_unique<Model>("Data/Model/Obstacle/orange_gum/orange_gum.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
     scale.x = scale.y = scale.z = 9.0f;
-    height = 5.0f;
-    radius = 3.0f;
+    height = 9.0f;
+    radius = 1.5f;
     Type = TYPE::CYLINDERS;
-    CollisionNum = 1;
+    CollisionNum = 3;
 }
 
 void Orange_gum::DrawDebugPrimitive()
@@ -471,8 +464,8 @@ Orange_can::Orange_can()
     model = std::make_unique<Model>("Data/Model/Obstacle/orange_can/orange_can.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
     scale.x = scale.y = scale.z = 5.0f;
-    height = 3.8f;
-    radius = 1.2f;
+    height = 19.0f;
+    radius = 6.0f;
     Type = TYPE::CYLINDER;
     CollisionNum = 1;
 }
@@ -492,7 +485,7 @@ Marble_chocolate::Marble_chocolate()
     model = std::make_unique<Model>("Data/Model/Obstacle/marble_chocolate/marble_chocolate.mdl");
     scale.x = scale.y = scale.z = 4.0f;
     angle.y = DirectX::XMConvertToRadians(180);
-    height = 10.0f;
+    height = 8.0f;
     radius = 4.0f;
     Type = TYPE::CYLINDERS;
     HitCheckTYpe = HIT_CHECK_TYPE::ACTIVE;
@@ -518,7 +511,7 @@ void Marble_chocolate::UpdataAdditionVelocity(float elapsedFrame)
     // 画面外に行かないように少し余裕を持って引き返している
     if (
         (position.x + (height * 0.5f) >= OriginPosition->x + size)
-        ||(position.x - (height * 0.5f) <= OriginPosition->x - size)
+        || (position.x - (height * 0.5f) <= OriginPosition->x - size)
         || IsHitVsObs
         )
     {
@@ -538,6 +531,7 @@ Cupcake_Base::Cupcake_Base()
     Type = TYPE::ITEMS;
     hungerPoint = 10;
     score = 10;
+    scale.x = scale.y = scale.z = 1.25f;
 }
 // カップケーキ(チョコ)
 Cupcake_Choco::Cupcake_Choco()
@@ -563,10 +557,12 @@ void Cupcake_Base::DrawDebugPrimitive()
 Pudding::Pudding()
 {
     model = std::make_unique<Model>("Data/Model/Obstacle/pudding/pudding.mdl");
-    radius = 2.5f;
+    radius = 5.0f;
     Type = TYPE::ITEMS;
     hungerPoint = 50;
     score = 50;
+
+    scale.x = scale.y = scale.z = 0.8f;
 }
 void Pudding::DrawDebugPrimitive()
 {
@@ -582,6 +578,7 @@ Macaron_Base::Macaron_Base()
     Type = TYPE::ITEMS;
     hungerPoint = 10;
     score = 10;
+    scale.x = scale.y = scale.z = 0.8f;
 }
 void Macaron_Base::DrawDebugPrimitive()
 {
