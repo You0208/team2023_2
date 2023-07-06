@@ -333,7 +333,7 @@ void StageManager::UpdateVelocity(float elapsedTime, Player* player)
     maxPlayerVelocity = MaxPlayerVelocity[player->GetHungerLevel()];
 
     // 水平速力更新処理
-    UpdataHorizontalVelocity(elapsedFrame);
+    UpdataHorizontalVelocity(elapsedFrame, player);
 
     player->SetVelocity({ -stageScrollVelocity.x,0.0f,0.0f });
 
@@ -355,12 +355,44 @@ void StageManager::UpdateVelocity(float elapsedTime, Player* player)
 }
 
 // 水平速力更新処理
-void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
+void StageManager::UpdataHorizontalVelocity(float elapsedFrame, Player* player)
 {
-    // XZ平面の速力を減速する
     float length = sqrtf(stageScrollVelocity.x * stageScrollVelocity.x);
 
-    // キーを離すとすぐ止まってほしので減速処理なし
+    // 空腹状態であるとき
+    if (player->GetHungerLevel() == 0)
+    {
+        // XZ平面の速力を減速する
+
+        // キーを離すとすぐ止まってほしので減速処理なし
+        float length = sqrtf((stageScrollVelocity.x * stageScrollVelocity.x));
+        if (length > 0.0f)
+        {
+            // 摩擦力
+            float friction = this->friction * elapsedFrame;
+
+            // 摩擦による横方向の減速処理[09]
+            if (length > friction)
+            {
+                float vx = stageScrollVelocity.x / length;
+                stageScrollVelocity.x -= vx * friction;
+            }
+            // 横方向の速力が摩擦力以下になったので速力を無効化[09]
+            else
+            {
+                stageScrollVelocity.x = 0.0f;
+            }
+        }
+    }
+    // 空腹状態でないとき
+    else
+    {
+        // moveVecXが0ならVelocityを0にする
+        if ((moveVecX < FLT_EPSILON) && (moveVecX > -FLT_EPSILON))
+        {
+            stageScrollVelocity.x = 0.0f;
+        }
+    }
 
     // XZ平面の速力を加速する
     if (length <= maxPlayerVelocity)
@@ -386,11 +418,6 @@ void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
         }
     }
 
-    // moveVecXが0ならVelocityを0にする
-    if ((moveVecX < FLT_EPSILON) && (moveVecX > -FLT_EPSILON))
-    {
-        stageScrollVelocity.x = 0.0f;
-    }
 
     // 地形データの速力に代入
     terrainScrollVelocity.x = stageScrollVelocity.x;

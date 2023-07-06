@@ -20,7 +20,7 @@ private:
     // 各空腹レベルでのプレイヤーの最大速度
     static constexpr float MaxPlayerVelocity[3] =
     {
-        60.0f,      // 空腹レベル：低
+        150.0f,      // 空腹レベル：低
         50.0f,      // 空腹レベル：中
         20.0f       // 空腹レベル：高
     };
@@ -136,7 +136,7 @@ private:
     DirectX::XMFLOAT3 GetMoveVec();
 
     // 水平速力更新処理
-    void UpdataHorizontalVelocity(float elapsedFrame);
+    void UpdataHorizontalVelocity(float elapsedFrame, Player* player);
 
     // BreakTime_Stateをセット
     void SetBreakTime_State();
@@ -184,7 +184,7 @@ private:
     int doneStageNum        = 0;                                        // プレイヤーが超えたステージの数
 
    // ===== 非使用　後で使うかも？ =====
-    float friction = 0.5f;                                              // 減速
+    float friction = 2.0f;                                              // 減速
     float acceleration = 10.0f;                                         // 加速力
 
     float scrollVelocityRate = 0.0f;                                    // スクロール速度補間係数
