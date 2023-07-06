@@ -27,6 +27,19 @@ public:
 private:
     std::unique_ptr<Sprite>	sprite;
     std::unique_ptr<Texture> texture;
+
+    std::unique_ptr<Sprite>	s_over;
+    std::unique_ptr<Texture> t_over;
+
+    std::unique_ptr<Sprite>	s_back;
+    std::unique_ptr<Texture> t_back;
+
+    std::unique_ptr<Sprite>	s_hamu;
+    std::unique_ptr<Texture> t_hamu;
+
+    std::unique_ptr<Sprite>	s_point;
+    std::unique_ptr<Texture> t_point;
+
     // UVスクロールデータ
     UVScrollData uvScrollData;
     // マスク画像

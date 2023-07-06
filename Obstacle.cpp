@@ -21,9 +21,12 @@ void Obstacle::Draw(RenderContext rc, ModelShader* shader)
 void Obstacle::Update(float elapsedTime)
 {
     if (once) {
-        // エフェクトの再生
-        handle = ItemEffect->Play(position);
-        once = false;
+        if (Type == ITEMS)
+        {
+            // エフェクトの再生
+            handle = ItemEffect->Play(position);
+            once = false;
+        }
     }
     // ヒットエフェクト再生
     {

@@ -96,7 +96,7 @@ void SceneGame::Initialize()
 	cameraController = new CameraController();
 
 	// ヒットエフェクト読み込み
-	hitEffect = new Effect("Data/e/syoutotu_0704_1.efk");
+	hitEffect = new Effect("Data/e/b.efk");
 	accelEffect = new Effect("Data/e/kasoku_0704_1.efk");
 
 
@@ -117,31 +117,39 @@ void SceneGame::Initialize()
 
 	// 終わり
 // テクスチャを読み込む
-	t_finish = std::make_unique<Texture>("Data/Texture/owaru.png");
+	t_finish = std::make_unique<Texture>("Data/Texture/Select/owaru.png");
 	// スプライト
 	s_finish = std::make_unique<Sprite>();
 	s_finish->SetShaderResourceView(t_finish->GetShaderResourceView(), t_finish->GetWidth(), t_finish->GetHeight());
 
 	// プレイ
 	// テクスチャを読み込む
-	t_play = std::make_unique<Texture>("Data/Texture/play.png");
+	t_play = std::make_unique<Texture>("Data/Texture/Select/play.png");
 	// スプライト
 	s_play = std::make_unique<Sprite>();
 	s_play->SetShaderResourceView(t_play->GetShaderResourceView(), t_play->GetWidth(), t_play->GetHeight());
 
 	// ルール
 	// テクスチャを読み込む
-	t_rulu = std::make_unique<Texture>("Data/Texture/rule.png");
+	t_rulu = std::make_unique<Texture>("Data/Texture/Select/rule.png");
 	// スプライト
 	s_rulu = std::make_unique<Sprite>();
 	s_rulu->SetShaderResourceView(t_rulu->GetShaderResourceView(), t_rulu->GetWidth(), t_rulu->GetHeight());
 
 	// セレクト
 	// テクスチャを読み込む
-	t_select = std::make_unique<Texture>("Data/Texture/select.png");
+	t_select = std::make_unique<Texture>("Data/Texture/Select/select.png");
 	// スプライト
 	s_select = std::make_unique<Sprite>();
 	s_select->SetShaderResourceView(t_select->GetShaderResourceView(), t_select->GetWidth(), t_select->GetHeight());
+
+	// スコア
+	// テクスチャを読み込む
+	t_score = std::make_unique<Texture>("Data/Texture/Select/highscore_point.png");
+	// スプライト
+	s_score = std::make_unique<Sprite>();
+	s_score->SetShaderResourceView(t_score->GetShaderResourceView(), t_score->GetWidth(), t_score->GetHeight());
+
 
 
 	// マスクテクスチャの読み込み
@@ -225,7 +233,11 @@ void SceneGame::Finalize()
 // 更新処理
 void SceneGame::Update(float elapsedTime)
 {
-	if (SceneManager::Instance().IsSelect)
+	if (IsRule)
+	{
+		RuleUpdate(elapsedTime);
+	}
+	else if (SceneManager::Instance().IsSelect)
 	{
 		SelectUpdate(elapsedTime);
 	}
@@ -235,8 +247,10 @@ void SceneGame::Update(float elapsedTime)
 		GamePad& gamePad = Input::Instance().GetGamePad();
 		if (gamePad.GetButtonDown() & GamePad::BTN_X)
 			isPaused = !isPaused;       // 0コンのスタートボタンが押されたらポーズ状態が反転
+		cameraController->Update(elapsedTime);
 		if (isPaused) return;           // この時点でポーズ中ならリターン
 
+		// デバッグ
 		if (gamePad.GetButtonDown() & GamePad::BTN_Y)
 		{
 			//player->IsDeath = true;
@@ -244,10 +258,11 @@ void SceneGame::Update(float elapsedTime)
 			//DeathMoment();
 			//player->Gashi = true;
 			//accel = true;
+			// TODO 吉野先生ヘルプ
 			// ヒットエフェクト再生
 			{
 				DirectX::XMFLOAT3 e = player->GetPosition();
-				hitEffect->Play(e);
+				accelEffect->Play(e);
 			}
 		}
 
@@ -303,19 +318,15 @@ void SceneGame::Update(float elapsedTime)
 				SceneManager::Instance().ChangeScene(new SceneOver);
 		}
 	}
-	if (!player->IsDeath)
-	{
-		// エフェクトの更新処理
-		EffectManager::Instance().Update(elapsedTime);
-	}
+	EffectManager::Instance().Update(elapsedTime);
 
 
 	//-------------------------------------------------------------------------------------------------------
 	// ↓　この下はシェーダー関連
 	//-------------------------------------------------------------------------------------------------------
 
-	sprite->Update(0.0f, 0.0f,
-		Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
+	sprite->Update(0.0f, rulePos,
+		static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight()),
 		0.0f, 0.0f,
 		static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight()),
 		0.0f,
@@ -328,31 +339,38 @@ void SceneGame::Update(float elapsedTime)
 		0.0f,
 		1.0f, 1.0f, 1.0f, 1.0f);
 
-	s_finish->Update(0.0f, 0.0f,
-		Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
-		p_w, 0.0f,
+	s_finish->Update(iconPosX[SELECT_FIN], 615.0f,
+		static_cast<float>(t_finish->GetWidth()), static_cast<float>(t_finish->GetHeight()),
+		0.0f, 0.0f,
 		static_cast<float>(t_finish->GetWidth()), static_cast<float>(t_finish->GetHeight()),
 		0.0f,
 		1.0f, 1.0f, 1.0f, 1.0f);
 
-	s_play->Update(0.0f, 0.0f,
-		Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
-		p_w, 0.0f,
+	s_play->Update(iconPosX[SELECT_PLAY], 215.0f,
+		static_cast<float>(t_play->GetWidth()), static_cast<float>(t_play->GetHeight()),
+		0.0f, 0.0f,
 		static_cast<float>(t_play->GetWidth()), static_cast<float>(t_play->GetHeight()),
 		0.0f,
 		1.0f, 1.0f, 1.0f, 1.0f);
 
-	s_rulu->Update(0.0f, 0.0f,
-		Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
-		p_w, 0.0f,
+	s_rulu->Update(iconPosX[SELECT_RULE], 420.0f,
+		static_cast<float>(t_rulu->GetWidth()), static_cast<float>(t_rulu->GetHeight()),
+		0.0f, 0.0f,
 		static_cast<float>(t_rulu->GetWidth()), static_cast<float>(t_rulu->GetHeight()),
 		0.0f,
 		1.0f, 1.0f, 1.0f, 1.0f);
 
-	s_select->Update(0.0f, 0.0f,
-		Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
-		p_w, 0.0f,
+	s_select->Update(660.0f, 30.0f,
 		static_cast<float>(t_select->GetWidth()), static_cast<float>(t_select->GetHeight()),
+		0.0f, 0.0f,
+		static_cast<float>(t_select->GetWidth()), static_cast<float>(t_select->GetHeight()),
+		0.0f,
+		1.0f, 1.0f, 1.0f, 1.0f);
+
+	s_score->Update(1120.0f, 830.0f,
+		static_cast<float>(t_score->GetWidth()), static_cast<float>(t_score->GetHeight()),
+		0.0f, 0.0f,
+		static_cast<float>(t_score->GetWidth()), static_cast<float>(t_score->GetHeight()),
 		0.0f,
 		1.0f, 1.0f, 1.0f, 1.0f);
 }
@@ -404,7 +422,6 @@ void SceneGame::Render()
 			// 描画処理
 			shader->Draw(rc, sprite_line.get());
 		}
-
 		// 空腹ゲージ
 		shader->Draw(rc, sprite_hungerGageBack.get());
 		shader->Draw(rc, sprite_hungerGage.get());
@@ -412,7 +429,17 @@ void SceneGame::Render()
 
 		// ステージレベル看板
 		//shader->Draw(rc, sprite_StageUI.get());
-
+		
+		if (SceneManager::Instance().IsSelect)
+		{
+			// ステージセレクト
+			shader->Draw(rc, s_finish.get());
+			shader->Draw(rc, s_play.get());
+			shader->Draw(rc, s_rulu.get());
+			shader->Draw(rc, s_select.get());
+			shader->Draw(rc, s_score.get());
+		}
+		if (IsRule)	shader->Draw(rc, sprite.get());
 		shader->End(rc);
 
 		// デバッグ情報の表示
@@ -530,11 +557,6 @@ void SceneGame::CollisionPlayerVsObs()
 								it2->GetHeight(),
 								outPosition))
 							{
-								// ヒットエフェクト再生
-								{
-									DirectX::XMFLOAT3 e = player->GetPosition();
-									hitEffect->Play(e);
-								}
 								player->OnDead();
 								DeathMoment();
 								it2->IsHit = true;
@@ -553,12 +575,6 @@ void SceneGame::CollisionPlayerVsObs()
 						{
 							player->AddScore(it2->score);
 							player->AddHungerPoint(it2->hungerPoint);
-
-							// ヒットエフェクト再生
-							{
-								DirectX::XMFLOAT3 e = player->GetPosition();
-								hitEffect->Play(e);
-							}
 							it2->IsHit = true;
 						}
 						break;
@@ -610,10 +626,54 @@ void SceneGame::SelectUpdate(float elapsedTime)
 		cameraController->setTarget(target);
 		cameraController->setRange(5.0f);
 		player->SetAngle({ 0.0f,  DirectX::XMConvertToRadians(130.0f), 0.0f });
+
+		// アイコン選択処理
+		GamePad& gamePad = Input::Instance().GetGamePad();
+		if (gamePad.GetButtonDown() & GamePad::BTN_UP)
+		{
+			selectNum--;
+		}
+		if (gamePad.GetButtonDown() & GamePad::BTN_DOWN)
+		{
+			selectNum++;
+		}
+		if (selectNum > 2)selectNum = 0;
+		if (selectNum < 0)selectNum = 2;
+		// selectNumの値に応じてiconPosXの要素を設定
+		for (int i = 0; i < 3; i++) 
+		{
+			if (i == selectNum)
+			{
+				iconPosX[i] = 1075.0f;
+			}
+			else 
+			{
+				iconPosX[i] = 1175.0f;
+			}
+		}
+
+
+		if (gamePad.GetButtonDown() & GamePad::BTN_B)
+		{
+			switch (selectNum)
+			{
+			case SELECT_PLAY:
+				range = cameraController->getRange();
+				rotation = player->GetAngle().y;
+				isTrans = true;
+				break;
+			case SELECT_RULE:
+				IsRule = true;
+				ruleIn = true;
+				break;
+			case SELECT_FIN:
+				SceneManager::Instance().IsFinishAll = true;
+				break;
+			}
+		}
 	}
+
 	cameraController->Update(elapsedTime);
-
-
 	//プレイヤー更新処理
 	player->Update(elapsedTime);
 	//ステージ更新処理
@@ -622,14 +682,6 @@ void SceneGame::SelectUpdate(float elapsedTime)
 	//空更新処理
 	sky->Update(elapsedTime);
 	sky->SetPosition({ player->GetPosition().x,player->GetPosition().y,player->GetPosition().z + sky->space });
-
-	GamePad& gamePad = Input::Instance().GetGamePad();
-	if (gamePad.GetButtonDown() & GamePad::BTN_B)
-	{
-		range = cameraController->getRange();
-		rotation = player->GetAngle().y;
-		isTrans = true;
-	}
 
 	if (isTrans) {
 		TransUpdate(elapsedTime);
@@ -641,7 +693,41 @@ void SceneGame::SelectUpdate(float elapsedTime)
 			SceneManager::Instance().IsNoneStage = false;
 		}
 	}
+}
 
+void SceneGame::RuleUpdate(float elapsedTime)
+{
+	if (ruleIn)
+	{
+		rulePos += 600 * elapsedTime;
+		if (rulePos >= 0.0f)
+		{
+			rulePos = 0.0f;
+			ruleIn = false;
+		}
+	}
+	if (ruleOut)
+	{
+		rulePos -= 600 * elapsedTime;
+		if (rulePos <= -1080.0f)
+		{
+			rulePos = -1080.0f;
+			ruleOut = false;
+			IsRule = false;
+		}
+	}
+
+	// カメラ更新処理
+	cameraController->Update(elapsedTime);
+	// プレイヤー更新処理
+	player->Update(elapsedTime);
+	if(!ruleIn&&!ruleOut)
+	{
+		// ポーズ処理
+		GamePad& gamePad = Input::Instance().GetGamePad();
+		if (gamePad.GetButtonDown() & GamePad::BTN_A)
+			ruleOut=true;
+	}
 }
 
 void SceneGame::TransUpdate(float elapsedTime)
@@ -672,6 +758,12 @@ void SceneGame::DeathUpdate(float elapsedTime)
 
 void SceneGame::DeathMoment()
 {
+
+	// ヒットエフェクト再生
+	{
+		DirectX::XMFLOAT3 e = player->GetPosition();
+		hitEffect->Play(e);
+	}
 	postprocessingRenderer->setThreshold(0.0f);
 	cameraController->flag = true;
 	cameraController->setRange(cameraController->getRange() * 1.5f);
@@ -945,7 +1037,6 @@ void SceneGame::RenderShadowmap()
 // 加速更新
 void SceneGame::accelUpdate(float elapsedTime)
 {
-
 	accelFrame -= 1.0f;
 	if (int(accelFrame) % 2 == 0)
 	{

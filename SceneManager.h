@@ -33,6 +33,7 @@ public:
     bool IsNoneStage = false;
     bool IsSelect = false;
 
+    bool IsFinishAll = false;
 private:
     Scene* currentScene = nullptr;
     Scene* nextScene = nullptr;

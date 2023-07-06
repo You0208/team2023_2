@@ -26,10 +26,17 @@ public:
     Obstacle(){
         // ヒットエフェクト読み込み
        ItemEffect = new Effect("Data/e/item_white_0703_2.efk");
-
     }
 
-    ~Obstacle() {}
+    ~Obstacle() {
+
+        // エフェクト終了
+        if (ItemEffect != nullptr)
+        {
+            delete ItemEffect;
+            ItemEffect = nullptr;
+        }
+    }
 
     // 描画処理
     void Draw(RenderContext rc, ModelShader* shader) ;
