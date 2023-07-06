@@ -78,7 +78,7 @@ void StageManager::Update(Player* player, float elapsedTIme)
     TerrainUpdate(elapsedTIme);
 
     // 休憩時間更新
-    UpdateBreakTime(elapsedTIme);
+    UpdateBreakTime(elapsedTIme, player);
     player->IsBreakTime = IsBreakTime;
 }
 
@@ -417,14 +417,15 @@ void StageManager::SetBreakTime_State()
 }
 
 // 休憩時間更新
-void StageManager::UpdateBreakTime(float elapsedFrame)
+void StageManager::UpdateBreakTime(float elapsedFrame, Player* player)
 {
     if (IsSpawnNone)
     {
         // ブレイクタイム開始するステージを超えた　かつ　ブレイクタイムでないとき
         if (!IsBreakTime && breakTime_State <= doneStageNum)
         {
-            stageNo++;                  // 次のステージに切り替え
+            player->AddScore(StageClearcBonus[stageNo]);    // ステージクリア報酬
+            stageNo++;                                      // 次のステージに切り替え
             IsBreakTime = true;
             breakTime_End = doneStageNum + Stage::StageDepthMax;
         }

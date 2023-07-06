@@ -55,7 +55,7 @@ private:
         2.0f,       // ステージ:2
         3.0f,       // ステージ:3
         4.0f,       // ステージ:4
-        6.0f        // ステージ:5
+        5.0f        // ステージ:5
     };
     // 各空腹レベルでのスコアの常時加算量の倍率
     static constexpr float MaxAlwaysAddScoreMagnification[3] =
@@ -63,6 +63,14 @@ private:
         2.0f,       // 空腹レベル：低 
         1.0f,       // 空腹レベル：中 
         0.5f        // 空腹レベル：高 
+    };
+    static constexpr int StageClearcBonus[Stage::StageMax] =
+    {
+        100,       // ステージ:1
+        200,       // ステージ:2
+        300,       // ステージ:3
+        400,       // ステージ:4
+        500        // ステージ:5
     };
 
 public:
@@ -134,7 +142,7 @@ private:
     void SetBreakTime_State();
 
     // 休憩時間更新
-    void UpdateBreakTime(float elapsedFrame);
+    void UpdateBreakTime(float elapsedFrame, Player* player);
 
     // doneStageNumの加算
     void AddDoneStageNum(float elapsedTIme);
