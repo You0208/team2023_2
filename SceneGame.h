@@ -54,6 +54,9 @@ public:
 	// セレクト画面
 	void SelectUpdate(float elapsedTime);
 
+	// ルール
+	void RuleUpdate(float elapsedTime);
+
 	// 遷移処理
 	void TransUpdate(float elapsedTime);
 
@@ -65,7 +68,6 @@ public:
 
 	// 餓死演出
 	void DidFromHunger(float elapsedTime);
-
 
 	// 障害物と障害物の当たり判定
 	void CollisionObsVsObs();
@@ -108,10 +110,31 @@ private:
 	float range;// セレクト用
 	float rotation;// セレクト用
 
+<<<<<<< HEAD
 	int fontNo = 4;	// フォント番号
 	DirectX::XMFLOAT2 text_size = { 50.0f,50.0f };
 	DirectX::XMFLOAT2 text_pos = { 0.0f,105.0f };
 	DirectX::XMFLOAT4 text_color = { 0.0f,1.0f,0.0f,1.0f };
+=======
+
+	enum SelectNum
+	{
+		SELECT_PLAY = 0,
+		SELECT_RULE,
+		SELECT_FIN
+	};
+	float iconPosX[3] = { 1175.0f,1175.0f,1175.0f };
+	int selectNum = 0;
+
+
+	// ルール用
+	bool IsRule;
+	bool ruleIn;//ルール入場
+	bool ruleOut;//ルール入場
+
+	// ルール位置
+	float rulePos = -1080;
+>>>>>>> muta
 
 	Player* player = nullptr;
 
@@ -161,6 +184,10 @@ private:
 
 	std::unique_ptr<Sprite>	s_select;
 	std::unique_ptr<Texture> t_select;
+
+	std::unique_ptr<Sprite>	s_score;
+	std::unique_ptr<Texture> t_score;
+
 	// UVスクロールデータ
 	UVScrollData uvScrollData;
 

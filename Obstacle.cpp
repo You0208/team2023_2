@@ -20,9 +20,21 @@ void Obstacle::Draw(RenderContext rc, ModelShader* shader)
 //更新処理
 void Obstacle::Update(float elapsedTime)
 {
+    if (once) {
+        if (Type == ITEMS)
+        {
+            // エフェクトの再生
+            handle = ItemEffect->Play(position);
+            once = false;
+        }
+    }
+    // ヒットエフェクト再生
+    {
+        // エフェクトの座標を変更
+        ItemEffect->SetPosition(handle, position);
+    }
     if (Type == ITEMS)
     {
-
         angle.y += DirectX::XMConvertToRadians(1);//回す
     }
     // 速度処理更新

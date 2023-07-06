@@ -9,37 +9,37 @@
 void SceneTitle::Initialize()
 {
     // スプライト初期化
-    texture = std::make_unique<Texture>("Data/Texture/black.png");
+    texture = std::make_unique<Texture>("Data/Texture/Title/black.png");
     // スプライト
     sprite = std::make_unique<Sprite>();
     sprite->SetShaderResourceView(texture->GetShaderResourceView(), texture->GetWidth(), texture->GetHeight());
 
     // スプライト初期化
-    t_back = std::make_unique<Texture>("Data/Texture/back.png");
+    t_back = std::make_unique<Texture>("Data/Texture/Title/back.png");
     // スプライト
     s_back = std::make_unique<Sprite>();
     s_back->SetShaderResourceView(t_back->GetShaderResourceView(), t_back->GetWidth(), t_back->GetHeight());
 
     // スプライト初期化
-    t_frame = std::make_unique<Texture>("Data/Texture/frame.png");
+    t_frame = std::make_unique<Texture>("Data/Texture/Title/frame.png");
     // スプライト
     s_frame = std::make_unique<Sprite>();
     s_frame->SetShaderResourceView(t_frame->GetShaderResourceView(), t_frame->GetWidth(), t_frame->GetHeight());
 
     // スプライト初期化
-    t_hamu = std::make_unique<Texture>("Data/Texture/hamster.png");
+    t_hamu = std::make_unique<Texture>("Data/Texture/Title/hamster.png");
     // スプライト
     s_hamu = std::make_unique<Sprite>();
     s_hamu->SetShaderResourceView(t_hamu->GetShaderResourceView(), t_hamu->GetWidth(), t_hamu->GetHeight());
 
     // スプライト初期化
-    t_logo = std::make_unique<Texture>("Data/Texture/titlelogo.png");
+    t_logo = std::make_unique<Texture>("Data/Texture/Title/titlelogo.png");
     // スプライト
     s_logo = std::make_unique<Sprite>();
     s_logo->SetShaderResourceView(t_logo->GetShaderResourceView(), t_logo->GetWidth(), t_logo->GetHeight());
 
     // スプライト初期化
-    t_start = std::make_unique<Texture>("Data/Texture/start.png");
+    t_start = std::make_unique<Texture>("Data/Texture/Title/start.png");
     // スプライト
     s_start = std::make_unique<Sprite>();
     s_start->SetShaderResourceView(t_start->GetShaderResourceView(), t_start->GetWidth(), t_start->GetHeight());

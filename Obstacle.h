@@ -26,11 +26,16 @@ public:
     Obstacle(){
         // ヒットエフェクト読み込み
        ItemEffect = new Effect("Data/e/item_white_0703_2.efk");
-
     }
 
+<<<<<<< HEAD
     ~Obstacle() 
     {
+=======
+    ~Obstacle() {
+
+        // エフェクト終了
+>>>>>>> muta
         if (ItemEffect != nullptr)
         {
             delete ItemEffect;
