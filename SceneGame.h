@@ -110,12 +110,10 @@ private:
 	float range;// セレクト用
 	float rotation;// セレクト用
 
-<<<<<<< HEAD
 	int fontNo = 4;	// フォント番号
 	DirectX::XMFLOAT2 text_size = { 50.0f,50.0f };
 	DirectX::XMFLOAT2 text_pos = { 0.0f,105.0f };
 	DirectX::XMFLOAT4 text_color = { 0.0f,1.0f,0.0f,1.0f };
-=======
 
 	enum SelectNum
 	{
@@ -134,7 +132,6 @@ private:
 
 	// ルール位置
 	float rulePos = -1080;
->>>>>>> muta
 
 	Player* player = nullptr;
 

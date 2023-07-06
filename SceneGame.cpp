@@ -455,7 +455,6 @@ void SceneGame::Render()
 		shader->Draw(rc, sprite_hungerGageFrame.get());
 
 		// ステージレベル看板
-<<<<<<< HEAD
 		shader->Draw(rc, sprite_StageUI.get());
 
 		// スコア表示(仮)
@@ -472,7 +471,6 @@ void SceneGame::Render()
 				, text_color.x, text_color.y, text_color.z, text_color.w
 			);
 
-=======
 		//shader->Draw(rc, sprite_StageUI.get());
 		
 		if (SceneManager::Instance().IsSelect)
@@ -485,7 +483,6 @@ void SceneGame::Render()
 			shader->Draw(rc, s_score.get());
 		}
 		if (IsRule)	shader->Draw(rc, sprite.get());
->>>>>>> muta
 		shader->End(rc);
 
 		// デバッグ情報の表示

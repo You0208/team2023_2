@@ -28,14 +28,9 @@ public:
        ItemEffect = new Effect("Data/e/item_white_0703_2.efk");
     }
 
-<<<<<<< HEAD
-    ~Obstacle() 
-    {
-=======
-    ~Obstacle() {
 
+    ~Obstacle() {
         // エフェクト終了
->>>>>>> muta
         if (ItemEffect != nullptr)
         {
             delete ItemEffect;
