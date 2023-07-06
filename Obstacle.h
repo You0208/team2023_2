@@ -29,7 +29,14 @@ public:
 
     }
 
-    ~Obstacle() {}
+    ~Obstacle()
+    {
+        if (ItemEffect != nullptr)
+        {
+            delete ItemEffect;
+            ItemEffect = nullptr;
+        }
+    }
 
     // •`‰æˆ—
     void Draw(RenderContext rc, ModelShader* shader) ;

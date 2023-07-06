@@ -168,8 +168,8 @@ Stage::Stage(int stageNo)
     }
     else 
     {
-        //AreaInfo info = RandSpawn(stageInfo[stageNo]);
-        AreaInfo info = RandSpawn(StageDebug[stageNo]);
+        AreaInfo info = RandSpawn(stageInfo[stageNo]);
+        //AreaInfo info = RandSpawn(StageDebug[stageNo]);
         info(this);
     }
 
