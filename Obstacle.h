@@ -29,7 +29,7 @@ public:
 
     }
 
-    ~Obstacle()
+    ~Obstacle() 
     {
         if (ItemEffect != nullptr)
         {

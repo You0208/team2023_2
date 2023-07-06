@@ -20,7 +20,7 @@ private:
     // 各空腹レベルでのプレイヤーの最大速度
     static constexpr float MaxPlayerVelocity[3] =
     {
-        60.0f,      // 空腹レベル：低
+        150.0f,      // 空腹レベル：低
         50.0f,      // 空腹レベル：中
         20.0f       // 空腹レベル：高
     };
@@ -55,7 +55,7 @@ private:
         2.0f,       // ステージ:2
         3.0f,       // ステージ:3
         4.0f,       // ステージ:4
-        6.0f        // ステージ:5
+        5.0f        // ステージ:5
     };
     // 各空腹レベルでのスコアの常時加算量の倍率
     static constexpr float MaxAlwaysAddScoreMagnification[3] =
@@ -63,6 +63,14 @@ private:
         2.0f,       // 空腹レベル：低 
         1.0f,       // 空腹レベル：中 
         0.5f        // 空腹レベル：高 
+    };
+    static constexpr int StageClearcBonus[Stage::StageMax] =
+    {
+        100,       // ステージ:1
+        200,       // ステージ:2
+        300,       // ステージ:3
+        400,       // ステージ:4
+        500        // ステージ:5
     };
 
 public:
@@ -128,13 +136,13 @@ private:
     DirectX::XMFLOAT3 GetMoveVec();
 
     // 水平速力更新処理
-    void UpdataHorizontalVelocity(float elapsedFrame);
+    void UpdataHorizontalVelocity(float elapsedFrame, Player* player);
 
     // BreakTime_Stateをセット
     void SetBreakTime_State();
 
     // 休憩時間更新
-    void UpdateBreakTime(float elapsedFrame);
+    void UpdateBreakTime(float elapsedFrame, Player* player);
 
     // doneStageNumの加算
     void AddDoneStageNum(float elapsedTIme);
@@ -176,7 +184,7 @@ private:
     int doneStageNum        = 0;                                        // プレイヤーが超えたステージの数
 
    // ===== 非使用　後で使うかも？ =====
-    float friction = 0.5f;                                              // 減速
+    float friction = 5.0f;                                              // 減速
     float acceleration = 10.0f;                                         // 加速力
 
     float scrollVelocityRate = 0.0f;                                    // スクロール速度補間係数
