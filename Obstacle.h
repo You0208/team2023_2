@@ -25,7 +25,8 @@ class Obstacle
 public:
     Obstacle(){
         // ヒットエフェクト読み込み
-       ItemEffect = new Effect("Data/e/accel.efk");
+       ItemEffect = new Effect("Data/e/item_white_0703_2.efk");
+
     }
 
     ~Obstacle() {}
@@ -84,6 +85,7 @@ public:
     Effect* ItemEffect = nullptr;
     Effekseer::Handle handle;
 
+    bool once=true;
     int score = 0;
     int hungerPoint = 0;
     int Type = 0;
