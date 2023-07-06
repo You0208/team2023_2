@@ -123,8 +123,8 @@ void SceneGame::Initialize()
 	cameraController = new CameraController();
 
 	// ヒットエフェクト読み込み
-	hitEffect = new Effect("Data/Effect/Hit.efk");
-	accelEffect = new Effect("Data/e/wind.efk");
+	hitEffect = new Effect("Data/e/syoutotu_0704_1.efk");
+	accelEffect = new Effect("Data/e/kasoku_0704_1.efk");
 
 
 	//-------------------------------------------------------------------------------------------------------
@@ -269,8 +269,13 @@ void SceneGame::Update(float elapsedTime)
 			//player->IsDeath = true;
 			//player->OnDead();
 			//DeathMoment();
-			player->Gashi = true;
+			//player->Gashi = true;
 			//accel = true;
+			// ヒットエフェクト再生
+			{
+				DirectX::XMFLOAT3 e = player->GetPosition();
+				hitEffect->Play(e);
+			}
 		}
 
 		if (cameraController->flag)
@@ -559,7 +564,6 @@ void SceneGame::CollisionPlayerVsObs()
 							// ヒットエフェクト再生
 							{
 								DirectX::XMFLOAT3 e = player->GetPosition();
-								e.y += player->GetHeight() * 0.5f;
 								hitEffect->Play(e);
 							}
 							player->OnDead();
@@ -583,7 +587,6 @@ void SceneGame::CollisionPlayerVsObs()
 								// ヒットエフェクト再生
 								{
 									DirectX::XMFLOAT3 e = player->GetPosition();
-									e.z -= 4.0f;
 									hitEffect->Play(e);
 								}
 								player->OnDead();
@@ -993,8 +996,10 @@ void SceneGame::RenderShadowmap()
 	}
 }
 
+// 加速更新
 void SceneGame::accelUpdate(float elapsedTime)
 {
+
 	accelFrame -= 1.0f;
 	if (int(accelFrame) % 2 == 0)
 	{
