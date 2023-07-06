@@ -291,7 +291,7 @@ void Player::UpdateHungerPoint(float elapsedTime)
     if (hungerPoint <= 0.0f) Gashi = true;
 
     // íŽž‹ó• —Ê‚ªŒ¸­‚·‚é
-    RemoveHungerPoint(elapsedTime, 1.0f);
+    RemoveHungerPoint(elapsedTime, 2.0f);
 
     // ‹ó• ƒŒƒxƒ‹XV
     UpdateHungerLevel();

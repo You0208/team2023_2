@@ -73,38 +73,214 @@ Stage::SpawnObstacleInfo Stage::StageInfo01[] =
 // ステージ2
 Stage::SpawnObstacleInfo Stage::StageInfo02[] =
 {
-    {AreaInfo02,Stage::SpawnLevel::high}
-    ,{AreaInfo02,Stage::SpawnLevel::middle}
-    ,{AreaInfo02,Stage::SpawnLevel::low}
+ {AreaInfo01,Stage::SpawnLevel::low}
+    ,{AreaInfo01,Stage::SpawnLevel::middle}
+    ,{AreaInfo01,Stage::SpawnLevel::high}
 
-    ,{nullptr,0} // END
+
+    ,{AreaInfo02,Stage::SpawnLevel::low}
+    ,{AreaInfo02,Stage::SpawnLevel::middle}
+    ,{AreaInfo02,Stage::SpawnLevel::high}
+    ,{AreaInfo03,Stage::SpawnLevel::low}
+    ,{AreaInfo03,Stage::SpawnLevel::middle}
+    ,{AreaInfo03,Stage::SpawnLevel::high}
+    ,{AreaInfo04,Stage::SpawnLevel::low}
+    ,{AreaInfo04,Stage::SpawnLevel::middle}
+    ,{AreaInfo04,Stage::SpawnLevel::high}
+    ,{AreaInfo05,Stage::SpawnLevel::low}
+    ,{AreaInfo05,Stage::SpawnLevel::middle}
+    ,{AreaInfo05,Stage::SpawnLevel::high}
+    ,{AreaInfo06,Stage::SpawnLevel::low}
+    ,{AreaInfo06,Stage::SpawnLevel::middle}
+    ,{AreaInfo06,Stage::SpawnLevel::high}
+    ,{AreaInfo07,Stage::SpawnLevel::low}
+    ,{AreaInfo07,Stage::SpawnLevel::middle}
+    ,{AreaInfo07,Stage::SpawnLevel::high}
+    ,{AreaInfo08,Stage::SpawnLevel::low}
+    ,{AreaInfo08,Stage::SpawnLevel::middle}
+    ,{AreaInfo08,Stage::SpawnLevel::high}
+    ,{AreaInfo09,Stage::SpawnLevel::low}
+    ,{AreaInfo09,Stage::SpawnLevel::middle}
+    ,{AreaInfo09,Stage::SpawnLevel::high}
+    ,{AreaInfo10,Stage::SpawnLevel::low}
+    ,{AreaInfo10,Stage::SpawnLevel::middle}
+    ,{AreaInfo10,Stage::SpawnLevel::high}
+    ,{AreaInfo11,Stage::SpawnLevel::low}
+    ,{AreaInfo11,Stage::SpawnLevel::middle}
+    ,{AreaInfo11,Stage::SpawnLevel::high}
+    ,{AreaInfo12,Stage::SpawnLevel::low}
+    ,{AreaInfo12,Stage::SpawnLevel::middle}
+    ,{AreaInfo12,Stage::SpawnLevel::high}
+    ,{AreaInfo13,Stage::SpawnLevel::low}
+    ,{AreaInfo13,Stage::SpawnLevel::middle}
+    ,{AreaInfo13,Stage::SpawnLevel::high}
+    ,{AreaInfo14,Stage::SpawnLevel::low}
+    ,{AreaInfo14,Stage::SpawnLevel::middle}
+    ,{AreaInfo14,Stage::SpawnLevel::high}
+    //            ,{AreaInfo15,Stage::SpawnLevel::low}
+    //,{AreaInfo15,Stage::SpawnLevel::middle}
+    //,{AreaInfo15,Stage::SpawnLevel::high}
+
+,{nullptr,0} // END
 };
 // ステージ3
 Stage::SpawnObstacleInfo Stage::StageInfo03[] =
 {
-    {AreaInfo02,Stage::SpawnLevel::high}
-    ,{AreaInfo02,Stage::SpawnLevel::middle}
-    ,{AreaInfo02,Stage::SpawnLevel::low}
+ {AreaInfo01,Stage::SpawnLevel::low}
+    ,{AreaInfo01,Stage::SpawnLevel::middle}
+    ,{AreaInfo01,Stage::SpawnLevel::high}
 
-    ,{nullptr,0} // END
+
+    ,{AreaInfo02,Stage::SpawnLevel::low}
+    ,{AreaInfo02,Stage::SpawnLevel::middle}
+    ,{AreaInfo02,Stage::SpawnLevel::high}
+    ,{AreaInfo03,Stage::SpawnLevel::low}
+    ,{AreaInfo03,Stage::SpawnLevel::middle}
+    ,{AreaInfo03,Stage::SpawnLevel::high}
+    ,{AreaInfo04,Stage::SpawnLevel::low}
+    ,{AreaInfo04,Stage::SpawnLevel::middle}
+    ,{AreaInfo04,Stage::SpawnLevel::high}
+    ,{AreaInfo05,Stage::SpawnLevel::low}
+    ,{AreaInfo05,Stage::SpawnLevel::middle}
+    ,{AreaInfo05,Stage::SpawnLevel::high}
+    ,{AreaInfo06,Stage::SpawnLevel::low}
+    ,{AreaInfo06,Stage::SpawnLevel::middle}
+    ,{AreaInfo06,Stage::SpawnLevel::high}
+    ,{AreaInfo07,Stage::SpawnLevel::low}
+    ,{AreaInfo07,Stage::SpawnLevel::middle}
+    ,{AreaInfo07,Stage::SpawnLevel::high}
+    ,{AreaInfo08,Stage::SpawnLevel::low}
+    ,{AreaInfo08,Stage::SpawnLevel::middle}
+    ,{AreaInfo08,Stage::SpawnLevel::high}
+    ,{AreaInfo09,Stage::SpawnLevel::low}
+    ,{AreaInfo09,Stage::SpawnLevel::middle}
+    ,{AreaInfo09,Stage::SpawnLevel::high}
+    ,{AreaInfo10,Stage::SpawnLevel::low}
+    ,{AreaInfo10,Stage::SpawnLevel::middle}
+    ,{AreaInfo10,Stage::SpawnLevel::high}
+    ,{AreaInfo11,Stage::SpawnLevel::low}
+    ,{AreaInfo11,Stage::SpawnLevel::middle}
+    ,{AreaInfo11,Stage::SpawnLevel::high}
+    ,{AreaInfo12,Stage::SpawnLevel::low}
+    ,{AreaInfo12,Stage::SpawnLevel::middle}
+    ,{AreaInfo12,Stage::SpawnLevel::high}
+    ,{AreaInfo13,Stage::SpawnLevel::low}
+    ,{AreaInfo13,Stage::SpawnLevel::middle}
+    ,{AreaInfo13,Stage::SpawnLevel::high}
+    ,{AreaInfo14,Stage::SpawnLevel::low}
+    ,{AreaInfo14,Stage::SpawnLevel::middle}
+    ,{AreaInfo14,Stage::SpawnLevel::high}
+    //            ,{AreaInfo15,Stage::SpawnLevel::low}
+    //,{AreaInfo15,Stage::SpawnLevel::middle}
+    //,{AreaInfo15,Stage::SpawnLevel::high}
+
+,{nullptr,0} // END
 };
 // ステージ4
 Stage::SpawnObstacleInfo Stage::StageInfo04[] =
 {
-    {AreaInfo02,Stage::SpawnLevel::high}
-    ,{AreaInfo02,Stage::SpawnLevel::middle}
-    ,{AreaInfo02,Stage::SpawnLevel::low}
+ {AreaInfo01,Stage::SpawnLevel::low}
+    ,{AreaInfo01,Stage::SpawnLevel::middle}
+    ,{AreaInfo01,Stage::SpawnLevel::high}
 
-    ,{nullptr,0} // END
+
+    ,{AreaInfo02,Stage::SpawnLevel::low}
+    ,{AreaInfo02,Stage::SpawnLevel::middle}
+    ,{AreaInfo02,Stage::SpawnLevel::high}
+    ,{AreaInfo03,Stage::SpawnLevel::low}
+    ,{AreaInfo03,Stage::SpawnLevel::middle}
+    ,{AreaInfo03,Stage::SpawnLevel::high}
+    ,{AreaInfo04,Stage::SpawnLevel::low}
+    ,{AreaInfo04,Stage::SpawnLevel::middle}
+    ,{AreaInfo04,Stage::SpawnLevel::high}
+    ,{AreaInfo05,Stage::SpawnLevel::low}
+    ,{AreaInfo05,Stage::SpawnLevel::middle}
+    ,{AreaInfo05,Stage::SpawnLevel::high}
+    ,{AreaInfo06,Stage::SpawnLevel::low}
+    ,{AreaInfo06,Stage::SpawnLevel::middle}
+    ,{AreaInfo06,Stage::SpawnLevel::high}
+    ,{AreaInfo07,Stage::SpawnLevel::low}
+    ,{AreaInfo07,Stage::SpawnLevel::middle}
+    ,{AreaInfo07,Stage::SpawnLevel::high}
+    ,{AreaInfo08,Stage::SpawnLevel::low}
+    ,{AreaInfo08,Stage::SpawnLevel::middle}
+    ,{AreaInfo08,Stage::SpawnLevel::high}
+    ,{AreaInfo09,Stage::SpawnLevel::low}
+    ,{AreaInfo09,Stage::SpawnLevel::middle}
+    ,{AreaInfo09,Stage::SpawnLevel::high}
+    ,{AreaInfo10,Stage::SpawnLevel::low}
+    ,{AreaInfo10,Stage::SpawnLevel::middle}
+    ,{AreaInfo10,Stage::SpawnLevel::high}
+    ,{AreaInfo11,Stage::SpawnLevel::low}
+    ,{AreaInfo11,Stage::SpawnLevel::middle}
+    ,{AreaInfo11,Stage::SpawnLevel::high}
+    ,{AreaInfo12,Stage::SpawnLevel::low}
+    ,{AreaInfo12,Stage::SpawnLevel::middle}
+    ,{AreaInfo12,Stage::SpawnLevel::high}
+    ,{AreaInfo13,Stage::SpawnLevel::low}
+    ,{AreaInfo13,Stage::SpawnLevel::middle}
+    ,{AreaInfo13,Stage::SpawnLevel::high}
+    ,{AreaInfo14,Stage::SpawnLevel::low}
+    ,{AreaInfo14,Stage::SpawnLevel::middle}
+    ,{AreaInfo14,Stage::SpawnLevel::high}
+    //            ,{AreaInfo15,Stage::SpawnLevel::low}
+    //,{AreaInfo15,Stage::SpawnLevel::middle}
+    //,{AreaInfo15,Stage::SpawnLevel::high}
+
+,{nullptr,0} // END
 };
 // ステージ5
 Stage::SpawnObstacleInfo Stage::StageInfo05[] =
 {
-    {AreaInfo02,Stage::SpawnLevel::high}
-    ,{AreaInfo02,Stage::SpawnLevel::middle}
-    ,{AreaInfo02,Stage::SpawnLevel::low}
+ {AreaInfo01,Stage::SpawnLevel::low}
+    ,{AreaInfo01,Stage::SpawnLevel::middle}
+    ,{AreaInfo01,Stage::SpawnLevel::high}
 
-    ,{nullptr,0} // END
+
+    ,{AreaInfo02,Stage::SpawnLevel::low}
+    ,{AreaInfo02,Stage::SpawnLevel::middle}
+    ,{AreaInfo02,Stage::SpawnLevel::high}
+    ,{AreaInfo03,Stage::SpawnLevel::low}
+    ,{AreaInfo03,Stage::SpawnLevel::middle}
+    ,{AreaInfo03,Stage::SpawnLevel::high}
+    ,{AreaInfo04,Stage::SpawnLevel::low}
+    ,{AreaInfo04,Stage::SpawnLevel::middle}
+    ,{AreaInfo04,Stage::SpawnLevel::high}
+    ,{AreaInfo05,Stage::SpawnLevel::low}
+    ,{AreaInfo05,Stage::SpawnLevel::middle}
+    ,{AreaInfo05,Stage::SpawnLevel::high}
+    ,{AreaInfo06,Stage::SpawnLevel::low}
+    ,{AreaInfo06,Stage::SpawnLevel::middle}
+    ,{AreaInfo06,Stage::SpawnLevel::high}
+    ,{AreaInfo07,Stage::SpawnLevel::low}
+    ,{AreaInfo07,Stage::SpawnLevel::middle}
+    ,{AreaInfo07,Stage::SpawnLevel::high}
+    ,{AreaInfo08,Stage::SpawnLevel::low}
+    ,{AreaInfo08,Stage::SpawnLevel::middle}
+    ,{AreaInfo08,Stage::SpawnLevel::high}
+    ,{AreaInfo09,Stage::SpawnLevel::low}
+    ,{AreaInfo09,Stage::SpawnLevel::middle}
+    ,{AreaInfo09,Stage::SpawnLevel::high}
+    ,{AreaInfo10,Stage::SpawnLevel::low}
+    ,{AreaInfo10,Stage::SpawnLevel::middle}
+    ,{AreaInfo10,Stage::SpawnLevel::high}
+    ,{AreaInfo11,Stage::SpawnLevel::low}
+    ,{AreaInfo11,Stage::SpawnLevel::middle}
+    ,{AreaInfo11,Stage::SpawnLevel::high}
+    ,{AreaInfo12,Stage::SpawnLevel::low}
+    ,{AreaInfo12,Stage::SpawnLevel::middle}
+    ,{AreaInfo12,Stage::SpawnLevel::high}
+    ,{AreaInfo13,Stage::SpawnLevel::low}
+    ,{AreaInfo13,Stage::SpawnLevel::middle}
+    ,{AreaInfo13,Stage::SpawnLevel::high}
+    ,{AreaInfo14,Stage::SpawnLevel::low}
+    ,{AreaInfo14,Stage::SpawnLevel::middle}
+    ,{AreaInfo14,Stage::SpawnLevel::high}
+    //            ,{AreaInfo15,Stage::SpawnLevel::low}
+    //,{AreaInfo15,Stage::SpawnLevel::middle}
+    //,{AreaInfo15,Stage::SpawnLevel::high}
+
+,{nullptr,0} // END
 };
 
 // デバッグ用ステージ
