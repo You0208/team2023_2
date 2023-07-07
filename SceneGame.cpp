@@ -258,7 +258,6 @@ void SceneGame::Update(float elapsedTime)
 			//DeathMoment();
 			//player->Gashi = true;
 			//accel = true;
-			// TODO 吉野先生ヘルプ
 			// ヒットエフェクト再生
 			{
 				DirectX::XMFLOAT3 e = player->GetPosition();

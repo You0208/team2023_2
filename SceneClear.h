@@ -26,8 +26,27 @@ public:
     void Render()override;
 
 private:
-    std::unique_ptr<Sprite>	sprite;
-    std::unique_ptr<Texture> texture;
+    std::unique_ptr<Sprite>	s_back;
+    std::unique_ptr<Texture> t_back;
+
+    std::unique_ptr<Sprite>	s_endles;
+    std::unique_ptr<Texture> t_endles;
+
+    std::unique_ptr<Sprite>	s_ham;
+    std::unique_ptr<Texture> t_ham;
+
+    std::unique_ptr<Sprite>	s_point;
+    std::unique_ptr<Texture> t_point;
+
+    std::unique_ptr<Sprite>	s_result;
+    std::unique_ptr<Texture> t_result;
+
+    std::unique_ptr<Sprite>	s_score;
+    std::unique_ptr<Texture> t_score;
+
+    std::unique_ptr<Sprite>	s_title;
+    std::unique_ptr<Texture> t_title;
+
     // UVスクロールデータ
     UVScrollData uvScrollData;
     // マスク画像
