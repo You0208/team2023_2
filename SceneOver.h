@@ -25,8 +25,11 @@ public:
     void Render()override;
 
 private:
-    std::unique_ptr<Sprite>	sprite;
-    std::unique_ptr<Texture> texture;
+    std::unique_ptr<Sprite>	s_high;
+    std::unique_ptr<Texture> t_high;
+
+    std::unique_ptr<Sprite>	s_100p;
+    std::unique_ptr<Texture> t_100p;
 
     std::unique_ptr<Sprite>	s_over;
     std::unique_ptr<Texture> t_over;
@@ -39,6 +42,26 @@ private:
 
     std::unique_ptr<Sprite>	s_point;
     std::unique_ptr<Texture> t_point;
+
+    std::unique_ptr<Sprite>	s_result;
+    std::unique_ptr<Texture> t_result;
+
+    std::unique_ptr<Sprite>	s_title;
+    std::unique_ptr<Texture> t_title;
+
+    std::unique_ptr<Sprite>	s_restart;
+    std::unique_ptr<Texture> t_restart;
+
+
+    enum OverNum
+    {
+        OVER_100 = 0,
+        OVER_RE,
+        OVER_TITLE
+    };
+    float iconPosX[3] = { 1200.0f,1200.0f,1200.0f };
+    int selectNum = 0;
+
 
     // UVスクロールデータ
     UVScrollData uvScrollData;

@@ -115,6 +115,9 @@ void SceneGame::Initialize()
 		}
 	}
 
+	//TODO 要改善
+	SceneManager::Instance().IsNoneStage = false;
+
 	//カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
 	Camera& camera = Camera::Instance();
@@ -300,7 +303,6 @@ void SceneGame::Update(float elapsedTime)
 			//DeathMoment();
 			//player->Gashi = true;
 			//accel = true;
-			// TODO 吉野先生ヘルプ
 			// ヒットエフェクト再生
 			{
 				DirectX::XMFLOAT3 e = player->GetPosition();
