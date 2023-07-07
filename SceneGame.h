@@ -153,8 +153,10 @@ private:
 	Effect* hitEffect = nullptr;
 	Effect* accelEffect = nullptr;
 
+	// BGM
 	std::unique_ptr<AudioSource> b_game;
 
+	// SE
 	std::unique_ptr<AudioSource> s_speed;		// ‰Á‘¬‰¹
 	std::unique_ptr<AudioSource> s_heal;		// ‹ó• ƒQ[ƒW‘‰Á‰¹
 	std::unique_ptr<AudioSource> s_choice;		// Œˆ’è‰¹
