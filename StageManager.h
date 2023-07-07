@@ -160,6 +160,7 @@ public:
 
     bool IsBreakTime = false;                                           // 休憩フラグ
     bool IsSpawnNone = false;                                           // 何もないステージを生成するフラグ
+    static int   stageNo;                                        // 現在のステージ
 
 private:
     // ステージデータ
@@ -180,7 +181,6 @@ private:
 
     float moveVecX = 0.0f;                                              // 移動方向ベクトル
     float maxPlayerVelocity = 20.0f;                                    // プレイヤーの最大速度
-    int   stageNo           = 0;                                        // 現在のステージ
     int doneStageNum        = 0;                                        // プレイヤーが超えたステージの数
 
    // ===== 非使用　後で使うかも？ =====

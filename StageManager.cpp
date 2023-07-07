@@ -3,6 +3,8 @@
 #include<imgui.h>
 #include <Input/Input.h>
 
+int StageManager::stageNo = 0;
+
 // コンストラクタ
 StageManager::StageManager()
 {

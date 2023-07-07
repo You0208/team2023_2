@@ -2,6 +2,7 @@
 #include "SceneLoading.h"
 #include "SceneGame.h"
 #include "SceneManager.h"
+#include "StageManager.h"
 #include "SceneOver.h"
 #include "SceneTitle.h"
 #include "Input/Input.h"
@@ -125,8 +126,13 @@ void SceneOver::Update(float elapsedTime)
         switch (selectNum)
         {
         case OVER_100:
+
+            SceneManager::Instance().IsSelect = false;
+            SceneManager::Instance().IsNoneStage = true;
+            SceneManager::Instance().ChangeScene(new SceneGame);
             break;
         case OVER_RE:
+            StageManager::stageNo = 0;
             SceneManager::Instance().IsSelect = false;
             SceneManager::Instance().IsNoneStage = true;
             SceneManager::Instance().ChangeScene(new SceneGame);
