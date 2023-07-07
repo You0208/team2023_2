@@ -155,6 +155,9 @@ private:
 
 	// BGM
 	std::unique_ptr<AudioSource> b_game;
+	std::unique_ptr<AudioSource> b_select;
+	std::unique_ptr<AudioSource> b_gameOver;
+	std::unique_ptr<AudioSource> b_gameClear;
 
 	// SE
 	std::unique_ptr<AudioSource> s_speed;		// ‰Á‘¬‰¹

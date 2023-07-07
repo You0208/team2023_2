@@ -20,9 +20,15 @@ static const UINT SHADOWMAP_SIZE = 2048;
 // 初期化
 void SceneGame::Initialize()
 {
-	// BGM再生(仮)
+	// BGM再生
 	b_game = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM.wav");
 	b_game->SetVolume(0.2f);
+	b_select = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM_Select.wav");
+	b_select->SetVolume(0.2f);
+	b_gameOver = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM_GameOver.wav");
+	b_gameOver->SetVolume(0.2f);
+	b_gameClear = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM_GameClear.wav");
+	b_gameClear->SetVolume(0.2f);
 
 	// SE設定
 	s_speed = Audio::Instance().LoadAudioSource("Data/Audio/SE/Speed.wav");
@@ -747,6 +753,8 @@ void SceneGame::SelectUpdate(float elapsedTime)
 {
 	if (!isTrans)
 	{
+		b_select->Play(true);	// BGM1再生
+
 		// カメラコントローラー更新処理
 		target = player->GetPosition();
 		target.y += 1.5f;
@@ -824,6 +832,8 @@ void SceneGame::SelectUpdate(float elapsedTime)
 			player->SetAngleY(0.0f);
 			SceneManager::Instance().IsSelect = false;
 			SceneManager::Instance().IsNoneStage = false;
+
+			b_select->Stop();	// BGM停止
 		}
 	}
 }
