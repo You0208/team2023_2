@@ -20,11 +20,38 @@ static const UINT SHADOWMAP_SIZE = 2048;
 // 初期化
 void SceneGame::Initialize()
 {
+	// BGM再生(仮)
+	//audio = Audio::Instance().LoadAudioSource("Data/Audio/BGM.wav");
+	//audio->SetVolume(0.5f);
+	//audio->Play(true);
+
+	//audio->Play(false);
+
 	//プレイヤー初期設定
 	player = new Player();
 
 	// 空初期設定
 	sky = new Sky();
+
+	// fonts
+	// フォント読み込み
+	texture_fonts[0] = std::make_unique<Texture>("Data/fonts/font0.png");
+	texture_fonts[1] = std::make_unique<Texture>("Data/fonts/font1.png");
+	texture_fonts[2] = std::make_unique<Texture>("Data/fonts/font2.png");
+	texture_fonts[3] = std::make_unique<Texture>("Data/fonts/font3.png");
+	texture_fonts[4] = std::make_unique<Texture>("Data/fonts/font4.png");
+	texture_fonts[5] = std::make_unique<Texture>("Data/fonts/font5.png");
+	texture_fonts[6] = std::make_unique<Texture>("Data/fonts/font6.png");
+	for (int i = 0; i < 7; ++i)
+	{
+		text[i] = std::make_unique<Text>();
+		text[i]->SetShaderResourceView(texture_fonts[i]->GetShaderResourceView(),
+			texture_fonts[i]->GetWidth(), texture_fonts[i]->GetHeight());
+	}
+	texture_fonts_number = std::make_unique<Texture>("Data/fonts/font7.png");
+	text_number = std::make_unique<Text>();
+	text_number->SetShaderResourceView(texture_fonts_number->GetShaderResourceView(),
+		texture_fonts_number->GetWidth(), texture_fonts_number->GetHeight());
 
 
 	// 空腹ゲージのフレーム設定
@@ -427,6 +454,22 @@ void SceneGame::Render()
 		shader->Draw(rc, sprite_hungerGageFrame.get());
 
 		// ステージレベル看板
+		shader->Draw(rc, sprite_StageUI.get());
+
+		// スコア表示(仮)
+		//text[fontNo]->textOut(rc
+		//	, "Score:" + std::to_string(player->GetScore())
+		//	, text_pos.x, text_pos.y
+		//	, text_size.x, text_size.y
+		//	, text_color.x, text_color.y, text_color.z, text_color.w
+		//);
+		text_number ->textOut(rc
+				, player->GetScore()
+				, text_pos.x, text_pos.y
+				, text_size.x, text_size.y
+				, text_color.x, text_color.y, text_color.z, text_color.w
+			);
+
 		//shader->Draw(rc, sprite_StageUI.get());
 		
 		if (SceneManager::Instance().IsSelect)
@@ -470,6 +513,19 @@ void SceneGame::Render()
 			player->DrawDebugGUI();
 			stageManager->DrawDebugGUI();
 			postprocessingRenderer->DrawDebugGUI();
+		}
+		// テキスト
+		{
+			if (ImGui::TreeNode("Text"))
+			{
+				ImGui::SliderInt("fontNo", &fontNo, 0, 6);
+				ImGui::SliderFloat("posX", &text_pos.x, 0.0f, 1920.0f);
+				ImGui::SliderFloat("posY", &text_pos.y, 0.0f, 1080.0f);
+				ImGui::SliderFloat("size", &text_size.x, 0.0f, 500.0f);
+				text_size.y = text_size.x;
+				ImGui::ColorPicker4("color", &text_color.x);
+				ImGui::TreePop();
+			}
 		}
 		// スコア表示
 		{
@@ -1104,22 +1160,54 @@ void SceneGame::UpdateHungerGage()
 
 void SceneGame::UpdateStageUI()
 {
+	float screen_width = 1920.0f;
+
+	const int MaxFrame = 20;		// 1枚当たりの表示フレーム数
+	const int SpriteMax = 4;		// アニメのスプライトの最大数
+	static int frame = 0;			// 現在のフレーム
+	frame += 1;
+
+	// 最後のスプライトの表示が終わったら
+	if (MaxFrame * (SpriteMax + 1) <= frame)
+	{
+		frame = 0;
+	}
+
+	// アニメ番号
+	float anime = static_cast<float>(frame / MaxFrame);
+
 	// 切り抜きサイズ
-	float sw = 400.0f;
+	float sw = 500.0f;
 	float sh = 300.0f;
 	// 描画位置
+	float dx_end = screen_width - sw; // 描画位置の終点
 	float dx = 1920.0f - sw;
-	float dy = 500.0f;
+	float dy = 0.0f;
 	// 描画サイズ
 	float dw = sw;
 	float dh = sh;
 	// 切り抜き位置
-	float sx = 0.0f;
-	float sy = 0.0f;
+	float sx = anime * sw;
+	float sy = sh * (stageManager->GetStageNo() - 1);
+
+	// 速度
+	float speed = 10.0f;
+
+	// 休憩フラグが立っているとき
+	if (stageManager->IsBreakTime)
+	{
+		StageUI_Position.x = lerp<float>(StageUI_Position.x,dx_end,0.05f);
+
+		// アニメーションしたい
+	}
+	if (!stageManager->IsBreakTime)
+	{
+		StageUI_Position.x = lerp<float>(StageUI_Position.x, screen_width, 0.05f);
+	}
 
 	// 背景
 	sprite_StageUI->Update(
-		dx, dy,
+		StageUI_Position.x, StageUI_Position.y,
 		dw, dh,
 		sx, sy,
 		sw, sh,

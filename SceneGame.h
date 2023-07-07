@@ -3,6 +3,7 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <string>
 #include "Graphics/Model.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/Texture.h"
@@ -20,6 +21,7 @@
 #include "Effect.h"
 #include "Obstacle.h"
 #include "sky.h"
+#include "Audio/Audio.h"
 
 // ゲームシーン
 class SceneGame :public Scene
@@ -108,6 +110,10 @@ private:
 	float range;// セレクト用
 	float rotation;// セレクト用
 
+	int fontNo = 4;	// フォント番号
+	DirectX::XMFLOAT2 text_size = { 50.0f,50.0f };
+	DirectX::XMFLOAT2 text_pos = { 0.0f,105.0f };
+	DirectX::XMFLOAT4 text_color = { 0.0f,1.0f,0.0f,1.0f };
 
 	enum SelectNum
 	{
@@ -136,9 +142,12 @@ private:
 	CameraController* cameraController = nullptr;
 
 	bool isPaused = false;//ポーズ
+	DirectX::XMFLOAT2 StageUI_Position = { 1920.0f ,0.0f};						// ステージレベルの看板の座標
 
 	Effect* hitEffect = nullptr;
 	Effect* accelEffect = nullptr;
+
+	std::unique_ptr<AudioSource> audio;
 
 	std::unique_ptr<Texture>	texture_hungerGage;			// 空腹ゲージのテクスチャ(白)
 	std::unique_ptr<Texture>	texture_hungerGageFrame;	// 空腹ゲージのフレームのテクスチャ
@@ -147,7 +156,12 @@ private:
 	std::unique_ptr<Sprite>		sprite_hungerGageFrame;		// 空腹ゲージのフレーム
 	std::unique_ptr<Sprite>		sprite_hungerGageBack;		// 空腹ゲージの背景
 	std::unique_ptr<Sprite>		sprite_StageUI;				// ステージレベルの看板
-	//-------------------------------------------------------------------------------------------------------
+	std::unique_ptr<Texture>	texture_fonts[7];			// フォントテクスチャ
+	std::unique_ptr<Text>		text[7];					// フォント
+	std::unique_ptr<Texture>	texture_fonts_number;		// フォントテクスチャ(数字のみ)
+	std::unique_ptr<Text>		text_number;				// フォント(数字のみ)
+	
+															//-------------------------------------------------------------------------------------------------------
 	// ↓　この下はシェーダー関連
 	//-------------------------------------------------------------------------------------------------------
 	std::unique_ptr<Sprite>	sprite;

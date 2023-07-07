@@ -130,7 +130,6 @@ private:
     // 空腹ポイント減算
     void RemoveHungerPoint(float elapsedTime,float Remove);
 
-
     // ===== 非使用　後で使うかも？ =====
 
     // スティック入力値から移動ベクトルを取得
@@ -147,8 +146,9 @@ public:
     std::unique_ptr<Model>  model      = nullptr;       // モデル
 
     bool IsDeath = false;
-    bool Gashi = false;// 餓死
 
+    bool IsBreakTime = false;        // ブレイクタイムであるか
+    bool Gashi = false;// 餓死
 private:
     enum class State
     {

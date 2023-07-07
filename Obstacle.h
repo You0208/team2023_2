@@ -28,8 +28,8 @@ public:
        ItemEffect = new Effect("Data/e/item_white_0703_2.efk");
     }
 
-    ~Obstacle() {
 
+    ~Obstacle() {
         // エフェクト終了
         if (ItemEffect != nullptr)
         {

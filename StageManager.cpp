@@ -32,9 +32,15 @@ void StageManager::DrawDebugGUI()
         ImGui::SliderFloat("terrainScrollVelocityZ", &terrainScrollVelocity.z, 0.0f, -300.0f);
     }
 
-    ImGui::Text("SpawnStageCount:%ld", GetSpawnStageCount());
+    ImGui::Text("DoneStageNu:%ld", doneStageNum);
     ImGui::Text("stageNo:%ld", stageNo);
     ImGui::Text("accelerationTimer:%d", static_cast<int>(accelerationTimer));
+
+    ImGui::Text("IsBreakTime:%d", static_cast<int>(IsBreakTime));
+    ImGui::Text("IsSpawnNone:%d", static_cast<int>(IsSpawnNone));
+
+    // 残り休憩時間
+    ImGui::Text("IsBreakTime:%lf", breakTimer);
 
     ImGui::Text("[I][J][K][L] : camera");
     ImGui::Text("[A][D] : player");
@@ -50,8 +56,11 @@ void StageManager::Update(Player* player, float elapsedTIme)
     // プレイヤーのダメージアニメ再生は以下の処理を行わない
     if(player->GetIsDamageAnim()) return;
 
+    // スコアの更新(常時加算)
+    UpdateScore(player, elapsedTIme);
+
     // ステージ切り替え
-    ChangeStage();
+    SetBreakTime_State();
 
     // 移動入力処理
     InputMove(elapsedTIme);
@@ -59,11 +68,18 @@ void StageManager::Update(Player* player, float elapsedTIme)
     // 速度処理更新
     UpdateVelocity(elapsedTIme, player);
 
+    // doneStageNumの加算
+    AddDoneStageNum(elapsedTIme);
+
     // ステージの更新
     StageUpdate(elapsedTIme);
 
     // 地形更新
     TerrainUpdate(elapsedTIme);
+
+    // 休憩時間更新
+    UpdateBreakTime(elapsedTIme, player);
+    player->IsBreakTime = IsBreakTime;
 }
 
 // セレクト更新
@@ -169,7 +185,9 @@ void StageManager::Clear()
 // ステージ生成
 void StageManager::StageSpawn(DirectX::XMFLOAT3 position)
 {
-    Stage* s = new Stage(stageNo);                  //ステージを生成
+    int No = IsSpawnNone ? -1 : stageNo;            // Stageの引き数が0以下の場合StageNONEが生成される
+
+    Stage* s = new Stage(No);                       //ステージを生成
     s->SetPosition(position);                       // ここでステージのポジションを決める
     s->SetScrollVelocity(&stageScrollVelocity);     // 共通のスクロール速度を設定
     s->Initialize();                                // 障害物生成
@@ -269,9 +287,9 @@ void StageManager::TerrainUpdate(float elapsedTIme)
 // 地形生成
 void StageManager::TerrainSpawn(DirectX::XMFLOAT3 position)
 {
-    Terrain* s = new Terrain;           //地形を生成
-    s->SetPosition(position);// ここでステージのポジションを決める
-    s->SetScrollVelocity(&terrainScrollVelocity);  // 共通のスクロール速度を設定
+    Terrain* s = new Terrain;                       //地形を生成
+    s->SetPosition(position);                       // ここでステージのポジションを決める
+    s->SetScrollVelocity(&terrainScrollVelocity);   // 共通のスクロール速度を設定
     s->Initialize();
     terrains.emplace_back(s);
 }
@@ -315,7 +333,7 @@ void StageManager::UpdateVelocity(float elapsedTime, Player* player)
     maxPlayerVelocity = MaxPlayerVelocity[player->GetHungerLevel()];
 
     // 水平速力更新処理
-    UpdataHorizontalVelocity(elapsedFrame);
+    UpdataHorizontalVelocity(elapsedFrame, player);
 
     player->SetVelocity({ -stageScrollVelocity.x,0.0f,0.0f });
 
@@ -337,12 +355,52 @@ void StageManager::UpdateVelocity(float elapsedTime, Player* player)
 }
 
 // 水平速力更新処理
-void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
+void StageManager::UpdataHorizontalVelocity(float elapsedFrame, Player* player)
 {
-    // XZ平面の速力を減速する
     float length = sqrtf(stageScrollVelocity.x * stageScrollVelocity.x);
 
-    // キーを離すとすぐ止まってほしので減速処理なし
+#if 0
+    // 空腹状態であるとき
+    if (player->GetHungerLevel() == 0)
+    {
+        // XZ平面の速力を減速する
+
+        // キーを離すとすぐ止まってほしので減速処理なし
+        float length = sqrtf((stageScrollVelocity.x * stageScrollVelocity.x));
+        if (length > 0.0f)
+        {
+            // 摩擦力
+            float friction = this->friction * elapsedFrame;
+
+            // 摩擦による横方向の減速処理[09]
+            if (length > friction)
+            {
+                float vx = stageScrollVelocity.x / length;
+                stageScrollVelocity.x -= vx * friction;
+            }
+            // 横方向の速力が摩擦力以下になったので速力を無効化[09]
+            else
+            {
+                stageScrollVelocity.x = 0.0f;
+            }
+        }
+    }
+    // 空腹状態でないとき
+    else
+    {
+        // moveVecXが0ならVelocityを0にする
+        if ((moveVecX < FLT_EPSILON) && (moveVecX > -FLT_EPSILON))
+        {
+            stageScrollVelocity.x = 0.0f;
+        }
+    }
+#else
+    if ((moveVecX < FLT_EPSILON) && (moveVecX > -FLT_EPSILON))
+    {
+        stageScrollVelocity.x = 0.0f;
+    }
+
+#endif
 
     // XZ平面の速力を加速する
     if (length <= maxPlayerVelocity)
@@ -368,11 +426,6 @@ void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
         }
     }
 
-    // moveVecXが0ならVelocityを0にする
-    if ((moveVecX < FLT_EPSILON) && (moveVecX > -FLT_EPSILON))
-    {
-        stageScrollVelocity.x = 0.0f;
-    }
 
     // 地形データの速力に代入
     terrainScrollVelocity.x = stageScrollVelocity.x;
@@ -381,16 +434,83 @@ void StageManager::UpdataHorizontalVelocity(float elapsedFrame)
     moveVecX = 0.0f;
 }
 
-// ステージの切り替え
-void StageManager::ChangeStage()
+// BreakTime_Stateをセット
+void StageManager::SetBreakTime_State()
 {
+    //　ブレイクタイムは以下の処理をしない
+    if (IsBreakTime) return;
+
     for (int i = stageNo ;i < Stage::StageMax - 1;++i)
     {
-        if (GetSpawnStageCount() >= StageChangeLine[i])
+        if (doneStageNum >= StageChangeLine[i] - (Stage::StageDepthMax - 1))    // 1枚は自機の後ろに行くので
         {
-            stageNo++;      // 次のステージに切り替え
-            return;
+            IsSpawnNone = true;             // 休憩フラグを立てる
+            breakTime_State = StageChangeLine[i];
+            break;
         }
+    }       
+}
+
+// 休憩時間更新
+void StageManager::UpdateBreakTime(float elapsedFrame, Player* player)
+{
+    if (IsSpawnNone)
+    {
+        // ブレイクタイム開始するステージを超えた　かつ　ブレイクタイムでないとき
+        if (!IsBreakTime && breakTime_State <= doneStageNum)
+        {
+            player->AddScore(StageClearcBonus[stageNo]);    // ステージクリア報酬
+            stageNo++;                                      // 次のステージに切り替え
+            IsBreakTime = true;
+            breakTime_End = doneStageNum + Stage::StageDepthMax;
+        }
+
+        // ステージの生成再開
+        if (IsBreakTime && breakTime_End - (Stage::StageDepthMax - 1) <= doneStageNum)
+        {
+            IsSpawnNone = false;
+        }
+    }
+    // ブレイクタイムなら
+    else if (IsBreakTime && breakTime_End <= doneStageNum)
+    {
+        IsBreakTime = false;
+        doneStageNum = 0;
+    }
+
+
+}
+
+// doneStageNumの加算
+void StageManager::AddDoneStageNum(float elapsedTIme)
+{
+    // ステージの位置(z)
+    static float z = + (Stage::StageSize*0.5f);     // 初期が画面の中心から始まるため
+    z -= stageScrollVelocity.z * elapsedTIme;
+
+    // ステージより大きくなると
+    if (z >= Stage::StageSize)
+    {
+        z = 0.0f;
+        ++doneStageNum;
+    }
+}
+
+// スコアの更新(常時加算)
+void StageManager::UpdateScore(Player* player, float elapsedTime)
+{
+    // ブレイクタイム中なら加算しない
+    if (IsBreakTime) return;
+    // 加算量
+    static float s = 0.0f;
+
+    s += MaxAlwaysAddScore[stageNo] * MaxAlwaysAddScoreMagnification[player->GetHungerLevel()] * elapsedTime;
+    
+    // 加算量が1を超えるとスコアを加算する
+    if (s >= 1.0f)
+    {
+        player->AddScore(1);    // スコア加算
+        s -= 1.0f;
     }
 }
 

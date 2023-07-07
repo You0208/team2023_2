@@ -13,12 +13,14 @@ class StageManager
 private:
     static constexpr float ScrollVelocityRate = 0.01f;              // スクロール速度補間係数
     static constexpr float ScrollVelocityRate_ac = 0.001f;          // スクロール速度補間係数(加速状態)
-    static constexpr float MaxVelocity = -300.0f;                    // Velocityの最大値
+    static constexpr float MaxVelocity = -300.0f;                   // Velocityの最大値
+    static const int Gap = 2;                                       // プレイヤーの位置とステージを削除する位置の差
+    static const int MaxBreakTime = 3;                                       // 
 
     // 各空腹レベルでのプレイヤーの最大速度
     static constexpr float MaxPlayerVelocity[3] =
     {
-        60.0f,      // 空腹レベル：低
+        150.0f,      // 空腹レベル：低
         50.0f,      // 空腹レベル：中
         20.0f       // 空腹レベル：高
     };
@@ -40,7 +42,35 @@ private:
     // ステージが切り替わる境目
     static constexpr int StageChangeLine[Stage::StageMax - 1] =
     {
-        3
+        12,      // ステージ2切り替え
+        12,      // ステージ3切り替え
+        12,      // ステージ4切り替え
+        12,      // ステージ5切り替え
+    };
+
+    // 各ステージレベルでのスコアの常時加算量
+    static constexpr float MaxAlwaysAddScore[Stage::StageMax] =
+    {
+        1.0f,       // ステージ:1
+        2.0f,       // ステージ:2
+        3.0f,       // ステージ:3
+        4.0f,       // ステージ:4
+        5.0f        // ステージ:5
+    };
+    // 各空腹レベルでのスコアの常時加算量の倍率
+    static constexpr float MaxAlwaysAddScoreMagnification[3] =
+    {
+        2.0f,       // 空腹レベル：低 
+        1.0f,       // 空腹レベル：中 
+        0.5f        // 空腹レベル：高 
+    };
+    static constexpr int StageClearcBonus[Stage::StageMax] =
+    {
+        100,       // ステージ:1
+        200,       // ステージ:2
+        300,       // ステージ:3
+        400,       // ステージ:4
+        500        // ステージ:5
     };
 
 public:
@@ -79,12 +109,15 @@ public:
     // 加速処理
     void AddVelocity(float addVelocity,float timer);
 
-    // 生成したステージ数を返す
-    int GetSpawnStageCount() { return BaseStage::GetSpawnStageCount() / Stage::StageSideMax; }
+    // プレイヤーが超えたステージの数を返す
+    int GetDoneStageNum() { return doneStageNum; }
 
     void setVelocityZ(int i) { stageScrollVelocity.z = i; }
 
     float getVelocityZ() { return stageScrollVelocity.z; }
+
+    // 今のステージ番号を返す
+    int GetStageNo() { return stageNo; }
 
 private:
     // ステージの更新
@@ -103,10 +136,19 @@ private:
     DirectX::XMFLOAT3 GetMoveVec();
 
     // 水平速力更新処理
-    void UpdataHorizontalVelocity(float elapsedFrame);
+    void UpdataHorizontalVelocity(float elapsedFrame, Player* player);
 
-    // ステージの切り替え
-    void ChangeStage();
+    // BreakTime_Stateをセット
+    void SetBreakTime_State();
+
+    // 休憩時間更新
+    void UpdateBreakTime(float elapsedFrame, Player* player);
+
+    // doneStageNumの加算
+    void AddDoneStageNum(float elapsedTIme);
+
+    // スコアの更新(常時加算)
+    void UpdateScore(Player* player,float elapsedTime);
 
 public:
     bool IsStart = true;
@@ -115,6 +157,9 @@ public:
     std::vector<BaseStage*>             stages;                         // ステージリスト
     // ステージのスクロール速度更新
     void UpdateScrollVelocity(DirectX::XMFLOAT3& ScrollVelocity,float maxVelocity,float rate);
+
+    bool IsBreakTime = false;                                           // 休憩フラグ
+    bool IsSpawnNone = false;                                           // 何もないステージを生成するフラグ
 
 private:
     // ステージデータ
@@ -128,12 +173,18 @@ private:
     std::set<BaseStage*>                terrainRemoves;                 // 削除リスト
     std::vector<DirectX::XMFLOAT3>      terrainSpawns;                  // 生成リスト(位置だけ持っている)
 
+    float breakTimer = 0.0f;                                             // 休憩タイマー
+    int breakTime = 0;                                                   // 休憩タイマー
+    int breakTime_State = 0;                                             // ブレイクタイム開始するステージ
+    int breakTime_End = 0;                                               // ブレイクタイム終了するステージ
 
     float moveVecX = 0.0f;                                              // 移動方向ベクトル
     float maxPlayerVelocity = 20.0f;                                    // プレイヤーの最大速度
     int   stageNo           = 0;                                        // 現在のステージ
-                                                                        // ===== 非使用　後で使うかも？ =====
-    float friction = 0.5f;                                              // 減速
+    int doneStageNum        = 0;                                        // プレイヤーが超えたステージの数
+
+   // ===== 非使用　後で使うかも？ =====
+    float friction = 5.0f;                                              // 減速
     float acceleration = 10.0f;                                         // 加速力
 
     float scrollVelocityRate = 0.0f;                                    // スクロール速度補間係数
