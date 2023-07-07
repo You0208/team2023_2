@@ -74,6 +74,16 @@ void SceneClear::Finalize()
 // 更新処理
 void SceneClear::Update(float elapsedTime)
 {
+
+    HamuY += cosf(Theta) * 1.0f;
+    Theta += 0.01f;
+    time += 60.0f * elapsedTime;
+
+    if (time >= 60)
+    {
+        time = 0;
+    }
+
     GamePad& gamePad = Input::Instance().GetGamePad();
     // アイコン選択処理
     if (gamePad.GetButtonDown() & GamePad::BTN_UP)
@@ -125,7 +135,7 @@ void SceneClear::Update(float elapsedTime)
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
 
-    s_ham->Update(400.0f, 400.0f,
+    s_ham->Update(400.0f, HamuY,
         static_cast<float>(t_ham->GetWidth()), static_cast<float>(t_ham->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_ham->GetWidth()), static_cast<float>(t_ham->GetHeight()),
