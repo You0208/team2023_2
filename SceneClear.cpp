@@ -9,6 +9,11 @@
 // 初期化
 void SceneClear::Initialize()
 {
+    // BGM
+    b_gameClear = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM_GameClear.wav");
+    b_gameClear->SetVolume(0.2f);
+    b_gameClear->Play(true);
+
     // クリア
     // スプライト初期化
     t_back = std::make_unique<Texture>("Data/Texture/Clear/back.png");

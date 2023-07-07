@@ -25,10 +25,6 @@ void SceneGame::Initialize()
 	b_game->SetVolume(0.2f);
 	b_select = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM_Select.wav");
 	b_select->SetVolume(0.2f);
-	b_gameOver = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM_GameOver.wav");
-	b_gameOver->SetVolume(0.2f);
-	b_gameClear = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM_GameClear.wav");
-	b_gameClear->SetVolume(0.2f);
 
 	// SEê›íË
 	s_speed = Audio::Instance().LoadAudioSource("Data/Audio/SE/Speed.wav");

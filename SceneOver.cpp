@@ -10,6 +10,10 @@
 // 初期化
 void SceneOver::Initialize()
 {
+    // BGM
+    b_gameOver = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM_GameOver.wav");
+    b_gameOver->SetVolume(0.2f);
+    b_gameOver->Play(false);
 
     //-------------------------------------------------------------------------------------------------------
     // ↓　この下はシェーダー関連
