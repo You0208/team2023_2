@@ -25,8 +25,14 @@ public:
     void Render()override;
 
 private:
-    std::unique_ptr<Sprite>	sprite;
-    std::unique_ptr<Texture> texture;
+    std::unique_ptr<Sprite>	s_high;
+    std::unique_ptr<Texture> t_high;
+
+    std::unique_ptr<Sprite>	s_100p;
+    std::unique_ptr<Texture> t_100p;
+
+    std::unique_ptr<Sprite>	s_endles;
+    std::unique_ptr<Texture> t_endles;
 
     std::unique_ptr<Sprite>	s_over;
     std::unique_ptr<Texture> t_over;

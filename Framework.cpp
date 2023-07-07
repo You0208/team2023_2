@@ -8,6 +8,8 @@
 #include "Camera.h"
 #include "SceneTitle.h"
 #include "SceneGame.h"
+#include "SceneOver.h"
+#include "SceneClear.h"
 #include "EffectManager.h"
 
 // 垂直同期間隔設定
@@ -38,7 +40,7 @@ Framework::Framework(HWND hWnd)
 	EffectManager::Instance().Initialize();
 
 	// シーン初期化
-	SceneManager::Instance().ChangeScene(new SceneTitle);
+	SceneManager::Instance().ChangeScene(new SceneOver);
 }
 
 // デストラクタ
