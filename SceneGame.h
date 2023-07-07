@@ -88,16 +88,16 @@ private:
 	void UpdateStageUI();
 
 private:	// スコア保存用SceneTitleに持っていく
-	int HighScore = 0;									// 読み込んだ最大スコアを格納する
-	std::ofstream writing_ScoreRanking;					// 書き出し用変数
-	std::ifstream read_ScoreRanking;					// 読み出し用変数
+	int HighScore = 0;					// 読み込んだスコア
+	std::ofstream write;				// 書き出し用変数
+	std::ifstream read;					// 読み出し用変数
 	static constexpr char* fileName = "Data/Save/HighScore.txt";	// 開くファイル名
 
 	// 最大スコアの読み取り(仮)
-	void InputScoreRanking();
+	void InputScore();
 
 	// 最大スコアの出力(仮)
-	void OutputScoreRanking(Player* player);
+	void OutputScore(Player* player);
 
 private:
 	int DeathTimer = 0;
