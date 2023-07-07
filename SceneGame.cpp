@@ -426,6 +426,10 @@ void SceneGame::Update(float elapsedTime)
 		1.0f, 1.0f, 1.0f, 1.0f);
 }
 
+// デバッグ用(削除する)
+DirectX::XMFLOAT2 HighScoreTextPos	= { 1510.0f, 857.0f };
+DirectX::XMFLOAT2 HighScoreTextSize = { 55.0f, 55.0f };
+
 // 描画処理
 void SceneGame::Render()
 {
@@ -482,6 +486,14 @@ void SceneGame::Render()
 			shader->Draw(rc, s_rulu.get());
 			shader->Draw(rc, s_select.get());
 			shader->Draw(rc, s_score.get());
+
+			// ハイスコア表示
+			text_number->textOut(rc
+				, HighScore
+				, HighScoreTextPos.x, HighScoreTextPos.y
+				, HighScoreTextSize.x, HighScoreTextSize.y
+				, 1.0f, 1.0f, 1.0f, 1.0f
+			);
 		}
 		else	// ゲーム時
 		{
@@ -543,7 +555,7 @@ void SceneGame::Render()
 		}
 		// テキスト
 		{
-			if (ImGui::TreeNode("Text"))
+			if (ImGui::TreeNode("Text Score"))
 			{
 				ImGui::SliderInt("fontNo", &fontNo, 0, 6);
 				ImGui::SliderFloat("posX", &text_pos.x, 0.0f, 1920.0f);
@@ -551,6 +563,13 @@ void SceneGame::Render()
 				ImGui::SliderFloat("size", &text_size.x, 0.0f, 500.0f);
 				text_size.y = text_size.x;
 				ImGui::ColorPicker4("color", &text_color.x);
+				ImGui::TreePop();
+			}
+			if (ImGui::TreeNode("Text HighScore"))
+			{
+				ImGui::InputFloat2("Pos", &HighScoreTextPos.x);
+				ImGui::InputFloat("Size", &HighScoreTextSize.x);
+				HighScoreTextSize.y = HighScoreTextSize.x;
 				ImGui::TreePop();
 			}
 		}
