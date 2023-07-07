@@ -104,6 +104,9 @@ void SceneGame::Initialize()
 		}
 	}
 
+	//TODO —v‰ü‘P
+	SceneManager::Instance().IsNoneStage = false;
+
 	//ƒJƒƒ‰‰Šúİ’è
 	Graphics& graphics = Graphics::Instance();
 	Camera& camera = Camera::Instance();

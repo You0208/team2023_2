@@ -3,13 +3,43 @@
 #include "SceneGame.h"
 #include "SceneManager.h"
 #include "SceneOver.h"
+#include "SceneTitle.h"
 #include "Input/Input.h"
 
 // 初期化
 void SceneOver::Initialize()
 {
+
+    //-------------------------------------------------------------------------------------------------------
+    // ↓　この下はシェーダー関連
+    //-------------------------------------------------------------------------------------------------------
+
+    // リスタート
     // スプライト初期化
-    t_high = std::make_unique<Texture>("Data/Texture/GameOver/highscore_point.png");
+    t_restart = std::make_unique<Texture>("Data/Texture/GameOver/restart.png");
+    // スプライト
+    s_restart = std::make_unique<Sprite>();
+    s_restart->SetShaderResourceView(t_restart->GetShaderResourceView(), t_restart->GetWidth(), t_restart->GetHeight());
+
+
+    // タイトル
+    // スプライト初期化
+    t_title = std::make_unique<Texture>("Data/Texture/GameOver/title.png");
+    // スプライト
+    s_title = std::make_unique<Sprite>();
+    s_title->SetShaderResourceView(t_title->GetShaderResourceView(), t_title->GetWidth(), t_title->GetHeight());
+    
+    // リザルト
+    // スプライト初期化
+    t_result = std::make_unique<Texture>("Data/Texture/GameOver/result.png");
+    // スプライト
+    s_result = std::make_unique<Sprite>();
+    s_result->SetShaderResourceView(t_result->GetShaderResourceView(), t_result->GetWidth(), t_result->GetHeight());
+
+
+    // スコア
+    // スプライト初期化
+    t_high = std::make_unique<Texture>("Data/Texture/GameOver/score.png");
     // スプライト
     s_high = std::make_unique<Sprite>();
     s_high->SetShaderResourceView(t_high->GetShaderResourceView(), t_high->GetWidth(), t_high->GetHeight());
@@ -20,13 +50,6 @@ void SceneOver::Initialize()
     // スプライト
     s_100p = std::make_unique<Sprite>();
     s_100p->SetShaderResourceView(t_100p->GetShaderResourceView(), t_100p->GetWidth(), t_100p->GetHeight());
-
-    // エンドレス
-    // スプライト初期化
-    t_endles = std::make_unique<Texture>("Data/Texture/GameOver/endles.png");
-    // スプライト
-    s_endles = std::make_unique<Sprite>();
-    s_endles->SetShaderResourceView(t_endles->GetShaderResourceView(), t_endles->GetWidth(), t_endles->GetHeight());
 
     // オーバー
     // スプライト初期化
@@ -73,43 +96,88 @@ void SceneOver::Finalize()
 void SceneOver::Update(float elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
-
-    // 何かボタンを押したらゲームシーンの切り替え
-    // なにかボタンを押したらローディングシーンを挟んでゲーム画面へ切り替え
-    const GamePadButton anyButton =
-        GamePad::BTN_A
-        | GamePad::BTN_B
-        | GamePad::BTN_X
-        | GamePad::BTN_Y
-        ;
-    if (gamePad.GetButtonDown() & anyButton)
+    // アイコン選択処理
+    if (gamePad.GetButtonDown() & GamePad::BTN_UP)
     {
-        SceneManager::Instance().IsNoneStage = true;
-        SceneManager::Instance().ChangeScene(new SceneGame);
+        selectNum--;
+    }
+    if (gamePad.GetButtonDown() & GamePad::BTN_DOWN)
+    {
+        selectNum++;
+    }
+    if (selectNum > 2)selectNum = 0;
+    if (selectNum < 0)selectNum = 2;
+    // selectNumの値に応じてiconPosXの要素を設定
+    for (int i = 0; i < 3; i++)
+    {
+        if (i == selectNum)
+        {
+            iconPosX[i] = 1075.0f;
+        }
+        else
+        {
+            iconPosX[i] = 1175.0f;
+        }
     }
 
-    s_high->Update(0.0f, 0.0f,
+    if (gamePad.GetButtonDown() & GamePad::BTN_B)
+    {
+        switch (selectNum)
+        {
+        case OVER_100:
+            break;
+        case OVER_RE:
+            SceneManager::Instance().IsSelect = false;
+            SceneManager::Instance().IsNoneStage = true;
+            SceneManager::Instance().ChangeScene(new SceneGame);
+            break;
+        case OVER_TITLE:
+            SceneManager::Instance().ChangeScene(new SceneTitle);
+            break;
+        }
+    }
+
+
+    //-------------------------------------------------------------------------------------------------------
+    // ↓　この下はシェーダー関連
+    //-------------------------------------------------------------------------------------------------------
+
+    s_result->Update(1300.0f, 300.0f,
+        static_cast<float>(t_result->GetWidth()), static_cast<float>(t_result->GetHeight()),
+        0.0f, 0.0f,
+        static_cast<float>(t_result->GetWidth()), static_cast<float>(t_result->GetHeight()),
+        0.0f,
+        1.0f, 1.0f, 1.0f, 1.0f);
+
+    s_title->Update(iconPosX[OVER_TITLE], 910.0f,
+        static_cast<float>(t_title->GetWidth()), static_cast<float>(t_title->GetHeight()),
+        0.0f, 0.0f,
+        static_cast<float>(t_title->GetWidth()), static_cast<float>(t_title->GetHeight()),
+        0.0f,
+        1.0f, 1.0f, 1.0f, 1.0f);
+
+    s_restart->Update(iconPosX[OVER_RE], 755.0f,
+        static_cast<float>(t_restart->GetWidth()), static_cast<float>(t_restart->GetHeight()),
+        0.0f, 0.0f,
+        static_cast<float>(t_restart->GetWidth()), static_cast<float>(t_restart->GetHeight()),
+        0.0f,
+        1.0f, 1.0f, 1.0f, 1.0f);
+
+    s_high->Update(1125.0f, 430.0f,
         static_cast<float>(t_high->GetWidth()), static_cast<float>(t_high->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_high->GetWidth()), static_cast<float>(t_high->GetHeight()),
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
 
-    s_100p->Update(0.0f, 0.0f,
+    s_100p->Update(iconPosX[OVER_100], 600.0f,
         static_cast<float>(t_100p->GetWidth()), static_cast<float>(t_100p->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_100p->GetWidth()), static_cast<float>(t_100p->GetHeight()),
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
 
-    s_endles->Update(0.0f, 0.0f,
-        static_cast<float>(t_endles->GetWidth()), static_cast<float>(t_endles->GetHeight()),
-        0.0f, 0.0f,
-        static_cast<float>(t_endles->GetWidth()), static_cast<float>(t_endles->GetHeight()),
-        0.0f,
-        1.0f, 1.0f, 1.0f, 1.0f);
-
-    s_over->Update(0.0f, 0.0f,
+    s_over->Update(235.0f, 130.0f,
         static_cast<float>(t_over->GetWidth()), static_cast<float>(t_over->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_over->GetWidth()), static_cast<float>(t_over->GetHeight()),
@@ -123,14 +191,14 @@ void SceneOver::Update(float elapsedTime)
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
 
-    s_hamu->Update(0.0f, 0.0f,
+    s_hamu->Update(130.0f, 385.0f,
         static_cast<float>(t_hamu->GetWidth()), static_cast<float>(t_hamu->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_hamu->GetWidth()), static_cast<float>(t_hamu->GetHeight()),
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
 
-    s_point->Update(0.0f, 0.0f,
+    s_point->Update(1320.0f, 0.0f,
         static_cast<float>(t_point->GetWidth()), static_cast<float>(t_point->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_point->GetWidth()), static_cast<float>(t_point->GetHeight()),
@@ -161,13 +229,15 @@ void SceneOver::Render()
     {
         SpriteShader* shader = graphics.GetShader(SpriteShaderId::Default);
         shader->Begin(rc);
+        shader->Draw(rc, s_back.get());
         shader->Draw(rc, s_high.get());
         shader->Draw(rc, s_100p.get());
-        shader->Draw(rc, s_endles.get());
         shader->Draw(rc, s_over.get());
-        shader->Draw(rc, s_back.get());
         shader->Draw(rc, s_hamu.get());
         shader->Draw(rc, s_point.get());
+        shader->Draw(rc, s_result.get());
+        shader->Draw(rc, s_title.get());
+        shader->Draw(rc, s_restart.get());
         shader->End(rc);
     }
 }

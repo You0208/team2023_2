@@ -3,6 +3,7 @@
 #include "SceneGame.h"
 #include "SceneManager.h"
 #include "SceneClear.h"
+#include "SceneTitle.h"
 #include "Input/Input.h"
 
 // 初期化
@@ -74,19 +75,40 @@ void SceneClear::Finalize()
 void SceneClear::Update(float elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
-
-    // 何かボタンを押したらゲームシーンの切り替え
-    // なにかボタンを押したらローディングシーンを挟んでゲーム画面へ切り替え
-    const GamePadButton anyButton =
-        GamePad::BTN_A
-        | GamePad::BTN_B
-        | GamePad::BTN_X
-        | GamePad::BTN_Y
-        ;
-    if (gamePad.GetButtonDown() & anyButton)
+    // アイコン選択処理
+    if (gamePad.GetButtonDown() & GamePad::BTN_UP)
     {
-        SceneManager::Instance().IsNoneStage = true;
-        SceneManager::Instance().ChangeScene(new SceneGame);
+        selectNum--;
+    }
+    if (gamePad.GetButtonDown() & GamePad::BTN_DOWN)
+    {
+        selectNum++;
+    }
+    if (selectNum > 1)selectNum = 0;
+    if (selectNum < 0)selectNum = 1;
+    // selectNumの値に応じてiconPosXの要素を設定
+    for (int i = 0; i < 2; i++)
+    {
+        if (i == selectNum)
+        {
+            iconPosX[i] = 1075.0f;
+        }
+        else
+        {
+            iconPosX[i] = 1175.0f;
+        }
+    }
+
+    if (gamePad.GetButtonDown() & GamePad::BTN_B)
+    {
+        switch (selectNum)
+        {
+        case 0:
+            break;
+        case 1:
+            SceneManager::Instance().ChangeScene(new SceneTitle);
+            break;
+        }
     }
 
     s_back->Update(0.0f, 0.0f,
@@ -96,42 +118,42 @@ void SceneClear::Update(float elapsedTime)
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
 
-    s_endles->Update(0.0f, 0.0f,
+    s_endles->Update(iconPosX[0], 600.0f,
         static_cast<float>(t_endles->GetWidth()), static_cast<float>(t_endles->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_endles->GetWidth()), static_cast<float>(t_endles->GetHeight()),
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
 
-    s_ham->Update(0.0f, 0.0f,
+    s_ham->Update(400.0f, 400.0f,
         static_cast<float>(t_ham->GetWidth()), static_cast<float>(t_ham->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_ham->GetWidth()), static_cast<float>(t_ham->GetHeight()),
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
 
-    s_point->Update(0.0f, 0.0f,
+    s_point->Update(1320.0f, 0.0f,
         static_cast<float>(t_point->GetWidth()), static_cast<float>(t_point->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_point->GetWidth()), static_cast<float>(t_point->GetHeight()),
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
 
-    s_result->Update(0.0f, 0.0f,
+    s_result->Update(1300.0f, 300.0f,
         static_cast<float>(t_result->GetWidth()), static_cast<float>(t_result->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_result->GetWidth()), static_cast<float>(t_result->GetHeight()),
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
-
-    s_score->Update(0.0f, 0.0f,
+    
+    s_score->Update(1125.0f, 430.0f,
         static_cast<float>(t_score->GetWidth()), static_cast<float>(t_score->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_score->GetWidth()), static_cast<float>(t_score->GetHeight()),
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
 
-    s_title->Update(0.0f, 0.0f,
+    s_title->Update(iconPosX[1], 755.0f,
         static_cast<float>(t_title->GetWidth()), static_cast<float>(t_title->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_title->GetWidth()), static_cast<float>(t_title->GetHeight()),
@@ -172,3 +194,4 @@ void SceneClear::Render()
         shader->End(rc);
     }
 }
+ 

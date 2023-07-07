@@ -47,6 +47,9 @@ private:
     std::unique_ptr<Sprite>	s_title;
     std::unique_ptr<Texture> t_title;
 
+    float iconPosX[2] = { 1200.0f,1200.0f };
+    int selectNum = 0;
+
     // UVスクロールデータ
     UVScrollData uvScrollData;
     // マスク画像
