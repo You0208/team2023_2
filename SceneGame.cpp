@@ -231,14 +231,16 @@ void SceneGame::Initialize()
 
 
 	// スコア読み取り
-	InputScoreRanking();
+	InputHighScore();
 }
 
 // 終了化
 void SceneGame::Finalize()
 {
+	// ハイスコアの更新
+	UpdateHighScore(player);
 	// ファイル書き込み(テスト)
-	OutputScoreRanking(player);
+	OutputHighScore();
 
 	// ステージ終了
 	stageManager->Clear();
@@ -560,6 +562,27 @@ void SceneGame::Render()
 				ImGui::Text("HighScore:%ld", HighScore);
 				ImGui::TreePop();
 			}
+			// ハイスコアの読み取り
+			if (ImGui::Button("InputHighScore"))
+			{
+				InputHighScore();
+			}
+			// ハイスコアの書き込み
+			if (ImGui::Button("OutputHighScore"))
+			{
+				OutputHighScore();
+			}
+			//ハイスコアの更新
+			if (ImGui::Button("UpdateHighScore"))
+			{
+				UpdateHighScore(player);
+			}
+			// ハイスコアのリセット(書き込みも行う)
+			if (ImGui::Button("ResetHighScore"))
+			{
+				ResetHighScore();
+			}
+
 			ImGui::Separator();
 		}
 
@@ -1250,41 +1273,44 @@ void SceneGame::UpdateStageUI()
 		1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-// 最大スコアの読み取り(仮)
-void SceneGame::InputScoreRanking()
+// ハイスコアの読み取り
+void SceneGame::InputHighScore()
 {
 	// ファイルの読み込み
-	read_ScoreRanking.open(fileName);
+	read.open(fileName);
 	char command[256];
 
 	// 読み込めた場合
-	if (read_ScoreRanking)
+	if (read)
 	{
-		while (read_ScoreRanking)
+		while (read)
 		{
-			read_ScoreRanking >> command;
-			if (0 == strcmp(command, "hs"))					// 先頭の文字が"s"である場合
+			read >> command;
+			if (0 == strcmp(command, "hs"))		// 先頭の文字が"s"である場合
 			{
-				read_ScoreRanking.ignore(1);				// 1行開ける
-				read_ScoreRanking >> HighScore;				// 数値代入
-				read_ScoreRanking.ignore(1024, '\n');       // [\n(改行)]まで文字を削除する(最大1024文字)⇒次の行まで削除
+				read.ignore(1);					// 1行開ける
+				read >> HighScore;				// 数値代入
+				read.ignore(1024, '\n');		// [\n(改行)]まで文字を削除する(最大1024文字)⇒次の行まで削除
 			}
 		}
 	}
-	read_ScoreRanking.close();
+	read.close();
 }
 
-// 最大スコアの出力(仮)
-void SceneGame::OutputScoreRanking(Player* player)
+// ハイスコアの書き込み
+void SceneGame::OutputHighScore()
 {
-	// score[最大値](一番小さい値)と今回のスコアの高い方を代入
-	HighScore = (std::max)(HighScore, player->GetScore());
-
-
 	// ファイルの書き込み
-	writing_ScoreRanking.open(fileName);
-	writing_ScoreRanking << "hs " << HighScore << "\n";
-	writing_ScoreRanking.close();
+	write.open(fileName);
+	write << "hs " << HighScore << "\n";
+	write.close();
+}
+
+// ハイスコアのリセット(書き込みも行う)
+void SceneGame::ResetHighScore()
+{
+	HighScore = 0;
+	OutputHighScore();
 }
 
 // 3D空間の描画
