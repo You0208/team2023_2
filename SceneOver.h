@@ -28,6 +28,9 @@ public:
 private:
     // BGM
     std::unique_ptr<AudioSource> b_gameOver;
+    // SE
+    std::unique_ptr<AudioSource> s_choice;		// Œˆ’è‰¹
+    std::unique_ptr<AudioSource> s_selection;	// ‘I‘ð‰¹
 
     std::unique_ptr<Sprite>	s_high;
     std::unique_ptr<Texture> t_high;

@@ -160,8 +160,8 @@ private:
 	// SE
 	std::unique_ptr<AudioSource> s_speed;		// 加速音
 	std::unique_ptr<AudioSource> s_heal;		// 空腹ゲージ増加音
-	std::unique_ptr<AudioSource> s_choice;		// 決定音
 	std::unique_ptr<AudioSource> s_clash;		// 衝突音
+	std::unique_ptr<AudioSource> s_choice;		// 決定音
 	std::unique_ptr<AudioSource> s_selection;	// 選択音
 
 	std::unique_ptr<Texture>	texture_hungerGage;			// 空腹ゲージのテクスチャ(白)

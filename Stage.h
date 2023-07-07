@@ -110,6 +110,8 @@ private:
     static SpawnObstacleInfo StageInfo04[];
     // ステージ05
     static SpawnObstacleInfo StageInfo05[];
+    // ステージエンドレス
+    static SpawnObstacleInfo StageInfoEndless[];
 
     // ステージDebug
     static SpawnObstacleInfo stageDebug[];

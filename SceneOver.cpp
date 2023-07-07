@@ -10,10 +10,14 @@
 // 初期化
 void SceneOver::Initialize()
 {
-    // BGM
+    // オーディオ初期化
     b_gameOver = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM_GameOver.wav");
     b_gameOver->SetVolume(0.2f);
     b_gameOver->Play(false);
+    s_choice = Audio::Instance().LoadAudioSource("Data/Audio/SE/Choice.wav");
+    s_choice->SetVolume(0.3f);
+    s_selection = Audio::Instance().LoadAudioSource("Data/Audio/SE/Selection.wav");
+    s_selection->SetVolume(1.0f);
 
     //-------------------------------------------------------------------------------------------------------
     // ↓　この下はシェーダー関連
@@ -104,10 +108,14 @@ void SceneOver::Update(float elapsedTime)
     // アイコン選択処理
     if (gamePad.GetButtonDown() & GamePad::BTN_UP)
     {
+        s_selection->Stop();        // SE停止 
+        s_selection->Play(false);   // SE再生
         selectNum--;
     }
     if (gamePad.GetButtonDown() & GamePad::BTN_DOWN)
     {
+        s_selection->Stop();        // SE停止 
+        s_selection->Play(false);   // SE再生
         selectNum++;
     }
     if (selectNum > 2)selectNum = 0;

@@ -20,25 +20,22 @@ static const UINT SHADOWMAP_SIZE = 2048;
 // 初期化
 void SceneGame::Initialize()
 {
-	// BGM再生
+	// オーディオ初期化
 	b_game = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM.wav");
 	b_game->SetVolume(0.2f);
 	b_select = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM_Select.wav");
 	b_select->SetVolume(0.2f);
 
-	// SE設定
 	s_speed = Audio::Instance().LoadAudioSource("Data/Audio/SE/Speed.wav");
 	s_speed->SetVolume(1.0f);
 	s_heal = Audio::Instance().LoadAudioSource("Data/Audio/SE/Heal.wav");
 	s_heal->SetVolume(1.0f);
-	s_choice = Audio::Instance().LoadAudioSource("Data/Audio/SE/Choice.wav");
-	s_choice->SetVolume(0.6f);
 	s_clash = Audio::Instance().LoadAudioSource("Data/Audio/SE/Clash.wav");
 	s_clash->SetVolume(0.6f);
+	s_choice = Audio::Instance().LoadAudioSource("Data/Audio/SE/Choice.wav");
+	s_choice->SetVolume(0.3f);
 	s_selection = Audio::Instance().LoadAudioSource("Data/Audio/SE/Selection.wav");
 	s_selection->SetVolume(1.0f);
-
-	//audio->Play(false);
 
 	//プレイヤー初期設定
 	player = new Player();
@@ -321,7 +318,7 @@ void SceneGame::Update(float elapsedTime)
 		{
 			// カメラコントローラー更新処理化
 			target = player->GetPosition();
-			target.y += 3.0f;
+			target.y += 2.5f;
 			cameraController->setTarget(target);
 		}
 		cameraController->Update(elapsedTime);
@@ -668,7 +665,8 @@ void SceneGame::CollisionPlayerVsObs()
 							player->OnDead();
 							DeathMoment();
 							it2->IsHit = true;
-							s_clash->Play(false);		// SE再生s
+							s_clash->Stop();			// SE再生
+							s_clash->Play(false);		// SE再生
 						}
 					break;
 					case TYPE::CYLINDERS:// 直方体
@@ -687,6 +685,7 @@ void SceneGame::CollisionPlayerVsObs()
 								player->OnDead();
 								DeathMoment();
 								it2->IsHit = true;
+								s_clash->Stop();			// SE再生
 								s_clash->Play(false);		// SE再生
 							}
 						}
@@ -704,6 +703,7 @@ void SceneGame::CollisionPlayerVsObs()
 							player->AddScore(it2->score);
 							player->AddHungerPoint(it2->hungerPoint);
 							it2->IsHit = true;
+							s_heal->Stop();				// SE再生
 							s_heal->Play(false);		// SE再生
 						}
 						break;
@@ -729,6 +729,7 @@ void SceneGame::CollisionPlayerVsObs()
 									accelEffect->Play(e);
 								}
 								it2->IsHit = true;
+								s_speed->Stop();		// SE再生
 								s_speed->Play(false);	// SE再生
 							}
 						}

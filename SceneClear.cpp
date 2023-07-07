@@ -9,10 +9,14 @@
 // 初期化
 void SceneClear::Initialize()
 {
-    // BGM
+    // オーディオ初期化
     b_gameClear = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM_GameClear.wav");
     b_gameClear->SetVolume(0.2f);
     b_gameClear->Play(true);
+    s_choice = Audio::Instance().LoadAudioSource("Data/Audio/SE/Choice.wav");
+    s_choice->SetVolume(0.3f);
+    s_selection = Audio::Instance().LoadAudioSource("Data/Audio/SE/Selection.wav");
+    s_selection->SetVolume(1.0f);
 
     // クリア
     // スプライト初期化
@@ -93,10 +97,14 @@ void SceneClear::Update(float elapsedTime)
     // アイコン選択処理
     if (gamePad.GetButtonDown() & GamePad::BTN_UP)
     {
+        s_selection->Stop();        // SE停止
+        s_selection->Play(false);   // SE再生
         selectNum--;
     }
     if (gamePad.GetButtonDown() & GamePad::BTN_DOWN)
     {
+        s_selection->Stop();        // SE停止
+        s_selection->Play(false);   // SE再生
         selectNum++;
     }
     if (selectNum > 1)selectNum = 0;
@@ -116,6 +124,7 @@ void SceneClear::Update(float elapsedTime)
 
     if (gamePad.GetButtonDown() & GamePad::BTN_B)
     {
+        s_choice->Play(false);
         switch (selectNum)
         {
         case 0:
