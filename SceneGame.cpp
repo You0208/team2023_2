@@ -21,9 +21,20 @@ static const UINT SHADOWMAP_SIZE = 2048;
 void SceneGame::Initialize()
 {
 	// BGM再生(仮)
-	//audio = Audio::Instance().LoadAudioSource("Data/Audio/BGM.wav");
-	//audio->SetVolume(0.5f);
-	//audio->Play(true);
+	b_game = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM.wav");
+	b_game->SetVolume(0.2f);
+
+	// SE設定
+	s_speed = Audio::Instance().LoadAudioSource("Data/Audio/SE/Speed.wav");
+	s_speed->SetVolume(1.0f);
+	s_heal = Audio::Instance().LoadAudioSource("Data/Audio/SE/Heal.wav");
+	s_heal->SetVolume(1.0f);
+	s_choice = Audio::Instance().LoadAudioSource("Data/Audio/SE/Choice.wav");
+	s_choice->SetVolume(0.6f);
+	s_clash = Audio::Instance().LoadAudioSource("Data/Audio/SE/Clash.wav");
+	s_clash->SetVolume(1.0f);
+	s_selection = Audio::Instance().LoadAudioSource("Data/Audio/SE/Selection.wav");
+	s_selection->SetVolume(1.0f);
 
 	//audio->Play(false);
 
@@ -270,6 +281,8 @@ void SceneGame::Update(float elapsedTime)
 	}
 	else
 	{
+		b_game->Play(true);
+
 		// ポーズ処理
 		GamePad& gamePad = Input::Instance().GetGamePad();
 		if (gamePad.GetButtonDown() & GamePad::BTN_X)
@@ -314,6 +327,7 @@ void SceneGame::Update(float elapsedTime)
 		sky->Update(elapsedTime);
 		sky->SetPosition({ player->GetPosition().x,player->GetPosition().y,player->GetPosition().z + sky->space });
 
+		static bool IsSePlay = false;			// SEを1度だけ流す(飢餓での死亡SE再生に使用中)
 
 		if (accel)// 加速時
 		{
@@ -335,6 +349,11 @@ void SceneGame::Update(float elapsedTime)
 		}
 		else if (player->Gashi)
 		{
+			if (IsSePlay)
+			{
+				s_clash->Play(false);
+				IsSePlay = true;
+			}
 			DidFromHunger(elapsedTime);
 		}
 
@@ -342,7 +361,10 @@ void SceneGame::Update(float elapsedTime)
 		{
 			DeathTimer++;
 			if (DeathTimer >= 800)
+			{
+				IsSePlay = false;
 				SceneManager::Instance().ChangeScene(new SceneOver);
+			}
 		}
 	}
 	EffectManager::Instance().Update(elapsedTime);
@@ -449,29 +471,6 @@ void SceneGame::Render()
 			// 描画処理
 			shader->Draw(rc, sprite_line.get());
 		}
-		// 空腹ゲージ
-		shader->Draw(rc, sprite_hungerGageBack.get());
-		shader->Draw(rc, sprite_hungerGage.get());
-		shader->Draw(rc, sprite_hungerGageFrame.get());
-
-		// ステージレベル看板
-		shader->Draw(rc, sprite_StageUI.get());
-
-		// スコア表示(仮)
-		//text[fontNo]->textOut(rc
-		//	, "Score:" + std::to_string(player->GetScore())
-		//	, text_pos.x, text_pos.y
-		//	, text_size.x, text_size.y
-		//	, text_color.x, text_color.y, text_color.z, text_color.w
-		//);
-		text_number ->textOut(rc
-				, player->GetScore()
-				, text_pos.x, text_pos.y
-				, text_size.x, text_size.y
-				, text_color.x, text_color.y, text_color.z, text_color.w
-			);
-
-		//shader->Draw(rc, sprite_StageUI.get());
 		
 		if (SceneManager::Instance().IsSelect)
 		{
@@ -482,7 +481,32 @@ void SceneGame::Render()
 			shader->Draw(rc, s_select.get());
 			shader->Draw(rc, s_score.get());
 		}
+		else	// ゲーム時
+		{
+			// 空腹ゲージ
+			shader->Draw(rc, sprite_hungerGageBack.get());
+			shader->Draw(rc, sprite_hungerGage.get());
+			shader->Draw(rc, sprite_hungerGageFrame.get());
+
+			// ステージレベル看板
+			shader->Draw(rc, sprite_StageUI.get());
+
+			// スコア表示(仮)
+			//text[fontNo]->textOut(rc
+			//	, "Score:" + std::to_string(player->GetScore())
+			//	, text_pos.x, text_pos.y
+			//	, text_size.x, text_size.y
+			//	, text_color.x, text_color.y, text_color.z, text_color.w
+			//);
+			text_number->textOut(rc
+				, player->GetScore()
+				, text_pos.x, text_pos.y
+				, text_size.x, text_size.y
+				, text_color.x, text_color.y, text_color.z, text_color.w
+			);
+		}
 		if (IsRule)	shader->Draw(rc, sprite.get());
+
 		shader->End(rc);
 
 		// デバッグ情報の表示
@@ -598,6 +622,7 @@ void SceneGame::CollisionPlayerVsObs()
 							player->OnDead();
 							DeathMoment();
 							it2->IsHit = true;
+							s_clash->Play(false);		// SE再生s
 						}
 					break;
 					case TYPE::CYLINDERS:// 直方体
@@ -616,6 +641,7 @@ void SceneGame::CollisionPlayerVsObs()
 								player->OnDead();
 								DeathMoment();
 								it2->IsHit = true;
+								s_clash->Play(false);		// SE再生
 							}
 						}
 						break;
@@ -632,6 +658,7 @@ void SceneGame::CollisionPlayerVsObs()
 							player->AddScore(it2->score);
 							player->AddHungerPoint(it2->hungerPoint);
 							it2->IsHit = true;
+							s_heal->Play(false);		// SE再生
 						}
 						break;
 					case TYPE::GATE:// ゲート
@@ -656,6 +683,7 @@ void SceneGame::CollisionPlayerVsObs()
 									accelEffect->Play(e);
 								}
 								it2->IsHit = true;
+								s_speed->Play(false);	// SE再生
 							}
 						}
 						break;
@@ -688,10 +716,14 @@ void SceneGame::SelectUpdate(float elapsedTime)
 		if (gamePad.GetButtonDown() & GamePad::BTN_UP)
 		{
 			selectNum--;
+			s_selection->Stop();
+			s_selection->Play(false);		// SE再生
 		}
 		if (gamePad.GetButtonDown() & GamePad::BTN_DOWN)
 		{
 			selectNum++;
+			s_selection->Stop();
+			s_selection->Play(false);		// SE再生
 		}
 		if (selectNum > 2)selectNum = 0;
 		if (selectNum < 0)selectNum = 2;
@@ -726,12 +758,13 @@ void SceneGame::SelectUpdate(float elapsedTime)
 				SceneManager::Instance().IsFinishAll = true;
 				break;
 			}
+			s_choice->Play(false);
 		}
 	}
 
 	cameraController->Update(elapsedTime);
 	//プレイヤー更新処理
-	player->Update(elapsedTime);
+	player->Update(elapsedTime,true);
 	//ステージ更新処理
 	stageManager->StageSelectUpdate(elapsedTime);
 
@@ -828,6 +861,7 @@ void SceneGame::DeathMoment()
 void SceneGame::DidFromHunger(float elapsedTime)
 {
 	cameraController->DidFromHungerCamera();
+	//s_clash->Play(false);		// SE再生
 }
 
 // 障害物と障害物の当たり判定

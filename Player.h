@@ -39,7 +39,7 @@ public:
     void SelectUpdate(float elapsedTime);
 
     //XVˆ—  
-    void Update(float elapsedTime);
+    void Update(float elapsedTime,bool IsSelect = false);
 
     // •`‰æˆ—
     void Draw(RenderContext rc, ModelShader* shader);

@@ -36,17 +36,10 @@ void Player::SelectUpdate(float elapsedTime)
 }
 
 //更新処理
-void Player::Update(float elapsedTime)
+void Player::Update(float elapsedTime, bool IsSelect)
 {
-    if (!IsDeath&&!Gashi)
+    if (!IsDeath && !Gashi)
     {
-        // Bボタンでダメージ状態へ遷移(仮)
-        GamePad& gamePad = Input::Instance().GetGamePad();
-        if (gamePad.GetButtonDown() & GamePad::BTN_B)
-        {
-            TransitionDamageState();
-        }
-
         // 状態毎の更新処理(時間に余裕あれば変更したい)
         switch (state)
         {
@@ -58,8 +51,12 @@ void Player::Update(float elapsedTime)
             break;
         }
 
-        //  空腹レベルの更新
-        UpdateHungerPoint(elapsedTime);
+        // セレクト画面でなければ
+        if (!IsSelect)
+        {
+            //  空腹レベルの更新
+            UpdateHungerPoint(elapsedTime);
+        }
     }
 
     if (Gashi)DidFromHunger();

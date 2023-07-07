@@ -25,4 +25,8 @@ private:
 	std::shared_ptr<AudioResource>	resource;
 
 	float volume = 1.0f;	// ボリューム
+	float MaxVolume = 1.0f;	// 元のボリュームを保存する
+
+	bool Fade{false};		// フェードインが完了したか
+	bool a[3]{};
 };
