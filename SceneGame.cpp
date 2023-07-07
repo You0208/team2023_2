@@ -32,7 +32,7 @@ void SceneGame::Initialize()
 	s_choice = Audio::Instance().LoadAudioSource("Data/Audio/SE/Choice.wav");
 	s_choice->SetVolume(0.6f);
 	s_clash = Audio::Instance().LoadAudioSource("Data/Audio/SE/Clash.wav");
-	s_clash->SetVolume(1.0f);
+	s_clash->SetVolume(0.6f);
 	s_selection = Audio::Instance().LoadAudioSource("Data/Audio/SE/Selection.wav");
 	s_selection->SetVolume(1.0f);
 
@@ -351,7 +351,7 @@ void SceneGame::Update(float elapsedTime)
 		}
 		else if (player->Gashi)
 		{
-			if (IsSePlay)
+			if (!IsSePlay)
 			{
 				s_clash->Play(false);
 				IsSePlay = true;
