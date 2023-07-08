@@ -242,7 +242,7 @@ void SceneGame::Initialize()
 void SceneGame::Finalize()
 {
 	// ハイスコアの更新
-	UpdateHighScore(player);
+	UpdateHighScore(player->GetScore());
 	// ファイル書き込み(テスト)
 	OutputHighScore();
 
@@ -597,7 +597,7 @@ void SceneGame::Render()
 			//ハイスコアの更新
 			if (ImGui::Button("UpdateHighScore"))
 			{
-				UpdateHighScore(player);
+				UpdateHighScore(player->GetScore());
 			}
 			// ハイスコアのリセット(書き込みも行う)
 			if (ImGui::Button("ResetHighScore"))
@@ -1301,46 +1301,6 @@ void SceneGame::UpdateStageUI()
 		sw, sh,
 		0.0f,
 		1.0f, 1.0f, 1.0f, 1.0f);
-}
-
-// ハイスコアの読み取り
-void SceneGame::InputHighScore()
-{
-	// ファイルの読み込み
-	read.open(fileName);
-	char command[256];
-
-	// 読み込めた場合
-	if (read)
-	{
-		while (read)
-		{
-			read >> command;
-			if (0 == strcmp(command, "hs"))		// 先頭の文字が"s"である場合
-			{
-				read.ignore(1);					// 1行開ける
-				read >> HighScore;				// 数値代入
-				read.ignore(1024, '\n');		// [\n(改行)]まで文字を削除する(最大1024文字)⇒次の行まで削除
-			}
-		}
-	}
-	read.close();
-}
-
-// ハイスコアの書き込み
-void SceneGame::OutputHighScore()
-{
-	// ファイルの書き込み
-	write.open(fileName);
-	write << "hs " << HighScore << "\n";
-	write.close();
-}
-
-// ハイスコアのリセット(書き込みも行う)
-void SceneGame::ResetHighScore()
-{
-	HighScore = 0;
-	OutputHighScore();
 }
 
 // 3D空間の描画

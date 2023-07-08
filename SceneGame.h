@@ -1,8 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <fstream>
-#include <string>
 #include <string>
 #include "Graphics/Model.h"
 #include "Graphics/Sprite.h"
@@ -86,24 +84,6 @@ private:
 
 	// ステージレベル看板更新
 	void UpdateStageUI();
-
-private:	// スコア保存用SceneTitleに持っていく
-	int HighScore = 0;					// 読み込んだスコア
-	std::ofstream write;				// 書き出し用変数
-	std::ifstream read;					// 読み出し用変数
-	static constexpr char* fileName = "Data/Save/HighScore.txt";	// 開くファイル名
-
-	// ハイスコアの読み取り
-	void InputHighScore();
-
-	// ハイスコアの書き込み
-	void OutputHighScore();
-
-	// ハイスコアの更新
-	void UpdateHighScore(Player* player)	{ HighScore = (std::max)(HighScore, player->GetScore()); }
-
-	// ハイスコアのリセット(書き込みも行う)
-	void ResetHighScore();
 
 private:
 	int DeathTimer = 0;
