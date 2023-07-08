@@ -415,7 +415,7 @@ void Stage::Draw(RenderContext rc, ModelShader* shader)
 void Stage::StageSpawn()
 {
     // 奥行
-    if (DepthSpawn()) SpawnStageCount++;    // ステージ生成数増加
+    isDepthSpawn = DepthSpawn();
     // 左
     LeftSpawn();
     // 右

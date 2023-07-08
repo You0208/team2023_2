@@ -98,7 +98,7 @@ void SceneGame::Initialize()
 			float X = (-((Stage::StageSideMax - 1) * 0.5f) + x) * Stage::StageSize;
 			float Z = (z * Stage::StageSize);
 
-			stageManager->StageSpawn({ X,0.0f,Z });
+			stageManager->StageSpawn({ {X,0.0f,Z},false });
 		}
 	}
 

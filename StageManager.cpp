@@ -39,7 +39,7 @@ void StageManager::DrawDebugGUI()
     ImGui::Text("accelerationTimer:%d", static_cast<int>(accelerationTimer));
 
     ImGui::Text("IsBreakTime:%d", static_cast<int>(IsBreakTime));
-    ImGui::Text("IsSpawnNone:%d", static_cast<int>(IsSpawnNone));
+    ImGui::Text("IsSpawnNone:%d", static_cast<int>(IsSpawnNone_Side));
 
     // 残り休憩時間
     ImGui::Text("IsBreakTime:%lf", breakTimer);
@@ -185,12 +185,15 @@ void StageManager::Clear()
 }
 
 // ステージ生成
-void StageManager::StageSpawn(DirectX::XMFLOAT3 position)
+void StageManager::StageSpawn(SpawnData data)
 {
-    int No = IsSpawnNone ? -1 : stageNo;            // Stageの引き数が0以下の場合StageNONEが生成される
+    // 奥行の生成が禁止されているもしくは左右の生成が禁止されていて左右に生成される場合-1を返す
+    int No = IsSpawnNone_Depth || (IsSpawnNone_Side && !data.IsDepthSpawn)
+        ? -1 : stageNo;            
+    // Stageの引き数が0以下の場合StageNONEが生成される
 
     Stage* s = new Stage(No);                       //ステージを生成
-    s->SetPosition(position);                       // ここでステージのポジションを決める
+    s->SetPosition(data.position);                       // ここでステージのポジションを決める
     s->SetScrollVelocity(&stageScrollVelocity);     // 共通のスクロール速度を設定
     s->Initialize();                                // 障害物生成
     stages.emplace_back(s);                         // コンテナ追加
@@ -200,7 +203,7 @@ void StageManager::StageSpawn(DirectX::XMFLOAT3 position)
 void StageManager::StageUpdate(float elapsedTIme)
 {
     // ステージの生成
-    for (DirectX::XMFLOAT3 data : stagesSpawns)
+    for (SpawnData data : stagesSpawns)
     {
         StageSpawn(data);
     }
@@ -220,7 +223,8 @@ void StageManager::StageUpdate(float elapsedTIme)
         // 生成リスト追加
         if (stage->GetIsSpawn())
         {
-            stagesSpawns.emplace_back(stage->GetSpawnPosition());
+            SpawnData data = { stage->GetSpawnPosition(), stage->GetisIsDepthSpawn() };
+            stagesSpawns.emplace_back(data);
         }
     }
 
@@ -446,7 +450,8 @@ void StageManager::SetBreakTime_State()
     {
         if (doneStageNum >= StageChangeLine[i] - (Stage::StageDepthMax - 1))    // 1枚は自機の後ろに行くので
         {
-            IsSpawnNone = true;             // 休憩フラグを立てる
+            IsSpawnNone_Depth = true;
+            IsSpawnNone_Side = true;
             breakTime_State = StageChangeLine[i];
             break;
         }
@@ -456,7 +461,7 @@ void StageManager::SetBreakTime_State()
 // 休憩時間更新
 void StageManager::UpdateBreakTime(float elapsedFrame, Player* player)
 {
-    if (IsSpawnNone)
+    if (IsSpawnNone_Depth)
     {
         // ブレイクタイム開始するステージを超えた　かつ　ブレイクタイムでないとき
         if (!IsBreakTime && breakTime_State <= doneStageNum)
@@ -470,12 +475,13 @@ void StageManager::UpdateBreakTime(float elapsedFrame, Player* player)
         // ステージの生成再開
         if (IsBreakTime && breakTime_End - MaxBreakTime <= doneStageNum)
         {
-            IsSpawnNone = false;
+            IsSpawnNone_Depth = false;
         }
     }
     // ブレイクタイムなら
     else if (IsBreakTime && breakTime_End <= doneStageNum)
     {
+        IsSpawnNone_Side = false;
         IsBreakTime = false;
         doneStageNum = 0;
     }

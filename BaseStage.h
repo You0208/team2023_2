@@ -25,11 +25,10 @@ public:
     void SetPosition(DirectX::XMFLOAT3 p) { position = p; }                 // 位置設定
     bool GetIsDestroy() { return isDestroy; }                               // 削除フラグ取得
     bool GetIsSpawn() { return isSpawn; }                                   // 生成フラグ取得
+    bool GetisIsDepthSpawn() { return isDepthSpawn; }                       // 奥で生成されたか取得
     DirectX::XMFLOAT3 GetSpawnPosition() { return spawnPosition; }          // 生成位置取得
     DirectX::XMFLOAT3* GetAddressOfVelocity() { return &velocity; }         // velocityのポインター取得
-    DirectX::XMFLOAT3* GetPosition() { return &position; }
-
-    static const int GetSpawnStageCount() { return SpawnStageCount; }               // ステージの生成数を返す
+    DirectX::XMFLOAT3* GetPosition() { return &position; }               // ステージの生成数を返す
     static void clear();                                                           // 初期化
 protected:
     // スクロール処理
@@ -75,8 +74,7 @@ protected:
     bool isSpawn                    = false;                    // ステージ生成フラグ
     // ステージ削除
     bool isDestroy                  = false;                    // ステージ削除フラグ
-    bool a[2] = {};
-
-    static int SpawnStageCount;                                 // 生成したステージの数
+    bool isDepthSpawn               = false;                    // 奥に生成されたステージであるか
+    bool a = {};
 };
 
