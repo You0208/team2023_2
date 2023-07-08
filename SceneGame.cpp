@@ -93,12 +93,13 @@ void SceneGame::Initialize()
 	// ステージ生成
 	for (int z = 0; z < Stage::StageDepthMax; ++z)
 	{
+		bool IsDepthSpawn = (z == (Stage::StageDepthMax - 1));
 		for (int x = 0; x < Stage::StageSideMax; ++x)
 		{
 			float X = (-((Stage::StageSideMax - 1) * 0.5f) + x) * Stage::StageSize;
 			float Z = (z * Stage::StageSize);
 
-			stageManager->StageSpawn({ {X,0.0f,Z},false });
+			stageManager->StageSpawn({ {X,0.0f,Z},IsDepthSpawn });
 		}
 	}
 

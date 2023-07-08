@@ -187,10 +187,11 @@ void StageManager::Clear()
 // ステージ生成
 void StageManager::StageSpawn(SpawnData data)
 {
-    // 奥行の生成が禁止されているもしくは左右の生成が禁止されていて左右に生成される場合-1を返す
-    int No = IsSpawnNone_Depth || (IsSpawnNone_Side && !data.IsDepthSpawn)
+    int No = (SceneManager::Instance().IsNoneStage && !data.IsDepthSpawn) ||
+        // 奥行の生成が禁止されているもしくは左右の生成が禁止されていて左右に生成される場合-1を返す
+        IsSpawnNone_Depth || (IsSpawnNone_Side && !data.IsDepthSpawn)
+        // Stageの引き数が0以下の場合StageNONEが生成される
         ? -1 : stageNo;            
-    // Stageの引き数が0以下の場合StageNONEが生成される
 
     Stage* s = new Stage(No);                       //ステージを生成
     s->SetPosition(data.position);                       // ここでステージのポジションを決める
