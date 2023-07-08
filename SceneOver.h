@@ -9,6 +9,11 @@
 // タイトルシーン
 class SceneOver :public Scene
 {
+private:
+    static constexpr float PointPositionX = 1600.0f;    // 追加ポイント位置(X)
+    static constexpr float PointPositionY = 30.0f;      // 追加ポイント位置(Y)
+    static  float AddPointMoveAmount;// 追加ポイント移動量
+
 public:
     SceneOver() {}
     ~SceneOver()override {}
@@ -28,6 +33,8 @@ public:
 private:
     // ポイントの加算(ポイントが加算されたらtureを返す)
     bool AddPoint();
+    // 追加ポイント演出(終了するとtrueを返す)
+    bool AddPointPerform();
 
 private:
     // BGM
@@ -66,6 +73,19 @@ private:
     std::unique_ptr<Texture>	texture_fonts_number;		// フォントテクスチャ(数字のみ)
     std::unique_ptr<Text>		text_number;				// フォント(数字のみ)
 
+    enum AddPointPerformState
+    {
+        begin = 0,      // 初期設定
+        FeadIn,         // 出現
+        FeadOut,        // 消滅
+        end,            // 終了
+    };
+
+    DirectX::XMFLOAT2 p_pos = { PointPositionX,PointPositionY };// ポイント表示位置
+    int addPoint = 0;                                           // 追加ポイント
+    DirectX::XMFLOAT2 ap_pos{ PointPositionX,PointPositionY };  // 追加ポイント表示位置
+    DirectX::XMFLOAT4 ap_color{ 0.0f, 0.0f, 0.0f, 1.0f };       // 追加ポイント表示位置
+    int addPointPerformState = AddPointPerformState::begin;
 
     enum OverNum
     {

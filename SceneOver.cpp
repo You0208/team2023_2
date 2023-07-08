@@ -7,7 +7,7 @@
 #include "SceneTitle.h"
 #include "Input/Input.h"
 #include "Player.h"
-
+#include "Tool.h"
 // 初期化
 void SceneOver::Initialize()
 {
@@ -114,6 +114,9 @@ void SceneOver::Finalize()
 // 更新処理
 void SceneOver::Update(float elapsedTime)
 {
+    // 追加ポイント演出
+    AddPointPerform();
+
     GamePad& gamePad = Input::Instance().GetGamePad();
     // アイコン選択処理
     if (gamePad.GetButtonDown() & GamePad::BTN_UP)
@@ -163,6 +166,7 @@ void SceneOver::Update(float elapsedTime)
             SceneManager::Instance().ChangeScene(new SceneGame);
             break;
         case OVER_TITLE:
+            SceneManager::Instance().IsSelect = true;
             SceneManager::Instance().ChangeScene(new SceneTitle);
             break;
         }
@@ -239,10 +243,13 @@ void SceneOver::Update(float elapsedTime)
 }
 
 // テキスト位置デバッグ(位置決まれば削除する)
-DirectX::XMFLOAT2 p_pos = { 1600.0f,30.0f };
 float p_size = 45.0;
 DirectX::XMFLOAT2 s_pos = { 1350.0f, 460.0f };
 float s_size = 45.0;
+float ap_size = 45.0;
+float SceneOver::AddPointMoveAmount = 100.0f;
+float rate = 0.005f;
+//int score = 0;
 
 // 描画処理
 void SceneOver::Render()
@@ -278,6 +285,7 @@ void SceneOver::Render()
         // スコア
         text_number->textOut(rc
             , Player::GetScore()
+            //, score
             , s_pos.x, s_pos.y
             , s_size, s_size
             , 1.0f, 1.0f, 1.0f, 1.0f
@@ -289,6 +297,13 @@ void SceneOver::Render()
             , p_size, p_size
             , 1.0f, 1.0f, 1.0f, 1.0f
         );
+        // 追加ポイント
+        text_number->textOut(rc
+            , addPoint
+            , p_pos.x, ap_pos.y
+            , ap_size, ap_size
+            , ap_color.x, ap_color.y, ap_color.z, ap_color.w
+        );
         shader->End(rc);
     }
     // デバッグ情報の表示
@@ -298,18 +313,30 @@ void SceneOver::Render()
             if (ImGui::CollapsingHeader("Score", ImGuiTreeNodeFlags_DefaultOpen))
             {
                 ImGui::SliderFloat("s_posX", &s_pos.x, 0.0f, 1920.0f);
+                ap_pos.x = s_pos.x;
                 ImGui::SliderFloat("s_posY", &s_pos.y, 0.0f, 1080.0f);
                 ImGui::SliderFloat("s_size", &s_size, 30.0f, 80.0f);
+                //ImGui::InputInt("score", &score);
             }
             if (ImGui::CollapsingHeader("Point", ImGuiTreeNodeFlags_DefaultOpen))
             {
                 ImGui::SliderFloat("p_posX", &p_pos.x, 0.0f, 1920.0f);
                 ImGui::SliderFloat("p_posY", &p_pos.y, 0.0f, 1080.0f);
-                ImGui::SliderFloat("p_size", &p_size, 30.0f, 80.0f);
                 ImGui::SliderInt("Point", &Point,0, 100000);
                 if(ImGui::Button("AddPoint"))
                 {
                     Point += 100;
+                }
+            }
+            if (ImGui::CollapsingHeader("AddPoint", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                ImGui::SliderFloat("ap_posY", &ap_pos.y, 0.0f, 1080.0f);
+                ImGui::SliderFloat("ap_size", &ap_size, 10.0f, 80.0f);
+                ImGui::InputFloat("addPointMoveAmount", &AddPointMoveAmount);
+                ImGui::InputFloat("rate", &rate);
+                if (ImGui::Button("Perform"))
+                {
+                    addPointPerformState = AddPointPerformState::begin;
                 }
             }
         }
@@ -322,7 +349,53 @@ bool SceneOver::AddPoint()
 {
     int add = Player::GetScore() / 10;
     if (add == 0) return false;
+    return true;
+}
 
-    Point += add;
+// 追加ポイント演出
+bool SceneOver::AddPointPerform()
+{
+    static float taget = p_pos.y + AddPointMoveAmount;
+
+    switch (addPointPerformState)
+    {
+    case SceneOver::begin:
+        addPoint = Player::GetScore() / 10;
+        taget = p_pos.y + AddPointMoveAmount;
+        ap_pos.y = taget;
+        ap_color.w = 0.0f;
+        addPointPerformState = AddPointPerformState::FeadIn;
+        break;
+    case SceneOver::FeadIn:
+       // ap_pos.y = lerp<float>(ap_pos.y, taget, rate);
+        ap_color.w = lerp<float>(ap_color.w, 1.0f, rate);
+
+        if((fabs(1.0f - ap_color.w) < 0.01f))
+        {
+            ap_pos.y = taget;
+            ap_color.w = 1.0f;
+            addPointPerformState = AddPointPerformState::FeadOut;
+        }
+        break;
+    case SceneOver::FeadOut:
+        ap_pos.y = lerp<float>(ap_pos.y, p_pos.y, rate);
+        ap_color.w = lerp<float>(ap_color.w, 0.0f, rate);
+
+        if ((fabs(p_pos.y - ap_pos.y) < 8.0f))
+        {
+            Point += addPoint;
+            ap_pos.y = p_pos.y;
+            ap_color.w = 0.0f;
+            addPointPerformState = AddPointPerformState::end;
+        }
+
+        break;
+    case SceneOver::end:
+        //addPointPerformState = AddPointPerformState::begin;
+        break;
+    default:
+        break;
+    }
+
     return true;
 }
