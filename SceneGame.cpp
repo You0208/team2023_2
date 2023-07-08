@@ -232,10 +232,6 @@ void SceneGame::Initialize()
 		srvData.height = renderTarget->GetHeight();
 		postprocessingRenderer->SetSceneData(srvData);
 	}
-
-
-	// スコア読み取り
-	InputHighScore();
 }
 
 // 終了化
@@ -243,8 +239,6 @@ void SceneGame::Finalize()
 {
 	// ハイスコアの更新
 	UpdateHighScore(player->GetScore());
-	// ファイル書き込み(テスト)
-	OutputHighScore();
 
 	// ステージ終了
 	stageManager->Clear();
@@ -587,12 +581,12 @@ void SceneGame::Render()
 			// ハイスコアの読み取り
 			if (ImGui::Button("InputHighScore"))
 			{
-				InputHighScore();
+				InputSave();
 			}
 			// ハイスコアの書き込み
 			if (ImGui::Button("OutputHighScore"))
 			{
-				OutputHighScore();
+				OutputSave();
 			}
 			//ハイスコアの更新
 			if (ImGui::Button("UpdateHighScore"))

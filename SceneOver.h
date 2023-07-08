@@ -26,6 +26,10 @@ public:
     void Render()override;
 
 private:
+    // ポイントの加算(ポイントが加算されたらtureを返す)
+    bool AddPoint();
+
+private:
     // BGM
     std::unique_ptr<AudioSource> b_gameOver;
     // SE

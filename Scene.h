@@ -28,19 +28,19 @@ public:
 protected:
 	static int HighScore;											//	ハイスコア
 	static int Point;												// ポイント
-	static constexpr char* fileName = "Data/Save/HighScore.txt";	// 開くファイル名
-
-	// ハイスコアの読み取り
-	static void InputHighScore();
-
-	// ハイスコアの書き込み
-	static void OutputHighScore();
+	static constexpr char* fileName = "Data/Save/Save";	// 開くファイル名
 
 	// ハイスコアの更新
 	static void UpdateHighScore(const int score);
 
 	// ハイスコアのリセット(書き込みも行う)
 	static void ResetHighScore();
+public:
+	// セーブファイルの読み取り
+	static void InputSave();
+
+	// セーブファイルの書き込み
+	static void OutputSave();
 
 private:
 	bool	ready = false;

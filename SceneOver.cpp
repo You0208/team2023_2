@@ -26,6 +26,9 @@ void SceneOver::Initialize()
     text_number->SetShaderResourceView(texture_fonts_number->GetShaderResourceView(),
         texture_fonts_number->GetWidth(), texture_fonts_number->GetHeight());
 
+    // ポイントの加算
+    AddPoint();
+
     //-------------------------------------------------------------------------------------------------------
     // ↓　この下はシェーダー関連
     //-------------------------------------------------------------------------------------------------------
@@ -142,10 +145,13 @@ void SceneOver::Update(float elapsedTime)
 
     if (gamePad.GetButtonDown() & GamePad::BTN_B)
     {
+        s_choice->Stop();
+        s_choice->Play(false);
         switch (selectNum)
         {
         case OVER_100:
-
+            if (Point < 100) return;
+            Point -= 100;   // 100ポイント使用
             SceneManager::Instance().IsSelect = false;
             SceneManager::Instance().IsNoneStage = true;
             SceneManager::Instance().ChangeScene(new SceneGame);
@@ -232,6 +238,12 @@ void SceneOver::Update(float elapsedTime)
 
 }
 
+// テキスト位置デバッグ(位置決まれば削除する)
+DirectX::XMFLOAT2 p_pos = { 1600.0f,30.0f };
+float p_size = 45.0;
+DirectX::XMFLOAT2 s_pos = { 1350.0f, 460.0f };
+float s_size = 45.0;
+
 // 描画処理
 void SceneOver::Render()
 {
@@ -263,12 +275,54 @@ void SceneOver::Render()
         shader->Draw(rc, s_result.get());
         shader->Draw(rc, s_title.get());
         shader->Draw(rc, s_restart.get());
+        // スコア
         text_number->textOut(rc
             , Player::GetScore()
-            , 1350.0f, 460.0f
-            , 45.0f, 45.0f
+            , s_pos.x, s_pos.y
+            , s_size, s_size
+            , 1.0f, 1.0f, 1.0f, 1.0f
+        );
+        // ポイント
+        text_number->textOut(rc
+            , Point
+            , p_pos.x, p_pos.y
+            , p_size, p_size
             , 1.0f, 1.0f, 1.0f, 1.0f
         );
         shader->End(rc);
     }
+    // デバッグ情報の表示
+    {
+        if (ImGui::Begin("Text", nullptr, ImGuiWindowFlags_None))
+        {
+            if (ImGui::CollapsingHeader("Score", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                ImGui::SliderFloat("s_posX", &s_pos.x, 0.0f, 1920.0f);
+                ImGui::SliderFloat("s_posY", &s_pos.y, 0.0f, 1080.0f);
+                ImGui::SliderFloat("s_size", &s_size, 30.0f, 80.0f);
+            }
+            if (ImGui::CollapsingHeader("Point", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                ImGui::SliderFloat("p_posX", &p_pos.x, 0.0f, 1920.0f);
+                ImGui::SliderFloat("p_posY", &p_pos.y, 0.0f, 1080.0f);
+                ImGui::SliderFloat("p_size", &p_size, 30.0f, 80.0f);
+                ImGui::SliderInt("Point", &Point,0, 100000);
+                if(ImGui::Button("AddPoint"))
+                {
+                    Point += 100;
+                }
+            }
+        }
+        ImGui::End();
+    }
+}
+
+// ポイントの加算
+bool SceneOver::AddPoint()
+{
+    int add = Player::GetScore() / 10;
+    if (add == 0) return false;
+
+    Point += add;
+    return true;
 }
