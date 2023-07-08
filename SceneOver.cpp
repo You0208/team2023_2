@@ -6,6 +6,7 @@
 #include "SceneOver.h"
 #include "SceneTitle.h"
 #include "Input/Input.h"
+#include "Player.h"
 
 // ‰Šú‰»
 void SceneOver::Initialize()
@@ -263,7 +264,7 @@ void SceneOver::Render()
         shader->Draw(rc, s_title.get());
         shader->Draw(rc, s_restart.get());
         text_number->textOut(rc
-            , 1234567890
+            , Player::GetScore()
             , 1350.0f, 460.0f
             , 45.0f, 45.0f
             , 1.0f, 1.0f, 1.0f, 1.0f

@@ -88,7 +88,8 @@ public:
     void AddScore(int s) { score += s; }
 
     // スコアを取得
-    int GetScore() { return score; }
+    static int GetScore() { return score; }
+    static void ScoreClear() { score = 0; }
     // 空腹レベル取得
     int GetHungerLevel() const { return hungerLevel; }
     // 空腹ポイント取得
@@ -178,7 +179,7 @@ private:
     int     maxHealth                  = 5;              // 最大体力
     float   invincibleTimer            = 1.0f;           // 無敵時間
 
-    int     score                      = 0;
+    static int score;
     // 回転速度
     float   turnSpeed                  = DirectX::XMConvertToRadians(720);
 

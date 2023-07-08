@@ -39,6 +39,7 @@ void SceneGame::Initialize()
 
 	//プレイヤー初期設定
 	player = new Player();
+	player->ScoreClear();	// スコアのリセット
 
 	// 空初期設定
 	sky = new Sky();
