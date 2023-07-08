@@ -3,6 +3,7 @@
 #include "Graphics/Model.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/Texture.h"
+#include "Audio/Audio.h"
 #include "Scene.h"
 
 // タイトルシーン
@@ -42,6 +43,11 @@ private:
 
     std::unique_ptr<Sprite>	s_start;
     std::unique_ptr<Texture> t_start;
+
+    // BGM
+    std::unique_ptr<AudioSource> b_title;
+    // SE
+    std::unique_ptr<AudioSource> s_choice;
 
     // UVスクロールデータ
     UVScrollData uvScrollData;

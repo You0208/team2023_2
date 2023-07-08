@@ -257,8 +257,8 @@ void Marshmallow_Base::Update(float elapsedTime)
     Obstacle::Update(elapsedTime);
     radius = 2.0f;
     Type = TYPE::ITEMS;
-    score = 5;
-    hungerPoint = 5;
+    score = 15;
+    hungerPoint = 15;
     scale.x = scale.y = scale.z = 3.0f;
     // ヒットエフェクト再生
     {
@@ -297,10 +297,10 @@ void Jellybeans_Base::Update(float elapsedTime)
 {
     // 基底クラス描画処理
     Obstacle::Update(elapsedTime);
-    radius = 1.0f;
+    radius = 2.0f;
     Type = TYPE::ITEMS;
-    score = 3;
-    hungerPoint = 3;
+    score = 10;
+    hungerPoint = 10;
 }
 void Jellybeans_Base::DrawDebugPrimitive()
 {
@@ -539,8 +539,8 @@ Cupcake_Base::Cupcake_Base()
 {
     radius = 2.5f;
     Type = TYPE::ITEMS;
-    hungerPoint = 10;
-    score = 10;
+    hungerPoint = 30;
+    score = 30;
     scale.x = scale.y = scale.z = 1.25f;
 }
 // カップケーキ(チョコ)
@@ -586,8 +586,8 @@ Macaron_Base::Macaron_Base()
 {
     radius = 2.5f;
     Type = TYPE::ITEMS;
-    hungerPoint = 10;
-    score = 10;
+    hungerPoint = 20;
+    score = 20;
     scale.x = scale.y = scale.z = 0.8f;
 }
 void Macaron_Base::DrawDebugPrimitive()

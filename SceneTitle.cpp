@@ -49,11 +49,20 @@ void SceneTitle::Initialize()
     dissolveThreshold = 1.0f;
     edgeThreshold = 0.2f; // 縁の閾値
     edgeColor = { 1, 0, 0, 1 }; // 縁の色
+
+    // オーディオ初期化
+    b_title = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM_Title.wav");
+    b_title->SetVolume(0.15f);
+    b_title->Play(true);
+
+    s_choice = Audio::Instance().LoadAudioSource("Data/Audio/SE/Choice.wav");
+    s_choice->SetVolume(0.3f);
 }
 
 // 終了化
 void SceneTitle::Finalize()
 {
+    b_title->Stop();
 }
 
 // 更新処理
@@ -71,6 +80,7 @@ void SceneTitle::Update(float elapsedTime)
         ;
     if (gamePad.GetButtonDown() & anyButton)
     {
+        s_choice->Play(false);
         Trans = 1.0f;
         next = true;
     }

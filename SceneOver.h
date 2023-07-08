@@ -3,6 +3,7 @@
 #include "Graphics/Model.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/Texture.h"
+#include "Audio/Audio.h"
 #include "Scene.h"
 
 // タイトルシーン
@@ -25,6 +26,12 @@ public:
     void Render()override;
 
 private:
+    // BGM
+    std::unique_ptr<AudioSource> b_gameOver;
+    // SE
+    std::unique_ptr<AudioSource> s_choice;		// 決定音
+    std::unique_ptr<AudioSource> s_selection;	// 選択音
+
     std::unique_ptr<Sprite>	s_high;
     std::unique_ptr<Texture> t_high;
 

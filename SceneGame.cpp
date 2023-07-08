@@ -20,12 +20,22 @@ static const UINT SHADOWMAP_SIZE = 2048;
 // 初期化
 void SceneGame::Initialize()
 {
-	// BGM再生(仮)
-	//audio = Audio::Instance().LoadAudioSource("Data/Audio/BGM.wav");
-	//audio->SetVolume(0.5f);
-	//audio->Play(true);
+	// オーディオ初期化
+	b_game = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM.wav");
+	b_game->SetVolume(0.2f);
+	b_select = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM_Select.wav");
+	b_select->SetVolume(0.2f);
 
-	//audio->Play(false);
+	s_speed = Audio::Instance().LoadAudioSource("Data/Audio/SE/Speed.wav");
+	s_speed->SetVolume(1.0f);
+	s_heal = Audio::Instance().LoadAudioSource("Data/Audio/SE/Heal.wav");
+	s_heal->SetVolume(1.0f);
+	s_clash = Audio::Instance().LoadAudioSource("Data/Audio/SE/Clash.wav");
+	s_clash->SetVolume(0.6f);
+	s_choice = Audio::Instance().LoadAudioSource("Data/Audio/SE/Choice.wav");
+	s_choice->SetVolume(0.3f);
+	s_selection = Audio::Instance().LoadAudioSource("Data/Audio/SE/Selection.wav");
+	s_selection->SetVolume(1.0f);
 
 	//プレイヤー初期設定
 	player = new Player();
@@ -223,14 +233,16 @@ void SceneGame::Initialize()
 
 
 	// スコア読み取り
-	InputScoreRanking();
+	InputHighScore();
 }
 
 // 終了化
 void SceneGame::Finalize()
 {
+	// ハイスコアの更新
+	UpdateHighScore(player);
 	// ファイル書き込み(テスト)
-	OutputScoreRanking(player);
+	OutputHighScore();
 
 	// ステージ終了
 	stageManager->Clear();
@@ -273,6 +285,8 @@ void SceneGame::Update(float elapsedTime)
 	}
 	else
 	{
+		b_game->Play(true);
+
 		// ポーズ処理
 		GamePad& gamePad = Input::Instance().GetGamePad();
 		if (gamePad.GetButtonDown() & GamePad::BTN_X)
@@ -304,7 +318,7 @@ void SceneGame::Update(float elapsedTime)
 		{
 			// カメラコントローラー更新処理化
 			target = player->GetPosition();
-			target.y += 3.0f;
+			target.y += 2.5f;
 			cameraController->setTarget(target);
 		}
 		cameraController->Update(elapsedTime);
@@ -316,6 +330,7 @@ void SceneGame::Update(float elapsedTime)
 		sky->Update(elapsedTime);
 		sky->SetPosition({ player->GetPosition().x,player->GetPosition().y,player->GetPosition().z + sky->space });
 
+		static bool IsSePlay = false;			// SEを1度だけ流す(飢餓での死亡SE再生に使用中)
 
 		if (accel)// 加速時
 		{
@@ -337,6 +352,11 @@ void SceneGame::Update(float elapsedTime)
 		}
 		else if (player->Gashi)
 		{
+			if (!IsSePlay)
+			{
+				s_clash->Play(false);
+				IsSePlay = true;
+			}
 			DidFromHunger(elapsedTime);
 		}
 
@@ -344,7 +364,10 @@ void SceneGame::Update(float elapsedTime)
 		{
 			DeathTimer++;
 			if (DeathTimer >= 800)
+			{
+				IsSePlay = false;
 				SceneManager::Instance().ChangeScene(new SceneOver);
+			}
 		}
 	}
 	EffectManager::Instance().Update(elapsedTime);
@@ -404,6 +427,10 @@ void SceneGame::Update(float elapsedTime)
 		1.0f, 1.0f, 1.0f, 1.0f);
 }
 
+// デバッグ用(削除する)
+DirectX::XMFLOAT2 HighScoreTextPos	= { 1510.0f, 857.0f };
+DirectX::XMFLOAT2 HighScoreTextSize = { 55.0f, 55.0f };
+
 // 描画処理
 void SceneGame::Render()
 {
@@ -451,29 +478,6 @@ void SceneGame::Render()
 			// 描画処理
 			shader->Draw(rc, sprite_line.get());
 		}
-		// 空腹ゲージ
-		shader->Draw(rc, sprite_hungerGageBack.get());
-		shader->Draw(rc, sprite_hungerGage.get());
-		shader->Draw(rc, sprite_hungerGageFrame.get());
-
-		// ステージレベル看板
-		shader->Draw(rc, sprite_StageUI.get());
-
-		// スコア表示(仮)
-		//text[fontNo]->textOut(rc
-		//	, "Score:" + std::to_string(player->GetScore())
-		//	, text_pos.x, text_pos.y
-		//	, text_size.x, text_size.y
-		//	, text_color.x, text_color.y, text_color.z, text_color.w
-		//);
-		text_number ->textOut(rc
-				, player->GetScore()
-				, text_pos.x, text_pos.y
-				, text_size.x, text_size.y
-				, text_color.x, text_color.y, text_color.z, text_color.w
-			);
-
-		//shader->Draw(rc, sprite_StageUI.get());
 		
 		if (SceneManager::Instance().IsSelect)
 		{
@@ -483,8 +487,41 @@ void SceneGame::Render()
 			shader->Draw(rc, s_rulu.get());
 			shader->Draw(rc, s_select.get());
 			shader->Draw(rc, s_score.get());
+
+			// ハイスコア表示
+			text_number->textOut(rc
+				, HighScore
+				, HighScoreTextPos.x, HighScoreTextPos.y
+				, HighScoreTextSize.x, HighScoreTextSize.y
+				, 1.0f, 1.0f, 1.0f, 1.0f
+			);
+		}
+		else	// ゲーム時
+		{
+			// 空腹ゲージ
+			shader->Draw(rc, sprite_hungerGageBack.get());
+			shader->Draw(rc, sprite_hungerGage.get());
+			shader->Draw(rc, sprite_hungerGageFrame.get());
+
+			// ステージレベル看板
+			shader->Draw(rc, sprite_StageUI.get());
+
+			// スコア表示(仮)
+			//text[fontNo]->textOut(rc
+			//	, "Score:" + std::to_string(player->GetScore())
+			//	, text_pos.x, text_pos.y
+			//	, text_size.x, text_size.y
+			//	, text_color.x, text_color.y, text_color.z, text_color.w
+			//);
+			text_number->textOut(rc
+				, player->GetScore()
+				, text_pos.x, text_pos.y
+				, text_size.x, text_size.y
+				, text_color.x, text_color.y, text_color.z, text_color.w
+			);
 		}
 		if (IsRule)	shader->Draw(rc, sprite.get());
+
 		shader->End(rc);
 
 		// デバッグ情報の表示
@@ -519,7 +556,7 @@ void SceneGame::Render()
 		}
 		// テキスト
 		{
-			if (ImGui::TreeNode("Text"))
+			if (ImGui::TreeNode("Text Score"))
 			{
 				ImGui::SliderInt("fontNo", &fontNo, 0, 6);
 				ImGui::SliderFloat("posX", &text_pos.x, 0.0f, 1920.0f);
@@ -527,6 +564,13 @@ void SceneGame::Render()
 				ImGui::SliderFloat("size", &text_size.x, 0.0f, 500.0f);
 				text_size.y = text_size.x;
 				ImGui::ColorPicker4("color", &text_color.x);
+				ImGui::TreePop();
+			}
+			if (ImGui::TreeNode("Text HighScore"))
+			{
+				ImGui::InputFloat2("Pos", &HighScoreTextPos.x);
+				ImGui::InputFloat("Size", &HighScoreTextSize.x);
+				HighScoreTextSize.y = HighScoreTextSize.x;
 				ImGui::TreePop();
 			}
 		}
@@ -538,6 +582,27 @@ void SceneGame::Render()
 				ImGui::Text("HighScore:%ld", HighScore);
 				ImGui::TreePop();
 			}
+			// ハイスコアの読み取り
+			if (ImGui::Button("InputHighScore"))
+			{
+				InputHighScore();
+			}
+			// ハイスコアの書き込み
+			if (ImGui::Button("OutputHighScore"))
+			{
+				OutputHighScore();
+			}
+			//ハイスコアの更新
+			if (ImGui::Button("UpdateHighScore"))
+			{
+				UpdateHighScore(player);
+			}
+			// ハイスコアのリセット(書き込みも行う)
+			if (ImGui::Button("ResetHighScore"))
+			{
+				ResetHighScore();
+			}
+
 			ImGui::Separator();
 		}
 
@@ -600,6 +665,8 @@ void SceneGame::CollisionPlayerVsObs()
 							player->OnDead();
 							DeathMoment();
 							it2->IsHit = true;
+							s_clash->Stop();			// SE再生
+							s_clash->Play(false);		// SE再生
 						}
 					break;
 					case TYPE::CYLINDERS:// 直方体
@@ -618,6 +685,8 @@ void SceneGame::CollisionPlayerVsObs()
 								player->OnDead();
 								DeathMoment();
 								it2->IsHit = true;
+								s_clash->Stop();			// SE再生
+								s_clash->Play(false);		// SE再生
 							}
 						}
 						break;
@@ -634,6 +703,8 @@ void SceneGame::CollisionPlayerVsObs()
 							player->AddScore(it2->score);
 							player->AddHungerPoint(it2->hungerPoint);
 							it2->IsHit = true;
+							s_heal->Stop();				// SE再生
+							s_heal->Play(false);		// SE再生
 						}
 						break;
 					case TYPE::GATE:// ゲート
@@ -658,6 +729,8 @@ void SceneGame::CollisionPlayerVsObs()
 									accelEffect->Play(e);
 								}
 								it2->IsHit = true;
+								s_speed->Stop();		// SE再生
+								s_speed->Play(false);	// SE再生
 							}
 						}
 						break;
@@ -677,6 +750,8 @@ void SceneGame::SelectUpdate(float elapsedTime)
 {
 	if (!isTrans)
 	{
+		b_select->Play(true);	// BGM1再生
+
 		// カメラコントローラー更新処理
 		target = player->GetPosition();
 		target.y += 1.5f;
@@ -690,10 +765,14 @@ void SceneGame::SelectUpdate(float elapsedTime)
 		if (gamePad.GetButtonDown() & GamePad::BTN_UP)
 		{
 			selectNum--;
+			s_selection->Stop();
+			s_selection->Play(false);		// SE再生
 		}
 		if (gamePad.GetButtonDown() & GamePad::BTN_DOWN)
 		{
 			selectNum++;
+			s_selection->Stop();
+			s_selection->Play(false);		// SE再生
 		}
 		if (selectNum > 2)selectNum = 0;
 		if (selectNum < 0)selectNum = 2;
@@ -728,12 +807,13 @@ void SceneGame::SelectUpdate(float elapsedTime)
 				SceneManager::Instance().IsFinishAll = true;
 				break;
 			}
+			s_choice->Play(false);
 		}
 	}
 
 	cameraController->Update(elapsedTime);
 	//プレイヤー更新処理
-	player->Update(elapsedTime);
+	player->Update(elapsedTime,true);
 	//ステージ更新処理
 	stageManager->StageSelectUpdate(elapsedTime);
 
@@ -749,6 +829,8 @@ void SceneGame::SelectUpdate(float elapsedTime)
 			player->SetAngleY(0.0f);
 			SceneManager::Instance().IsSelect = false;
 			SceneManager::Instance().IsNoneStage = false;
+
+			b_select->Stop();	// BGM停止
 		}
 	}
 }
@@ -830,6 +912,7 @@ void SceneGame::DeathMoment()
 void SceneGame::DidFromHunger(float elapsedTime)
 {
 	cameraController->DidFromHungerCamera();
+	//s_clash->Play(false);		// SE再生
 }
 
 // 障害物と障害物の当たり判定
@@ -1218,41 +1301,44 @@ void SceneGame::UpdateStageUI()
 		1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-// 最大スコアの読み取り(仮)
-void SceneGame::InputScoreRanking()
+// ハイスコアの読み取り
+void SceneGame::InputHighScore()
 {
 	// ファイルの読み込み
-	read_ScoreRanking.open(fileName);
+	read.open(fileName);
 	char command[256];
 
 	// 読み込めた場合
-	if (read_ScoreRanking)
+	if (read)
 	{
-		while (read_ScoreRanking)
+		while (read)
 		{
-			read_ScoreRanking >> command;
-			if (0 == strcmp(command, "hs"))					// 先頭の文字が"s"である場合
+			read >> command;
+			if (0 == strcmp(command, "hs"))		// 先頭の文字が"s"である場合
 			{
-				read_ScoreRanking.ignore(1);				// 1行開ける
-				read_ScoreRanking >> HighScore;				// 数値代入
-				read_ScoreRanking.ignore(1024, '\n');       // [\n(改行)]まで文字を削除する(最大1024文字)⇒次の行まで削除
+				read.ignore(1);					// 1行開ける
+				read >> HighScore;				// 数値代入
+				read.ignore(1024, '\n');		// [\n(改行)]まで文字を削除する(最大1024文字)⇒次の行まで削除
 			}
 		}
 	}
-	read_ScoreRanking.close();
+	read.close();
 }
 
-// 最大スコアの出力(仮)
-void SceneGame::OutputScoreRanking(Player* player)
+// ハイスコアの書き込み
+void SceneGame::OutputHighScore()
 {
-	// score[最大値](一番小さい値)と今回のスコアの高い方を代入
-	HighScore = (std::max)(HighScore, player->GetScore());
-
-
 	// ファイルの書き込み
-	writing_ScoreRanking.open(fileName);
-	writing_ScoreRanking << "hs " << HighScore << "\n";
-	writing_ScoreRanking.close();
+	write.open(fileName);
+	write << "hs " << HighScore << "\n";
+	write.close();
+}
+
+// ハイスコアのリセット(書き込みも行う)
+void SceneGame::ResetHighScore()
+{
+	HighScore = 0;
+	OutputHighScore();
 }
 
 // 3D空間の描画

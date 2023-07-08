@@ -88,16 +88,22 @@ private:
 	void UpdateStageUI();
 
 private:	// スコア保存用SceneTitleに持っていく
-	int HighScore = 0;									// 読み込んだ最大スコアを格納する
-	std::ofstream writing_ScoreRanking;					// 書き出し用変数
-	std::ifstream read_ScoreRanking;					// 読み出し用変数
+	int HighScore = 0;					// 読み込んだスコア
+	std::ofstream write;				// 書き出し用変数
+	std::ifstream read;					// 読み出し用変数
 	static constexpr char* fileName = "Data/Save/HighScore.txt";	// 開くファイル名
 
-	// 最大スコアの読み取り(仮)
-	void InputScoreRanking();
+	// ハイスコアの読み取り
+	void InputHighScore();
 
-	// 最大スコアの出力(仮)
-	void OutputScoreRanking(Player* player);
+	// ハイスコアの書き込み
+	void OutputHighScore();
+
+	// ハイスコアの更新
+	void UpdateHighScore(Player* player)	{ HighScore = (std::max)(HighScore, player->GetScore()); }
+
+	// ハイスコアのリセット(書き込みも行う)
+	void ResetHighScore();
 
 private:
 	int DeathTimer = 0;
@@ -147,7 +153,16 @@ private:
 	Effect* hitEffect = nullptr;
 	Effect* accelEffect = nullptr;
 
-	std::unique_ptr<AudioSource> audio;
+	// BGM
+	std::unique_ptr<AudioSource> b_game;
+	std::unique_ptr<AudioSource> b_select;
+
+	// SE
+	std::unique_ptr<AudioSource> s_speed;		// 加速音
+	std::unique_ptr<AudioSource> s_heal;		// 空腹ゲージ増加音
+	std::unique_ptr<AudioSource> s_clash;		// 衝突音
+	std::unique_ptr<AudioSource> s_choice;		// 決定音
+	std::unique_ptr<AudioSource> s_selection;	// 選択音
 
 	std::unique_ptr<Texture>	texture_hungerGage;			// 空腹ゲージのテクスチャ(白)
 	std::unique_ptr<Texture>	texture_hungerGageFrame;	// 空腹ゲージのフレームのテクスチャ

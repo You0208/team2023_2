@@ -3,6 +3,7 @@
 #include "Graphics/Model.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/Texture.h"
+#include "Audio/Audio.h"
 #include "Scene.h"
 
 
@@ -26,6 +27,12 @@ public:
     void Render()override;
 
 private:
+    // BGM
+    std::unique_ptr<AudioSource> b_gameClear;
+    // SE
+    std::unique_ptr<AudioSource> s_choice;		// Œˆ’è‰¹
+    std::unique_ptr<AudioSource> s_selection;	// ‘I‘ð‰¹
+
     std::unique_ptr<Sprite>	s_back;
     std::unique_ptr<Texture> t_back;
 
