@@ -154,6 +154,8 @@ void SceneOver::Update(float elapsedTime)
         {
         case OVER_100:
             if (Point < 100) return;
+            if(addPointPerformState != AddPointPerformState::end) Point += addPoint;
+
             Point -= 100;   // 100ポイント使用
             SceneManager::Instance().IsSelect = false;
             SceneManager::Instance().IsNoneStage = true;
@@ -249,7 +251,8 @@ float s_size = 45.0;
 float ap_size = 45.0;
 float SceneOver::AddPointMoveAmount = 100.0f;
 float rate = 0.005f;
-//int score = 0;
+int score = 0;
+bool debug = false;
 
 // 描画処理
 void SceneOver::Render()
@@ -284,8 +287,7 @@ void SceneOver::Render()
         shader->Draw(rc, s_restart.get());
         // スコア
         text_number->textOut(rc
-            , Player::GetScore()
-            //, score
+            , debug ? score : Player::GetScore()
             , s_pos.x, s_pos.y
             , s_size, s_size
             , 1.0f, 1.0f, 1.0f, 1.0f
@@ -316,7 +318,7 @@ void SceneOver::Render()
                 ap_pos.x = s_pos.x;
                 ImGui::SliderFloat("s_posY", &s_pos.y, 0.0f, 1080.0f);
                 ImGui::SliderFloat("s_size", &s_size, 30.0f, 80.0f);
-                //ImGui::InputInt("score", &score);
+                ImGui::InputInt("score", &score);
             }
             if (ImGui::CollapsingHeader("Point", ImGuiTreeNodeFlags_DefaultOpen))
             {
@@ -339,6 +341,7 @@ void SceneOver::Render()
                     addPointPerformState = AddPointPerformState::begin;
                 }
             }
+            ImGui::Checkbox("debug", &debug);
         }
         ImGui::End();
     }
@@ -355,17 +358,15 @@ bool SceneOver::AddPoint()
 // 追加ポイント演出
 bool SceneOver::AddPointPerform()
 {
-    static float taget = p_pos.y + AddPointMoveAmount;
-
+    static float taget = p_pos.y + AddPointMoveAmount;  // 移動(出現)する位置
     switch (addPointPerformState)
     {
     case SceneOver::begin:
-        addPoint = Player::GetScore() / 10;
+        addPoint = debug ? score / 10 : Player::GetScore() / 10;
         taget = p_pos.y + AddPointMoveAmount;
         ap_pos.y = taget;
         ap_color.w = 0.0f;
         addPointPerformState = AddPointPerformState::FeadIn;
-        break;
     case SceneOver::FeadIn:
        // ap_pos.y = lerp<float>(ap_pos.y, taget, rate);
         ap_color.w = lerp<float>(ap_color.w, 1.0f, rate);

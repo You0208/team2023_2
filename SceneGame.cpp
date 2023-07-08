@@ -21,8 +21,8 @@ static const UINT SHADOWMAP_SIZE = 2048;
 void SceneGame::Initialize()
 {
 	// オーディオ初期化
-	b_game = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM.wav");
-	b_game->SetVolume(0.2f);
+	b_game = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM_Game.wav");
+	b_game->SetVolume(0.5f);
 	b_select = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM_Select.wav");
 	b_select->SetVolume(0.2f);
 

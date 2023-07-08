@@ -42,7 +42,7 @@ private:
     // ステージが切り替わる境目
     static constexpr int StageChangeLine[Stage::StageMax - 1] =
     {
-        5,      // ステージ2切り替え
+        12,      // ステージ2切り替え
         12,      // ステージ3切り替え
         12,      // ステージ4切り替え
         12,      // ステージ5切り替え
