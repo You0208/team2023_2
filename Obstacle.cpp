@@ -277,9 +277,6 @@ Marshmallow_Blue::Marshmallow_Blue()
 {
     //モデルを読み込み
     model = std::make_unique<Model>("Data/Model/Obstacle/marshmallow/marshmallow_blue.mdl");
-    // エフェクトの再生
-    handle = ItemEffect->Play(position);
-
 }
 // マシュマロ(ピンク)
 Marshmallow_Pink::Marshmallow_Pink()
