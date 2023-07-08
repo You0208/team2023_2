@@ -19,8 +19,6 @@ void SceneOver::Initialize()
     s_selection = Audio::Instance().LoadAudioSource("Data/Audio/SE/Selection.wav");
     s_selection->SetVolume(1.0f);
 
-    // a
-
     // ƒtƒHƒ“ƒg
     texture_fonts_number = std::make_unique<Texture>("Data/fonts/font7.png");
     text_number = std::make_unique<Text>();
