@@ -59,6 +59,9 @@ private:
     std::unique_ptr<Sprite>	s_restart;
     std::unique_ptr<Texture> t_restart;
 
+    std::unique_ptr<Texture>	texture_fonts_number;		// フォントテクスチャ(数字のみ)
+    std::unique_ptr<Text>		text_number;				// フォント(数字のみ)
+
 
     enum OverNum
     {

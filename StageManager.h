@@ -15,7 +15,7 @@ private:
     static constexpr float ScrollVelocityRate_ac = 0.001f;          // スクロール速度補間係数(加速状態)
     static constexpr float MaxVelocity = -300.0f;                   // Velocityの最大値
     static const int Gap = 2;                                       // プレイヤーの位置とステージを削除する位置の差
-    static const int MaxBreakTime = 3;                                       // 
+    static const int MaxBreakTime = 2;                                       // 
 
     // 各空腹レベルでのプレイヤーの最大速度
     static constexpr float MaxPlayerVelocity[3] =
@@ -42,7 +42,7 @@ private:
     // ステージが切り替わる境目
     static constexpr int StageChangeLine[Stage::StageMax - 1] =
     {
-        12,      // ステージ2切り替え
+        5,      // ステージ2切り替え
         12,      // ステージ3切り替え
         12,      // ステージ4切り替え
         12,      // ステージ5切り替え

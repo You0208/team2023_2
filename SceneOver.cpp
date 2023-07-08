@@ -19,6 +19,12 @@ void SceneOver::Initialize()
     s_selection = Audio::Instance().LoadAudioSource("Data/Audio/SE/Selection.wav");
     s_selection->SetVolume(1.0f);
 
+    // フォント
+    texture_fonts_number = std::make_unique<Texture>("Data/fonts/font7.png");
+    text_number = std::make_unique<Text>();
+    text_number->SetShaderResourceView(texture_fonts_number->GetShaderResourceView(),
+        texture_fonts_number->GetWidth(), texture_fonts_number->GetHeight());
+
     //-------------------------------------------------------------------------------------------------------
     // ↓　この下はシェーダー関連
     //-------------------------------------------------------------------------------------------------------
@@ -256,6 +262,12 @@ void SceneOver::Render()
         shader->Draw(rc, s_result.get());
         shader->Draw(rc, s_title.get());
         shader->Draw(rc, s_restart.get());
+        text_number->textOut(rc
+            , 1234567890
+            , 1350.0f, 460.0f
+            , 45.0f, 45.0f
+            , 1.0f, 1.0f, 1.0f, 1.0f
+        );
         shader->End(rc);
     }
 }

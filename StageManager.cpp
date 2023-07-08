@@ -464,11 +464,11 @@ void StageManager::UpdateBreakTime(float elapsedFrame, Player* player)
             player->AddScore(StageClearcBonus[stageNo]);    // ステージクリア報酬
             stageNo++;                                      // 次のステージに切り替え
             IsBreakTime = true;
-            breakTime_End = doneStageNum + Stage::StageDepthMax;
+            breakTime_End = doneStageNum + MaxBreakTime;
         }
 
         // ステージの生成再開
-        if (IsBreakTime && breakTime_End - (Stage::StageDepthMax - 1) <= doneStageNum)
+        if (IsBreakTime && breakTime_End - MaxBreakTime <= doneStageNum)
         {
             IsSpawnNone = false;
         }
