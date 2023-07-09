@@ -40,12 +40,13 @@ private:
     };
 
     // ステージが切り替わる境目
-    static constexpr int StageChangeLine[Stage::StageMax - 1] =
+    static constexpr int StageChangeLine[Stage::StageMax] =
     {
-        12,      // ステージ2切り替え
-        12,      // ステージ3切り替え
-        12,      // ステージ4切り替え
-        12,      // ステージ5切り替え
+        5,      // ステージ2切り替え
+        5,      // ステージ3切り替え
+        5,      // ステージ4切り替え
+        5,      // ステージ5切り替え
+        5,      // クリア
     };
 
     // 各ステージレベルでのスコアの常時加算量
@@ -116,14 +117,20 @@ public:
     void AddVelocity(float addVelocity,float timer);
 
     // プレイヤーが超えたステージの数を返す
-    int GetDoneStageNum() { return doneStageNum; }
+    int GetDoneStageNum() const{ return doneStageNum; }
 
-    void setVelocityZ(int i) { stageScrollVelocity.z = i; }
+    void setVelocityZ(int i) {  stageScrollVelocity.z = i; }
 
-    float getVelocityZ() { return stageScrollVelocity.z; }
+    float getVelocityZ() const { return stageScrollVelocity.z; }
 
     // 今のステージ番号を返す
-    int GetStageNo() { return stageNo; }
+    int GetStageNo() const { return stageNo; }
+
+    // クリアフラグ取得
+    static bool const GetIsClear() { return IsClear; }
+
+    // クリアフラグを折る
+    static void FoldIsClear() { IsClear = false; }
 
 private:
     // ステージの更新
@@ -185,6 +192,8 @@ private:
     int breakTime = 0;                                                   // 休憩タイマー
     int breakTime_State = 0;                                             // ブレイクタイム開始するステージ
     int breakTime_End = 0;                                               // ブレイクタイム終了するステージ
+    bool IsClearVerge = false;                                           // クリア目前フラグ
+    static bool IsClear;                                                // クリアフラグ
 
     float moveVecX = 0.0f;                                              // 移動方向ベクトル
     float maxPlayerVelocity = 20.0f;                                    // プレイヤーの最大速度

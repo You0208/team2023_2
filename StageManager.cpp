@@ -4,6 +4,7 @@
 #include <Input/Input.h>
 
 int StageManager::stageNo = 0;
+bool StageManager::IsClear = false;
 
 // コンストラクタ
 StageManager::StageManager()
@@ -447,13 +448,15 @@ void StageManager::SetBreakTime_State()
     //　ブレイクタイムは以下の処理をしない
     if (IsBreakTime) return;
 
-    for (int i = stageNo ;i < Stage::StageMax - 1;++i)
+    for (int i = stageNo ;i < Stage::StageMax;++i)
     {
         if (doneStageNum >= StageChangeLine[i] - (Stage::StageDepthMax - 1))    // 1枚は自機の後ろに行くので
         {
             IsSpawnNone_Depth = true;
             IsSpawnNone_Side = true;
             breakTime_State = StageChangeLine[i];
+            // クリア目前ならフラグを立てる
+            if (i == Stage::StageMax - 1)IsClearVerge = true;
             break;
         }
     }       
@@ -467,14 +470,24 @@ void StageManager::UpdateBreakTime(float elapsedFrame, Player* player)
         // ブレイクタイム開始するステージを超えた　かつ　ブレイクタイムでないとき
         if (!IsBreakTime && breakTime_State <= doneStageNum)
         {
-            player->AddScore(StageClearcBonus[stageNo]);    // ステージクリア報酬
-            stageNo++;                                      // 次のステージに切り替え
-            IsBreakTime = true;
             breakTime_End = doneStageNum + MaxBreakTime;
+            IsBreakTime = true;
+            
+            // クリアした場合
+            if (IsClearVerge)
+            {
+                IsClear = true;
+            }
+            // 次のステージに進む場合
+            else
+            {
+                stageNo++;                                      // 次のステージに切り替え
+                player->AddScore(StageClearcBonus[stageNo]);    // ステージクリア報酬
+            }
         }
 
-        // ステージの生成再開
-        if (IsBreakTime && breakTime_End - MaxBreakTime <= doneStageNum)
+        // ステージの生成再開(クリアした場合再開しない)
+        if (IsBreakTime && breakTime_End - MaxBreakTime <= doneStageNum && !IsClear)
         {
             IsSpawnNone_Depth = false;
         }

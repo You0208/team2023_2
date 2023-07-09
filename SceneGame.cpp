@@ -1248,7 +1248,7 @@ void SceneGame::CollisionObsVsObs()
 
 void SceneGame::IsClear()
 {
-	if (stageManager->GetStageNo() == 5 && stageManager->GetDoneStageNum() >= 12)
+	if (stageManager->GetIsClear())
 	{
 		TransClear = true;
 		postprocessingRenderer->setThreshold(0.0f);
@@ -1501,16 +1501,18 @@ void SceneGame::UpdateStageUI()
 	// 速度
 	float speed = 10.0f;
 
-	// 休憩フラグが立っているとき
-	if (stageManager->IsBreakTime)
+	// クリアしていないときだけ処理する
+	if (!StageManager::GetIsClear())
 	{
-		StageUI_Position.x = lerp<float>(StageUI_Position.x,dx_end,0.05f);
-
-		// アニメーションしたい
-	}
-	if (!stageManager->IsBreakTime)
-	{
-		StageUI_Position.x = lerp<float>(StageUI_Position.x, screen_width, 0.05f);
+		// 休憩フラグが立っているとき
+		if (stageManager->IsBreakTime)
+		{
+			StageUI_Position.x = lerp<float>(StageUI_Position.x, dx_end, 0.05f);
+		}
+		if (!stageManager->IsBreakTime)
+		{
+			StageUI_Position.x = lerp<float>(StageUI_Position.x, screen_width, 0.05f);
+		}
 	}
 
 	// 背景
