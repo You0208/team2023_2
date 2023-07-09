@@ -185,6 +185,7 @@ public:
 
     // デバッグのためにpublicにおいてる
     static bool IsClear;                                                // クリアフラグ
+    static bool Endless;                                                 // エンドレスモードフラグ
 private:
     // ステージデータ
     DirectX::XMFLOAT3 stageScrollVelocity = { 0.0f,0.0f ,-10.0f };      // 共通のスクロール速度のポインタ
@@ -202,8 +203,7 @@ private:
     int breakTime_State = 0;                                             // ブレイクタイム開始するステージ
     int breakTime_End = 0;                                               // ブレイクタイム終了するステージ
     bool IsClearVerge = false;                                           // クリア目前フラグ
-    static bool Endless;                                                 // エンドレスモードフラグ
-
+    
     float moveVecX = 0.0f;                                              // 移動方向ベクトル
     float maxPlayerVelocity = 20.0f;                                    // プレイヤーの最大速度
     int doneStageNum        = 0;                                        // プレイヤーが超えたステージの数

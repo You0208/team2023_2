@@ -461,6 +461,7 @@ void SceneGame::Update(float elapsedTime)
 			//}
 			TransClear = true;
 			StageManager::IsClear = true;
+			StageManager::Endless = true;
 		}
 
 		if (cameraController->flag)

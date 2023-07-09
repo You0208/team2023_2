@@ -111,6 +111,8 @@ void SceneOver::Initialize()
     dissolveThreshold = 1.0f;
     edgeThreshold = 0.2f; // 縁の閾値
     edgeColor = { 1, 0, 0, 1 }; // 縁の色
+
+    selectNum = StageManager::GetEndless() ? 1 : 0;
 }
 
 // 終了化
@@ -141,8 +143,8 @@ void SceneOver::Update(float elapsedTime)
         s_selection->Play(false);   // SE再生
         selectNum++;
     }
-    if (selectNum > 2)selectNum = 0;
-    if (selectNum < 0)selectNum = 2;
+    if (selectNum > 2)selectNum = StageManager::GetEndless() ? 1 : 0;
+    if (selectNum < StageManager::GetEndless() ? 1 : 0)selectNum = 2;
     // selectNumの値に応じてiconPosXの要素を設定
     for (int i = 0; i < 3; i++)
     {
@@ -173,16 +175,19 @@ void SceneOver::Update(float elapsedTime)
             Point -= 100;   // 100ポイント使用
             SceneManager::Instance().IsSelect = false;
             SceneManager::Instance().IsNoneStage = true;
+            StageManager::FoldEndless();    // エンドレスフラグを折る
             SceneManager::Instance().ChangeScene(new SceneGame);
             break;
         case OVER_RE:
             StageManager::stageNo = 0;
             SceneManager::Instance().IsSelect = false;
             SceneManager::Instance().IsNoneStage = true;
+            StageManager::FoldEndless();    // エンドレスフラグを折る
             SceneManager::Instance().ChangeScene(new SceneGame);
             break;
         case OVER_TITLE:
             SceneManager::Instance().IsSelect = true;
+            StageManager::FoldEndless();    // エンドレスフラグを折る
             SceneManager::Instance().ChangeScene(new SceneTitle);
             break;
         }
@@ -232,7 +237,12 @@ void SceneOver::Update(float elapsedTime)
         0.0f, 0.0f,
         static_cast<float>(t_100p->GetWidth()), static_cast<float>(t_100p->GetHeight()),
         0.0f,
-        1.0f, 1.0f, 1.0f, 1.0f);
+    //　色
+        StageManager::GetEndless() ? 0.5f : 1.0f,
+        StageManager::GetEndless() ? 0.5f : 1.0f,
+        StageManager::GetEndless() ? 0.5f : 1.0f,
+        1.0f
+    );
 
     s_over->Update(235.0f, 130.0f,
         static_cast<float>(t_over->GetWidth()), static_cast<float>(t_over->GetHeight()),
