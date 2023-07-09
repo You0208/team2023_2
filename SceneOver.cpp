@@ -112,7 +112,11 @@ void SceneOver::Initialize()
     edgeThreshold = 0.2f; // 縁の閾値
     edgeColor = { 1, 0, 0, 1 }; // 縁の色
 
-    selectNum = StageManager::GetEndless() ? 1 : 0;
+    NotUseOVER_100 = (
+        (StageManager::GetEndless())
+        || (StageManager::stageNo == 0)
+        );
+    selectNum = NotUseOVER_100 ? 1 : 0;
 }
 
 // 終了化
@@ -143,8 +147,8 @@ void SceneOver::Update(float elapsedTime)
         s_selection->Play(false);   // SE再生
         selectNum++;
     }
-    if (selectNum > 2)selectNum = StageManager::GetEndless() ? 1 : 0;
-    if (selectNum < StageManager::GetEndless() ? 1 : 0)selectNum = 2;
+    if (selectNum > 2)selectNum = NotUseOVER_100 ? 1 : 0;
+    if (selectNum < NotUseOVER_100 ? 1 : 0)selectNum = 2;
     // selectNumの値に応じてiconPosXの要素を設定
     for (int i = 0; i < 3; i++)
     {
@@ -160,6 +164,10 @@ void SceneOver::Update(float elapsedTime)
 
     if (gamePad.GetButtonDown() & GamePad::BTN_B)
     {
+        s_choice->Stop();
+        s_choice->Play(false);
+        // 復活に必要なポイントが足らない場合はretrunする
+        if (selectNum == OVER_100 && Point < 100) return;
         isNext = true;
     }
     if (dissolveThreshold >= 1.0f)
@@ -167,9 +175,6 @@ void SceneOver::Update(float elapsedTime)
         switch (selectNum)
         {
         case OVER_100:
-        s_choice->Stop();
-        s_choice->Play(false);
-            if (Point < 100) return;
             if(addPointPerformState != AddPointPerformState::end) Point += addPoint;
 
             Point -= 100;   // 100ポイント使用
@@ -238,9 +243,9 @@ void SceneOver::Update(float elapsedTime)
         static_cast<float>(t_100p->GetWidth()), static_cast<float>(t_100p->GetHeight()),
         0.0f,
     //　色
-        StageManager::GetEndless() ? 0.5f : 1.0f,
-        StageManager::GetEndless() ? 0.5f : 1.0f,
-        StageManager::GetEndless() ? 0.5f : 1.0f,
+        NotUseOVER_100 ? 0.5f : 1.0f,
+        NotUseOVER_100 ? 0.5f : 1.0f,
+        NotUseOVER_100 ? 0.5f : 1.0f,
         1.0f
     );
 
