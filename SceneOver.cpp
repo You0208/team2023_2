@@ -88,9 +88,16 @@ void SceneOver::Initialize()
     s_point = std::make_unique<Sprite>();
     s_point->SetShaderResourceView(t_point->GetShaderResourceView(), t_point->GetWidth(), t_point->GetHeight());
 
+    // 黒
+    // スプライト初期化
+    t_black = std::make_unique<Texture>("Data/Texture/black.png");
+    // スプライト
+    s_black = std::make_unique<Sprite>();
+    s_black->SetShaderResourceView(t_black->GetShaderResourceView(), t_black->GetWidth(), t_black->GetHeight());
+
 
     // マスクテクスチャの読み込み
-    maskTexture = std::make_unique<Texture>("Data/Texture/dissolve_animation.png");
+    maskTexture = std::make_unique<Texture>("Data/Texture/dissolve.png");
     dissolveThreshold = 1.0f;
     edgeThreshold = 0.2f; // 縁の閾値
     edgeColor = { 1, 0, 0, 1 }; // 縁の色
@@ -104,6 +111,10 @@ void SceneOver::Finalize()
 // 更新処理
 void SceneOver::Update(float elapsedTime)
 {
+    if(!isNext)dissolveThreshold -= 1.0 * elapsedTime;
+    if (dissolveThreshold <= 0.0f)dissolveThreshold = 0.0f;
+    if (isNext)dissolveThreshold += 1.0 * elapsedTime;
+
     GamePad& gamePad = Input::Instance().GetGamePad();
     // アイコン選択処理
     if (gamePad.GetButtonDown() & GamePad::BTN_UP)
@@ -135,10 +146,13 @@ void SceneOver::Update(float elapsedTime)
 
     if (gamePad.GetButtonDown() & GamePad::BTN_B)
     {
+        isNext = true;
+    }
+    if (dissolveThreshold >= 1.0f)
+    {
         switch (selectNum)
         {
         case OVER_100:
-
             SceneManager::Instance().IsSelect = false;
             SceneManager::Instance().IsNoneStage = true;
             SceneManager::Instance().ChangeScene(new SceneGame);
@@ -155,10 +169,16 @@ void SceneOver::Update(float elapsedTime)
         }
     }
 
-
     //-------------------------------------------------------------------------------------------------------
     // ↓　この下はシェーダー関連
     //-------------------------------------------------------------------------------------------------------
+
+    s_black->Update(0.0f, 0.0f,
+        Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
+        0.0f, 0.0f,
+        static_cast<float>(t_black->GetWidth()), static_cast<float>(t_black->GetHeight()),
+        0.0f,
+        1.0f, 1.0f, 1.0f, 1.0f);
 
     s_result->Update(1300.0f, 300.0f,
         static_cast<float>(t_result->GetWidth()), static_cast<float>(t_result->GetHeight()),
@@ -257,5 +277,12 @@ void SceneOver::Render()
         shader->Draw(rc, s_title.get());
         shader->Draw(rc, s_restart.get());
         shader->End(rc);
+
+        rc.maskData.maskTexture = maskTexture->GetShaderResourceView().Get();
+        rc.maskData.dissolveThreshold = dissolveThreshold;
+        SpriteShader* shader_mask = graphics.GetShader(SpriteShaderId::Mask);
+        shader_mask->Begin(rc);
+        shader_mask->Draw(rc, s_black.get());
+        shader_mask->End(rc);
     }
 }

@@ -45,4 +45,10 @@ private:
     float angle = 0.0f;
     Scene* nextScene = nullptr;
     std::thread* thread = nullptr;
+
+    // マスク画像
+    std::unique_ptr<Texture> maskTexture;
+    float dissolveThreshold;
+    float edgeThreshold; // 縁の閾値
+    DirectX::XMFLOAT4 edgeColor; // 縁の色
 };

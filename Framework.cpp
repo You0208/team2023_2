@@ -40,7 +40,7 @@ Framework::Framework(HWND hWnd)
 	EffectManager::Instance().Initialize();
 
 	// シーン初期化
-	SceneManager::Instance().ChangeScene(new SceneTitle);
+	SceneManager::Instance().ChangeScene(new SceneGame);
 }
 
 // デストラクタ
@@ -172,7 +172,10 @@ LRESULT CALLBACK Framework::HandleMessage(HWND hWnd, UINT msg, WPARAM wParam, LP
 	case WM_CREATE:
 		break;
 	case WM_KEYDOWN:
-		if (wParam == VK_ESCAPE) PostMessage(hWnd, WM_CLOSE, 0, 0);
+		if (!SceneManager::Instance().NotFinish)
+		{
+			if (wParam == VK_ESCAPE) PostMessage(hWnd, WM_CLOSE, 0, 0);
+		}
 		if (SceneManager::Instance().IsFinishAll)PostMessage(hWnd, WM_CLOSE, 0, 0);
 		break;
 	case WM_ENTERSIZEMOVE:

@@ -45,7 +45,7 @@ void SceneTitle::Initialize()
     s_start->SetShaderResourceView(t_start->GetShaderResourceView(), t_start->GetWidth(), t_start->GetHeight());
 
     // マスクテクスチャの読み込み
-    maskTexture = std::make_unique<Texture>("Data/Texture/dissolve_animation.png");
+    maskTexture = std::make_unique<Texture>("Data/Texture/dissolve.png");
     dissolveThreshold = 1.0f;
     edgeThreshold = 0.2f; // 縁の閾値
     edgeColor = { 1, 0, 0, 1 }; // 縁の色
@@ -68,6 +68,9 @@ void SceneTitle::Finalize()
 // 更新処理
 void SceneTitle::Update(float elapsedTime)
 {
+    dissolveThreshold -= 1.0 * elapsedTime;
+    if (dissolveThreshold <= 0.0f)dissolveThreshold = 0.0f;
+
     GamePad& gamePad = Input::Instance().GetGamePad();
 
     // 何かボタンを押したらゲームシーンの切り替え
@@ -107,8 +110,8 @@ void SceneTitle::Update(float elapsedTime)
     }
     else
     {
-        Trans_A += 1.0 * elapsedTime;
-        if (Trans_A >= 1.0f)
+        dissolveThreshold += 1.0 * elapsedTime;
+        if (dissolveThreshold >= 1.0f)
             SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
     }
 
@@ -117,7 +120,7 @@ void SceneTitle::Update(float elapsedTime)
         0.0f, 0.0f,
         static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight()),
         0.0f,
-        1.0f, 1.0f, 1.0f, Trans_A);
+        1.0f, 1.0f, 1.0f, 1.0f);
 
     // 背景
     s_back->Update(0.0f, 0.0f,
@@ -179,6 +182,8 @@ void SceneTitle::Render()
     RenderContext rc;
     rc.deviceContext = dc;
 
+
+
     // 2Dスプライト描画
     {
         SpriteShader* shader = graphics.GetShader(SpriteShaderId::Default);
@@ -188,7 +193,25 @@ void SceneTitle::Render()
         shader->Draw(rc, s_hamu.get());
         shader->Draw(rc, s_logo.get());
         shader->Draw(rc, s_start.get());
-        shader->Draw(rc, sprite.get());
+        //shader->Draw(rc, sprite.get());
         shader->End(rc);
+
+
+        rc.maskData.maskTexture = maskTexture->GetShaderResourceView().Get();
+        rc.maskData.dissolveThreshold = dissolveThreshold;
+        SpriteShader* shader_mask = graphics.GetShader(SpriteShaderId::Mask);
+        shader_mask->Begin(rc);
+        shader_mask->Draw(rc, sprite.get());
+        shader_mask->End(rc);
+    }
+
+    // デバッグ情報の表示
+    {
+        ImGui::Separator();
+        if (ImGui::TreeNode("Mask"))
+        {
+            ImGui::SliderFloat("Dissolve Threshold", &dissolveThreshold, 0.0f, 1.0f);
+            ImGui::TreePop();
+        }
     }
 }

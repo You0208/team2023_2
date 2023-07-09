@@ -54,12 +54,17 @@ private:
     std::unique_ptr<Sprite>	s_title;
     std::unique_ptr<Texture> t_title;
 
+    std::unique_ptr<Sprite>	s_black;
+    std::unique_ptr<Texture> t_black;
+
     float Theta = 0.0f;
     float HamuY = 400.0f;
     float time = 0;
 
     float iconPosX[2] = { 1200.0f,1200.0f };
     int selectNum = 0;
+
+    bool IsNext = false;
 
     // UVスクロールデータ
     UVScrollData uvScrollData;

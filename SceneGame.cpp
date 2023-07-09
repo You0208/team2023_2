@@ -43,47 +43,6 @@ void SceneGame::Initialize()
 	// 空初期設定
 	sky = new Sky();
 
-	// fonts
-	// フォント読み込み
-	texture_fonts[0] = std::make_unique<Texture>("Data/fonts/font0.png");
-	texture_fonts[1] = std::make_unique<Texture>("Data/fonts/font1.png");
-	texture_fonts[2] = std::make_unique<Texture>("Data/fonts/font2.png");
-	texture_fonts[3] = std::make_unique<Texture>("Data/fonts/font3.png");
-	texture_fonts[4] = std::make_unique<Texture>("Data/fonts/font4.png");
-	texture_fonts[5] = std::make_unique<Texture>("Data/fonts/font5.png");
-	texture_fonts[6] = std::make_unique<Texture>("Data/fonts/font6.png");
-	for (int i = 0; i < 7; ++i)
-	{
-		text[i] = std::make_unique<Text>();
-		text[i]->SetShaderResourceView(texture_fonts[i]->GetShaderResourceView(),
-			texture_fonts[i]->GetWidth(), texture_fonts[i]->GetHeight());
-	}
-	texture_fonts_number = std::make_unique<Texture>("Data/fonts/font7.png");
-	text_number = std::make_unique<Text>();
-	text_number->SetShaderResourceView(texture_fonts_number->GetShaderResourceView(),
-		texture_fonts_number->GetWidth(), texture_fonts_number->GetHeight());
-
-
-	// 空腹ゲージのフレーム設定
-	texture_hungerGageFrame = std::make_unique<Texture>("Data/Texture/UI/GaugeUI.png");
-	sprite_hungerGageFrame = std::make_unique<Sprite>();
-	sprite_hungerGageFrame->SetShaderResourceView(texture_hungerGageFrame->GetShaderResourceView(),
-		texture_hungerGageFrame->GetWidth(), texture_hungerGageFrame->GetHeight());
-	// 空腹ゲージ設定
-	texture_hungerGage = std::make_unique<Texture>("Data/Texture/UI/white.png");
-	sprite_hungerGage = std::make_unique<Sprite>();
-	sprite_hungerGage->SetShaderResourceView(texture_hungerGage->GetShaderResourceView(),
-		texture_hungerGage->GetWidth(), texture_hungerGage->GetHeight());
-	// 空腹ゲージの背景設定
-	sprite_hungerGageBack = std::make_unique<Sprite>();
-	sprite_hungerGageBack->SetShaderResourceView(texture_hungerGage->GetShaderResourceView(),
-		texture_hungerGage->GetWidth(), texture_hungerGage->GetHeight());
-
-	// ステージレベル看板
-	texture_StageUI = std::make_unique<Texture>("Data/Texture/UI/StageUI_sheet.png");
-	sprite_StageUI = std::make_unique<Sprite>();
-	sprite_StageUI->SetShaderResourceView(texture_StageUI->GetShaderResourceView(),
-		texture_StageUI->GetWidth(), texture_StageUI->GetHeight());
 
 	// ステージマネージャー初期設定
 	stageManager = new StageManager;
@@ -143,6 +102,47 @@ void SceneGame::Initialize()
 	//-------------------------------------------------------------------------------------------------------
 	// ↓　この下はシェーダー関連
 	//-------------------------------------------------------------------------------------------------------
+	// fonts
+	// フォント読み込み
+	texture_fonts[0] = std::make_unique<Texture>("Data/fonts/font0.png");
+	texture_fonts[1] = std::make_unique<Texture>("Data/fonts/font1.png");
+	texture_fonts[2] = std::make_unique<Texture>("Data/fonts/font2.png");
+	texture_fonts[3] = std::make_unique<Texture>("Data/fonts/font3.png");
+	texture_fonts[4] = std::make_unique<Texture>("Data/fonts/font4.png");
+	texture_fonts[5] = std::make_unique<Texture>("Data/fonts/font5.png");
+	texture_fonts[6] = std::make_unique<Texture>("Data/fonts/font6.png");
+	for (int i = 0; i < 7; ++i)
+	{
+		text[i] = std::make_unique<Text>();
+		text[i]->SetShaderResourceView(texture_fonts[i]->GetShaderResourceView(),
+			texture_fonts[i]->GetWidth(), texture_fonts[i]->GetHeight());
+	}
+	texture_fonts_number = std::make_unique<Texture>("Data/fonts/font7.png");
+	text_number = std::make_unique<Text>();
+	text_number->SetShaderResourceView(texture_fonts_number->GetShaderResourceView(),
+		texture_fonts_number->GetWidth(), texture_fonts_number->GetHeight());
+
+
+	// 空腹ゲージのフレーム設定
+	texture_hungerGageFrame = std::make_unique<Texture>("Data/Texture/UI/GaugeUI.png");
+	sprite_hungerGageFrame = std::make_unique<Sprite>();
+	sprite_hungerGageFrame->SetShaderResourceView(texture_hungerGageFrame->GetShaderResourceView(),
+		texture_hungerGageFrame->GetWidth(), texture_hungerGageFrame->GetHeight());
+	// 空腹ゲージ設定
+	texture_hungerGage = std::make_unique<Texture>("Data/Texture/UI/white.png");
+	sprite_hungerGage = std::make_unique<Sprite>();
+	sprite_hungerGage->SetShaderResourceView(texture_hungerGage->GetShaderResourceView(),
+		texture_hungerGage->GetWidth(), texture_hungerGage->GetHeight());
+	// 空腹ゲージの背景設定
+	sprite_hungerGageBack = std::make_unique<Sprite>();
+	sprite_hungerGageBack->SetShaderResourceView(texture_hungerGage->GetShaderResourceView(),
+		texture_hungerGage->GetWidth(), texture_hungerGage->GetHeight());
+
+	// ステージレベル看板
+	texture_StageUI = std::make_unique<Texture>("Data/Texture/UI/StageUI_sheet.png");
+	sprite_StageUI = std::make_unique<Sprite>();
+	sprite_StageUI->SetShaderResourceView(texture_StageUI->GetShaderResourceView(),
+		texture_StageUI->GetWidth(), texture_StageUI->GetHeight());
 	// テクスチャを読み込む
 	texture = std::make_unique<Texture>("Data/Texture/titleFrame.png");
 	// スプライト
@@ -190,11 +190,18 @@ void SceneGame::Initialize()
 	s_score = std::make_unique<Sprite>();
 	s_score->SetShaderResourceView(t_score->GetShaderResourceView(), t_score->GetWidth(), t_score->GetHeight());
 
+	// 黒
+	// スプライト初期化
+	t_black = std::make_unique<Texture>("Data/Texture/black.png");
+	// スプライト
+	s_black = std::make_unique<Sprite>();
+	s_black->SetShaderResourceView(t_black->GetShaderResourceView(), t_black->GetWidth(), t_black->GetHeight());
+
 
 
 	// マスクテクスチャの読み込み
-	maskTexture = std::make_unique<Texture>("Data/Texture/dissolve_animation.png");
-	dissolveThreshold = 0.0f;
+	maskTexture = std::make_unique<Texture>("Data/Texture/dissolve.png");
+	dissolveThreshold = 1.0f;
 	edgeThreshold = 0.2f; // 縁の閾値
 	edgeColor = { 1, 0, 0, 1 }; // 縁の色
 
@@ -275,16 +282,22 @@ void SceneGame::Finalize()
 // 更新処理
 void SceneGame::Update(float elapsedTime)
 {
+	if(!player->IsDeath && !player->Gashi)dissolveThreshold -= 1.0 * elapsedTime;
+	if (dissolveThreshold <= 0.0f)dissolveThreshold = 0.0f;
+
 	if (IsRule)
 	{
+		SceneManager::Instance().NotFinish = true;
 		RuleUpdate(elapsedTime);
 	}
 	else if (SceneManager::Instance().IsSelect)
 	{
+		SceneManager::Instance().NotFinish = true;
 		SelectUpdate(elapsedTime);
 	}
 	else
 	{
+		SceneManager::Instance().NotFinish = false;
 		b_game->Play(true);
 
 		// ポーズ処理
@@ -363,10 +376,14 @@ void SceneGame::Update(float elapsedTime)
 		if (player->IsDeath || player->Gashi)
 		{
 			DeathTimer++;
-			if (DeathTimer >= 800)
+			if (DeathTimer >=600)
 			{
-				IsSePlay = false;
-				SceneManager::Instance().ChangeScene(new SceneOver);
+				dissolveThreshold += 1.0 * elapsedTime;
+				if (dissolveThreshold >= 1.0f)
+				{
+					IsSePlay = false;
+					SceneManager::Instance().ChangeScene(new SceneOver);
+				}
 			}
 		}
 	}
@@ -376,6 +393,14 @@ void SceneGame::Update(float elapsedTime)
 	//-------------------------------------------------------------------------------------------------------
 	// ↓　この下はシェーダー関連
 	//-------------------------------------------------------------------------------------------------------
+
+
+	s_black->Update(0.0f, 0.0f,
+		Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
+		0.0f, 0.0f,
+		static_cast<float>(t_black->GetWidth()), static_cast<float>(t_black->GetHeight()),
+		0.0f,
+		1.0f, 1.0f, 1.0f, 1.0f);
 
 	sprite->Update(0.0f, rulePos,
 		static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight()),
@@ -523,7 +548,7 @@ void SceneGame::Render()
 		if (IsRule)	shader->Draw(rc, sprite.get());
 
 		shader->End(rc);
-
+		
 		// デバッグ情報の表示
 		{
 			ImGui::Separator();
@@ -604,6 +629,15 @@ void SceneGame::Render()
 			}
 
 			ImGui::Separator();
+		}
+
+		{
+			rc.maskData.maskTexture = maskTexture->GetShaderResourceView().Get();
+			rc.maskData.dissolveThreshold = dissolveThreshold;
+			SpriteShader* shader_mask = graphics.GetShader(SpriteShaderId::Mask);
+			shader_mask->Begin(rc);
+			shader_mask->Draw(rc, s_black.get());
+			shader_mask->End(rc);
 		}
 
 	}
@@ -798,12 +832,15 @@ void SceneGame::SelectUpdate(float elapsedTime)
 				range = cameraController->getRange();
 				rotation = player->GetAngle().y;
 				isTrans = true;
+				SceneManager::Instance().NotFinish = false;
 				break;
 			case SELECT_RULE:
 				IsRule = true;
 				ruleIn = true;
+				SceneManager::Instance().NotFinish = false;
 				break;
 			case SELECT_FIN:
+				SceneManager::Instance().NotFinish = false;
 				SceneManager::Instance().IsFinishAll = true;
 				break;
 			}
@@ -860,12 +897,12 @@ void SceneGame::RuleUpdate(float elapsedTime)
 	// カメラ更新処理
 	cameraController->Update(elapsedTime);
 	// プレイヤー更新処理
-	player->Update(elapsedTime);
+	player->SelectUpdate(elapsedTime);
 	if(!ruleIn&&!ruleOut)
 	{
 		// ポーズ処理
 		GamePad& gamePad = Input::Instance().GetGamePad();
-		if (gamePad.GetButtonDown() & GamePad::BTN_A)
+		if (GetAsyncKeyState(VK_ESCAPE) & 0x8000)
 			ruleOut=true;
 	}
 }

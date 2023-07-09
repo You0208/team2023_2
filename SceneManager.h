@@ -34,6 +34,7 @@ public:
     bool IsSelect = true;
 
     bool IsFinishAll = false;
+    bool NotFinish = false;
 private:
     Scene* currentScene = nullptr;
     Scene* nextScene = nullptr;

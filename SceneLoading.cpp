@@ -11,6 +11,21 @@ void SceneLoading::Initialize()
     // スプライト
     sprite = std::make_unique<Sprite>();
     sprite->SetShaderResourceView(texture->GetShaderResourceView(), texture->GetWidth(), texture->GetHeight());
+
+
+    // テクスチャを読み込む
+    t_black = std::make_unique<Texture>("Data/Texture/black.png");
+    // スプライト
+    s_black = std::make_unique<Sprite>();
+    s_black->SetShaderResourceView(t_black->GetShaderResourceView(), t_black->GetWidth(), t_black->GetHeight());
+
+
+    // マスクテクスチャの読み込み
+    maskTexture = std::make_unique<Texture>("Data/Texture/dissolve.png");
+    dissolveThreshold = 1.0f;
+    edgeThreshold = 0.2f; // 縁の閾値
+    edgeColor = { 1, 0, 0, 1 }; // 縁の色
+
     // スレッド開始
     thread = new std::thread(LoadingThread, this);
 }
@@ -33,8 +48,8 @@ void SceneLoading::Update(float elapsedTime)
     constexpr float speed = 180;
     if (!next) {
         timer++;
-        Trans += 1.0 * elapsedTime;
-        if (Trans >= 1.0f)Trans = 1.0f;
+        dissolveThreshold -= 1.0 * elapsedTime;
+        if (dissolveThreshold <= 0.0f)dissolveThreshold = 0.0f;
 
         if (timer % 300 == 0)
         {
@@ -54,8 +69,8 @@ void SceneLoading::Update(float elapsedTime)
     }
     else
     {
-        Trans -= 1.0 * elapsedTime;
-        if (Trans <= 0.0f)
+        dissolveThreshold += 1.0 * elapsedTime;
+        if (dissolveThreshold >= 1.0f)
         {
             SceneManager::Instance().ChangeScene(nextScene);
             nextScene = nullptr;
@@ -67,7 +82,14 @@ void SceneLoading::Update(float elapsedTime)
         p_w, 0.0f,
         1920, static_cast<float>(texture->GetHeight()),
         angle,
-        1.0f, 1.0f, 1.0f, Trans);
+        1.0f, 1.0f, 1.0f, 1.0f);
+
+    s_black->Update(0.0f, 0.0f,
+        Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
+        p_w, 0.0f,
+        1920, static_cast<float>(t_black->GetHeight()),
+        angle,
+        1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 // 描画処理
@@ -94,6 +116,13 @@ void SceneLoading::Render()
         shader->Begin(rc);
         shader->Draw(rc, sprite.get());
         shader->End(rc);
+
+        rc.maskData.maskTexture = maskTexture->GetShaderResourceView().Get();
+        rc.maskData.dissolveThreshold = dissolveThreshold;
+        SpriteShader* shader_mask = graphics.GetShader(SpriteShaderId::Mask);
+        shader_mask->Begin(rc);
+        shader_mask->Draw(rc, s_black.get());
+        shader_mask->End(rc);
     }
 }
 

@@ -59,6 +59,9 @@ private:
     std::unique_ptr<Sprite>	s_restart;
     std::unique_ptr<Texture> t_restart;
 
+    std::unique_ptr<Sprite>	s_black;
+    std::unique_ptr<Texture> t_black;
+
 
     enum OverNum
     {
@@ -75,6 +78,7 @@ private:
     // マスク画像
     std::unique_ptr<Texture> maskTexture;
 
+    bool isNext = false;
     float dissolveThreshold;
     float edgeThreshold; // 縁の閾値
     DirectX::XMFLOAT4 edgeColor; // 縁の色

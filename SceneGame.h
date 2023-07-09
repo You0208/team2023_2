@@ -164,6 +164,11 @@ private:
 	std::unique_ptr<AudioSource> s_choice;		// 決定音
 	std::unique_ptr<AudioSource> s_selection;	// 選択音
 
+	
+	//-------------------------------------------------------------------------------------------------------
+	// ↓　この下はシェーダー関連
+	//-------------------------------------------------------------------------------------------------------
+
 	std::unique_ptr<Texture>	texture_hungerGage;			// 空腹ゲージのテクスチャ(白)
 	std::unique_ptr<Texture>	texture_hungerGageFrame;	// 空腹ゲージのフレームのテクスチャ
 	std::unique_ptr<Texture>	texture_StageUI;			// ステージレベルの看板のテクスチャ
@@ -175,10 +180,7 @@ private:
 	std::unique_ptr<Text>		text[7];					// フォント
 	std::unique_ptr<Texture>	texture_fonts_number;		// フォントテクスチャ(数字のみ)
 	std::unique_ptr<Text>		text_number;				// フォント(数字のみ)
-	
-	//-------------------------------------------------------------------------------------------------------
-	// ↓　この下はシェーダー関連
-	//-------------------------------------------------------------------------------------------------------
+
 	std::unique_ptr<Sprite>	sprite;
 	std::unique_ptr<Texture> texture;
 
@@ -199,6 +201,9 @@ private:
 
 	std::unique_ptr<Sprite>	s_score;
 	std::unique_ptr<Texture> t_score;
+
+	std::unique_ptr<Sprite>	s_black;
+	std::unique_ptr<Texture> t_black;
 
 	// UVスクロールデータ
 	UVScrollData uvScrollData;

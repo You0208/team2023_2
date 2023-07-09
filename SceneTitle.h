@@ -50,9 +50,6 @@ private:
     std::unique_ptr<AudioSource> s_choice;
 
     // UVスクロールデータ
-    UVScrollData uvScrollData;
-    // マスク画像
-    std::unique_ptr<Texture> maskTexture;
 
     float Trans = 0.0f;
     float Trans_A = 0.0f;
@@ -62,6 +59,9 @@ private:
 
     bool next = false;
 
+    UVScrollData uvScrollData;
+    // マスク画像
+    std::unique_ptr<Texture> maskTexture;
     float dissolveThreshold;
     float edgeThreshold; // 縁の閾値
     DirectX::XMFLOAT4 edgeColor; // 縁の色
