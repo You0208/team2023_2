@@ -380,9 +380,11 @@ Stage::AreaInfo Stage::RandSpawn(Stage::SpawnObstacleInfo* data)
 }
 
 // コンストラクタ（nはステージの種類）
-Stage::Stage(int stageNo)
+Stage::Stage(int stageNo, bool Endless)
 {
-    stageNo = (std::min)(stageNo, IsEndless ? (StageMax + 1) : StageMax);
+    IsEndless = Endless;
+
+    stageNo = (std::min)(stageNo, IsEndless ? StageMax : (StageMax - 1));
 
     //ステージモデルを読み込み
     //model = std::make_unique<Model>("Data/Model/Debug/cube.mdl");

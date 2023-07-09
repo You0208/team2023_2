@@ -50,13 +50,14 @@ private:
     };
 
     // 各ステージレベルでのスコアの常時加算量
-    static constexpr float MaxAlwaysAddScore[Stage::StageMax] =
+    static constexpr float MaxAlwaysAddScore[Stage::StageMax + 1] =
     {
         1.0f,       // ステージ:1
         2.0f,       // ステージ:2
         3.0f,       // ステージ:3
         4.0f,       // ステージ:4
-        5.0f        // ステージ:5
+        5.0f,        // ステージ:5
+        1.0f        // エンドレスモード
     };
     // 各空腹レベルでのスコアの常時加算量の倍率
     static constexpr float MaxAlwaysAddScoreMagnification[3] =
@@ -65,13 +66,15 @@ private:
         1.0f,       // 空腹レベル：中 
         0.5f        // 空腹レベル：高 
     };
-    static constexpr int StageClearcBonus[Stage::StageMax] =
+    // クリアボーナス
+    static constexpr int StageClearcBonus[Stage::StageMax + 1] =
     {
         100,       // ステージ:1
         200,       // ステージ:2
         300,       // ステージ:3
         400,       // ステージ:4
-        500        // ステージ:5
+        500,       // ステージ:5
+        0,         // エンドレスモード(バグ防止)
     };
 
     struct SpawnData
@@ -128,9 +131,13 @@ public:
 
     // クリアフラグ取得
     static bool const GetIsClear() { return IsClear; }
+    // エンドレスフラグ取得
+    static bool const GetEndless() { return Endless; }
 
     // クリアフラグを折る
     static void FoldIsClear() { IsClear = false; }
+    // エンドレスフラグを折る
+    static void FoldEndless() { Endless = false; }
 
 private:
     // ステージの更新
@@ -176,6 +183,8 @@ public:
     bool IsSpawnNone_Depth = false;                                     // 何もないステージを生成するフラグ(奥行)
     static int   stageNo;                                               // 現在のステージ
 
+    // デバッグのためにpublicにおいてる
+    static bool IsClear;                                                // クリアフラグ
 private:
     // ステージデータ
     DirectX::XMFLOAT3 stageScrollVelocity = { 0.0f,0.0f ,-10.0f };      // 共通のスクロール速度のポインタ
@@ -193,7 +202,7 @@ private:
     int breakTime_State = 0;                                             // ブレイクタイム開始するステージ
     int breakTime_End = 0;                                               // ブレイクタイム終了するステージ
     bool IsClearVerge = false;                                           // クリア目前フラグ
-    static bool IsClear;                                                // クリアフラグ
+    static bool Endless;                                                 // エンドレスモードフラグ
 
     float moveVecX = 0.0f;                                              // 移動方向ベクトル
     float maxPlayerVelocity = 20.0f;                                    // プレイヤーの最大速度

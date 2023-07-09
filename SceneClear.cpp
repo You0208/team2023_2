@@ -142,8 +142,15 @@ void SceneClear::Update(float elapsedTime)
         switch (selectNum)
         {
         case 0:
+            StageManager::stageNo = Stage::StageMax;
+            StageManager::FoldIsClear();    // クリアフラグを折る
+            SceneManager::Instance().IsSelect = false;
+            SceneManager::Instance().IsNoneStage = true;
+            SceneManager::Instance().ChangeScene(new SceneGame);
             break;
         case 1:
+            StageManager::FoldIsClear();    // クリアフラグを折る
+            StageManager::FoldEndless();    // エンドレスフラグを折る
             SceneManager::Instance().ChangeScene(new SceneTitle);
             break;
         }

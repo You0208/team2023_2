@@ -15,7 +15,7 @@ public:
     static constexpr float StageSize        = 500.0f;    //ステージのサイズ
 
 public:
-    Stage(int stageNo);
+    Stage(int stageNo,bool Endless);
     ~Stage();
 
     void DrawDebugGUI(){}
@@ -32,7 +32,7 @@ public:
     // アイテム・障害物の追加
     void AddObstacle(Obstacle* obstacle) { obstacles.emplace_back(obstacle); }
 
-    //エンドレスモードに挑戦できるフラグを折る
+    //エンドレスモードに挑戦できるフラグ
     void FoldIsEndless() { IsEndless = false; }
 
 private:

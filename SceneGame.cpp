@@ -460,6 +460,7 @@ void SceneGame::Update(float elapsedTime)
 			//	accelEffect->Play(e);
 			//}
 			TransClear = true;
+			StageManager::IsClear = true;
 		}
 
 		if (cameraController->flag)
@@ -1502,7 +1503,7 @@ void SceneGame::UpdateStageUI()
 	float speed = 10.0f;
 
 	// ƒNƒŠƒA‚µ‚Ä‚¢‚È‚¢‚Æ‚«‚¾‚¯ˆ—‚·‚é
-	if (!StageManager::GetIsClear())
+	if (!StageManager::GetIsClear() && !StageManager::GetEndless())
 	{
 		// ‹xŒeƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚é‚Æ‚«
 		if (stageManager->IsBreakTime)

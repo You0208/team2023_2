@@ -5,6 +5,7 @@
 
 int StageManager::stageNo = 0;
 bool StageManager::IsClear = false;
+bool StageManager::Endless = false;
 
 // コンストラクタ
 StageManager::StageManager()
@@ -194,8 +195,8 @@ void StageManager::StageSpawn(SpawnData data)
         // Stageの引き数が0以下の場合StageNONEが生成される
         ? -1 : stageNo;            
 
-    Stage* s = new Stage(No);                       //ステージを生成
-    s->SetPosition(data.position);                       // ここでステージのポジションを決める
+    Stage* s = new Stage(No, Endless);               //ステージを生成
+    s->SetPosition(data.position);                  // ここでステージのポジションを決める
     s->SetScrollVelocity(&stageScrollVelocity);     // 共通のスクロール速度を設定
     s->Initialize();                                // 障害物生成
     stages.emplace_back(s);                         // コンテナ追加
@@ -455,7 +456,7 @@ void StageManager::SetBreakTime_State()
             IsSpawnNone_Depth = true;
             IsSpawnNone_Side = true;
             breakTime_State = StageChangeLine[i];
-            // クリア目前ならフラグを立てる
+            // 次でステージクリアならフラグを立てる
             if (i == Stage::StageMax - 1)IsClearVerge = true;
             break;
         }
@@ -477,6 +478,7 @@ void StageManager::UpdateBreakTime(float elapsedFrame, Player* player)
             if (IsClearVerge)
             {
                 IsClear = true;
+                Endless = true;
             }
             // 次のステージに進む場合
             else
