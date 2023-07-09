@@ -33,6 +33,7 @@ public:
         // エフェクト終了
         if (ItemEffect != nullptr)
         {
+            ItemEffect->Stop(handle);
             delete ItemEffect;
             ItemEffect = nullptr;
         }
