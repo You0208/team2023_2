@@ -1,5 +1,26 @@
 #include "BaseStage.h"
 
+void BaseStage::GetDelete()
+{
+    //TODO　見直し
+    for (int i = 0; i < obstacles.size(); i++)
+    {
+        if (obstacles[i]->IsGet)
+        {
+            // エフェクト終了
+            if (obstacles[i]->ItemEffect != nullptr)
+            {
+                obstacles[i]->ItemEffect->Stop(obstacles[i]->handle);
+                delete obstacles[i]->ItemEffect;
+                obstacles[i]->ItemEffect = nullptr;
+            }
+            delete obstacles[i];
+            // 要素を削除する
+            obstacles.erase(obstacles.begin() + i);
+        }
+    }
+}
+
 // 初期化
 void BaseStage::clear()
 {

@@ -38,6 +38,9 @@ public:
     // セレクト用更新
     void SelectUpdate(float elapsedTime);
 
+    // クリア用更新
+    void ClearUpdate(float elapsedTime);
+
     //更新処理  
     void Update(float elapsedTime,bool IsSelect = false);
 

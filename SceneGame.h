@@ -37,6 +37,8 @@ public:
 	// 更新処理
 	void Update(float elapsedTime)override;
 
+	void PausedUpdate(float elapsedTime);
+
 	// 描画処理
 	void Render()override;
 
@@ -51,6 +53,9 @@ public:
 
 	// セレクト画面
 	void SelectUpdate(float elapsedTime);
+
+	// クリア画面遷移
+	void TransClearUpdate(float elapsedTime);
 
 	// ルール
 	void RuleUpdate(float elapsedTime);
@@ -70,6 +75,7 @@ public:
 	// 障害物と障害物の当たり判定
 	void CollisionObsVsObs();
 
+	void IsClear();
 private:
 	// 3D空間の描画
 	void Render3DScene();
@@ -91,6 +97,9 @@ private:
 	float accelFrame = 120.0f;
 	float p_w = 0.0f;
 
+	bool TransClear;
+	int ClearTimer = 0;
+
 	bool isTrans = false;// 遷移中か
 	DirectX::XMFLOAT3 target;// セレクト用
 	float range;// セレクト用
@@ -110,6 +119,15 @@ private:
 	float iconPosX[3] = { 1175.0f,1175.0f,1175.0f };
 	int selectNum = 0;
 
+	enum PauseNum
+	{
+		PAUSE_PLAY = 0,
+		PAUSE_RE,
+		PAUSE_TITLE
+	};
+	float iconPosX_p[3] = { 1200.0f,1200.0f,1200.0f };
+	int selectNum_p = 0;
+	bool PauseTrans = false;
 
 	// ルール用
 	bool IsRule;
@@ -184,6 +202,20 @@ private:
 
 	std::unique_ptr<Sprite>	s_black;
 	std::unique_ptr<Texture> t_black;
+
+	std::unique_ptr<Sprite>	s_black2;
+
+	std::unique_ptr<Sprite>	s_restart;
+	std::unique_ptr<Texture> t_restart;
+
+	std::unique_ptr<Sprite>	s_paused;
+	std::unique_ptr<Texture> t_paused;
+
+	std::unique_ptr<Sprite>	s_title;
+	std::unique_ptr<Texture> t_title;
+
+	std::unique_ptr<Sprite>	s_play2;
+	std::unique_ptr<Texture> t_play2;
 
 	// UVスクロールデータ
 	UVScrollData uvScrollData;

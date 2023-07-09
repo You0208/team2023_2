@@ -37,6 +37,18 @@ void Player::SelectUpdate(float elapsedTime)
     model->UpdateTransform(transform);
 }
 
+void Player::ClearUpdate(float elapsedTime)
+{
+    //オブジェクト行列を更新
+    UpdateTransform();
+
+    // モデルアニメーション更新処理
+    model->UpdateAnimation(elapsedTime);
+
+    //モデル行列更新
+    model->UpdateTransform(transform);
+}
+
 //更新処理
 void Player::Update(float elapsedTime, bool IsSelect)
 {

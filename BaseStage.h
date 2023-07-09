@@ -21,6 +21,9 @@ public:
     // 描画処理
     virtual void Draw(RenderContext rc, ModelShader* shader) = 0;
 
+    // ゲットしたものは消す
+    void GetDelete();
+
     void SetScrollVelocity(DirectX::XMFLOAT3* v) { scrollVelocity = v; };   // スクロール速度のポインタをセット
     void SetPosition(DirectX::XMFLOAT3 p) { position = p; }                 // 位置設定
     bool GetIsDestroy() { return isDestroy; }                               // 削除フラグ取得

@@ -99,6 +99,7 @@ public:
     int HitCheckTYpe = HIT_CHECK_TYPE::DEACTIVE;
     int CollisionNum = 0;
     bool IsHit = false;                                     // 対プレイヤー
+    bool IsGet = false;                                     // 対プレイヤー
     bool IsHitVsObs = false;                                // 対Obstacle
 protected:
     DirectX::XMFLOAT3   position        = { 0,0,0 };        // 位置
