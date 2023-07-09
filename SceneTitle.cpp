@@ -68,9 +68,6 @@ void SceneTitle::Finalize()
 // 更新処理
 void SceneTitle::Update(float elapsedTime)
 {
-    dissolveThreshold -= 1.0 * elapsedTime;
-    if (dissolveThreshold <= 0.0f)dissolveThreshold = 0.0f;
-
     GamePad& gamePad = Input::Instance().GetGamePad();
 
     // 何かボタンを押したらゲームシーンの切り替え
@@ -90,6 +87,9 @@ void SceneTitle::Update(float elapsedTime)
 
     if (!next)
     {
+        dissolveThreshold -= 1.0 * elapsedTime;
+        if (dissolveThreshold <= 0.0f)dissolveThreshold = 0.0f;
+
         HamuY += cosf(Theta) * 1.0f;
         Theta += 0.01f;
         time += 60.0f * elapsedTime;

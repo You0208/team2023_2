@@ -1248,7 +1248,7 @@ void SceneGame::CollisionObsVsObs()
 
 void SceneGame::IsClear()
 {
-	if (stageManager->GetStageNo() == 5 && stageManager->GetDoneStageNum() >= 12)
+	if (stageManager->GetStageNo() == 4 && stageManager->GetDoneStageNum() > 12)
 	{
 		TransClear = true;
 		postprocessingRenderer->setThreshold(0.0f);
