@@ -15,7 +15,7 @@ private:
     static constexpr float ScrollVelocityRate_ac = 0.001f;          // スクロール速度補間係数(加速状態)
     static constexpr float MaxVelocity = -300.0f;                   // Velocityの最大値
     static const int Gap = 2;                                       // プレイヤーの位置とステージを削除する位置の差
-    static const int MaxBreakTime = 3;                                       // 
+    static const int MaxBreakTime = 2;                                       // 
 
     // 各空腹レベルでのプレイヤーの最大速度
     static constexpr float MaxPlayerVelocity[3] =
@@ -73,6 +73,12 @@ private:
         500        // ステージ:5
     };
 
+    struct SpawnData
+    {
+        DirectX::XMFLOAT3 position;     // 生成位置
+        bool IsDepthSpawn;              // 生成原因
+    };
+
 public:
     StageManager();
     ~StageManager();
@@ -101,7 +107,7 @@ public:
     void Clear();
 
     // ステージ生成
-    void StageSpawn(DirectX::XMFLOAT3 position);
+    void StageSpawn(SpawnData data);
 
     // 地形生成
     void TerrainSpawn(DirectX::XMFLOAT3 position);
@@ -159,14 +165,15 @@ public:
     void UpdateScrollVelocity(DirectX::XMFLOAT3& ScrollVelocity,float maxVelocity,float rate);
 
     bool IsBreakTime = false;                                           // 休憩フラグ
-    bool IsSpawnNone = false;                                           // 何もないステージを生成するフラグ
-    static int   stageNo;                                        // 現在のステージ
+    bool IsSpawnNone_Side = false;                                      // 何もないステージを生成するフラグ(サイド)
+    bool IsSpawnNone_Depth = false;                                     // 何もないステージを生成するフラグ(奥行)
+    static int   stageNo;                                               // 現在のステージ
 
 private:
     // ステージデータ
     DirectX::XMFLOAT3 stageScrollVelocity = { 0.0f,0.0f ,-10.0f };      // 共通のスクロール速度のポインタ
     std::set<BaseStage*>                stageRemoves;                   // 削除リスト
-    std::vector<DirectX::XMFLOAT3>      stagesSpawns;                   // 生成リスト(位置だけ持っている)
+    std::vector<SpawnData>              stagesSpawns;                   // 生成リスト(位置だけ持っている)
 
     // 地形データ
     DirectX::XMFLOAT3 terrainScrollVelocity = { 0.0f,0.0f ,-10.0f };    // 共通のスクロール速度のポインタ

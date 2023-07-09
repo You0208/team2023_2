@@ -6,7 +6,8 @@
 #include "SceneOver.h"
 #include "SceneTitle.h"
 #include "Input/Input.h"
-
+#include "Player.h"
+#include "Tool.h"
 // 初期化
 void SceneOver::Initialize()
 {
@@ -18,6 +19,15 @@ void SceneOver::Initialize()
     s_choice->SetVolume(0.3f);
     s_selection = Audio::Instance().LoadAudioSource("Data/Audio/SE/Selection.wav");
     s_selection->SetVolume(1.0f);
+
+    // フォント
+    texture_fonts_number = std::make_unique<Texture>("Data/fonts/font7.png");
+    text_number = std::make_unique<Text>();
+    text_number->SetShaderResourceView(texture_fonts_number->GetShaderResourceView(),
+        texture_fonts_number->GetWidth(), texture_fonts_number->GetHeight());
+
+    // ポイントの加算
+    AddPoint();
 
     //-------------------------------------------------------------------------------------------------------
     // ↓　この下はシェーダー関連
@@ -114,6 +124,8 @@ void SceneOver::Update(float elapsedTime)
     if(!isNext)dissolveThreshold -= 1.0 * elapsedTime;
     if (dissolveThreshold <= 0.0f)dissolveThreshold = 0.0f;
     if (isNext)dissolveThreshold += 1.0 * elapsedTime;
+    // 追加ポイント演出
+    AddPointPerform();
 
     GamePad& gamePad = Input::Instance().GetGamePad();
     // アイコン選択処理
@@ -153,6 +165,12 @@ void SceneOver::Update(float elapsedTime)
         switch (selectNum)
         {
         case OVER_100:
+        s_choice->Stop();
+        s_choice->Play(false);
+            if (Point < 100) return;
+            if(addPointPerformState != AddPointPerformState::end) Point += addPoint;
+
+            Point -= 100;   // 100ポイント使用
             SceneManager::Instance().IsSelect = false;
             SceneManager::Instance().IsNoneStage = true;
             SceneManager::Instance().ChangeScene(new SceneGame);
@@ -164,6 +182,7 @@ void SceneOver::Update(float elapsedTime)
             SceneManager::Instance().ChangeScene(new SceneGame);
             break;
         case OVER_TITLE:
+            SceneManager::Instance().IsSelect = true;
             SceneManager::Instance().ChangeScene(new SceneTitle);
             break;
         }
@@ -245,6 +264,16 @@ void SceneOver::Update(float elapsedTime)
 
 }
 
+// テキスト位置デバッグ(位置決まれば削除する)
+float p_size = 45.0;
+DirectX::XMFLOAT2 s_pos = { 1350.0f, 460.0f };
+float s_size = 45.0;
+float ap_size = 45.0;
+float SceneOver::AddPointMoveAmount = 100.0f;
+float rate = 0.005f;
+int score = 0;
+bool debug = false;
+
 // 描画処理
 void SceneOver::Render()
 {
@@ -276,6 +305,27 @@ void SceneOver::Render()
         shader->Draw(rc, s_result.get());
         shader->Draw(rc, s_title.get());
         shader->Draw(rc, s_restart.get());
+        // スコア
+        text_number->textOut(rc
+            , debug ? score : Player::GetScore()
+            , s_pos.x, s_pos.y
+            , s_size, s_size
+            , 1.0f, 1.0f, 1.0f, 1.0f
+        );
+        // ポイント
+        text_number->textOut(rc
+            , Point
+            , p_pos.x, p_pos.y
+            , p_size, p_size
+            , 1.0f, 1.0f, 1.0f, 1.0f
+        );
+        // 追加ポイント
+        text_number->textOut(rc
+            , addPoint
+            , p_pos.x, ap_pos.y
+            , ap_size, ap_size
+            , ap_color.x, ap_color.y, ap_color.z, ap_color.w
+        );
         shader->End(rc);
 
         rc.maskData.maskTexture = maskTexture->GetShaderResourceView().Get();
@@ -285,4 +335,95 @@ void SceneOver::Render()
         shader_mask->Draw(rc, s_black.get());
         shader_mask->End(rc);
     }
+    // デバッグ情報の表示
+    {
+        if (ImGui::Begin("Text", nullptr, ImGuiWindowFlags_None))
+        {
+            if (ImGui::CollapsingHeader("Score", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                ImGui::SliderFloat("s_posX", &s_pos.x, 0.0f, 1920.0f);
+                ap_pos.x = s_pos.x;
+                ImGui::SliderFloat("s_posY", &s_pos.y, 0.0f, 1080.0f);
+                ImGui::SliderFloat("s_size", &s_size, 30.0f, 80.0f);
+                ImGui::InputInt("score", &score);
+            }
+            if (ImGui::CollapsingHeader("Point", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                ImGui::SliderFloat("p_posX", &p_pos.x, 0.0f, 1920.0f);
+                ImGui::SliderFloat("p_posY", &p_pos.y, 0.0f, 1080.0f);
+                ImGui::SliderInt("Point", &Point,0, 100000);
+                if(ImGui::Button("AddPoint"))
+                {
+                    Point += 100;
+                }
+            }
+            if (ImGui::CollapsingHeader("AddPoint", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                ImGui::SliderFloat("ap_posY", &ap_pos.y, 0.0f, 1080.0f);
+                ImGui::SliderFloat("ap_size", &ap_size, 10.0f, 80.0f);
+                ImGui::InputFloat("addPointMoveAmount", &AddPointMoveAmount);
+                ImGui::InputFloat("rate", &rate);
+                if (ImGui::Button("Perform"))
+                {
+                    addPointPerformState = AddPointPerformState::begin;
+                }
+            }
+            ImGui::Checkbox("debug", &debug);
+        }
+        ImGui::End();
+    }
+}
+
+// ポイントの加算
+bool SceneOver::AddPoint()
+{
+    int add = Player::GetScore() / 10;
+    if (add == 0) return false;
+    return true;
+}
+
+// 追加ポイント演出
+bool SceneOver::AddPointPerform()
+{
+    static float taget = p_pos.y + AddPointMoveAmount;  // 移動(出現)する位置
+    switch (addPointPerformState)
+    {
+    case SceneOver::begin:
+        addPoint = debug ? score / 10 : Player::GetScore() / 10;
+        taget = p_pos.y + AddPointMoveAmount;
+        ap_pos.y = taget;
+        ap_color.w = 0.0f;
+        addPointPerformState = AddPointPerformState::FeadIn;
+    case SceneOver::FeadIn:
+       // ap_pos.y = lerp<float>(ap_pos.y, taget, rate);
+        ap_color.w = lerp<float>(ap_color.w, 1.0f, rate);
+
+        if((fabs(1.0f - ap_color.w) < 0.01f))
+        {
+            ap_pos.y = taget;
+            ap_color.w = 1.0f;
+            addPointPerformState = AddPointPerformState::FeadOut;
+        }
+        break;
+    case SceneOver::FeadOut:
+        ap_pos.y = lerp<float>(ap_pos.y, p_pos.y, rate);
+        ap_color.w = lerp<float>(ap_color.w, 0.0f, rate);
+
+        if ((fabs(p_pos.y - ap_pos.y) < 8.0f))
+        {
+            Point += addPoint;
+            ap_pos.y = p_pos.y;
+            ap_color.w = 0.0f;
+            addPointPerformState = AddPointPerformState::end;
+        }
+
+        break;
+    case SceneOver::end:
+        //addPointPerformState = AddPointPerformState::begin;
+        break;
+    default:
+        break;
+    }
+
+    return true;
 }

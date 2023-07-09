@@ -40,12 +40,18 @@ Framework::Framework(HWND hWnd)
 	EffectManager::Instance().Initialize();
 
 	// シーン初期化
-	SceneManager::Instance().ChangeScene(new SceneGame);
+	SceneManager::Instance().ChangeScene(new SceneOver);
+
+	// ハイスコアの読み取り
+	Scene::InputSave();
 }
 
 // デストラクタ
 Framework::~Framework()
 {
+	// ハイスコアの書き込み
+	Scene::OutputSave();
+
 	// シーン終了化
 	SceneManager::Instance().Clear();
 

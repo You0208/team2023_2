@@ -21,8 +21,8 @@ static const UINT SHADOWMAP_SIZE = 2048;
 void SceneGame::Initialize()
 {
 	// オーディオ初期化
-	b_game = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM.wav");
-	b_game->SetVolume(0.2f);
+	b_game = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM_Game.wav");
+	b_game->SetVolume(0.5f);
 	b_select = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM_Select.wav");
 	b_select->SetVolume(0.2f);
 
@@ -39,6 +39,7 @@ void SceneGame::Initialize()
 
 	//プレイヤー初期設定
 	player = new Player();
+	player->ScoreClear();	// スコアのリセット
 
 	// 空初期設定
 	sky = new Sky();
@@ -52,12 +53,13 @@ void SceneGame::Initialize()
 	// ステージ生成
 	for (int z = 0; z < Stage::StageDepthMax; ++z)
 	{
+		bool IsDepthSpawn = (z == (Stage::StageDepthMax - 1));
 		for (int x = 0; x < Stage::StageSideMax; ++x)
 		{
 			float X = (-((Stage::StageSideMax - 1) * 0.5f) + x) * Stage::StageSize;
 			float Z = (z * Stage::StageSize);
 
-			stageManager->StageSpawn({ X,0.0f,Z });
+			stageManager->StageSpawn({ {X,0.0f,Z},IsDepthSpawn });
 		}
 	}
 
@@ -237,19 +239,13 @@ void SceneGame::Initialize()
 		srvData.height = renderTarget->GetHeight();
 		postprocessingRenderer->SetSceneData(srvData);
 	}
-
-
-	// スコア読み取り
-	InputHighScore();
 }
 
 // 終了化
 void SceneGame::Finalize()
 {
 	// ハイスコアの更新
-	UpdateHighScore(player);
-	// ファイル書き込み(テスト)
-	OutputHighScore();
+	UpdateHighScore(player->GetScore());
 
 	// ステージ終了
 	stageManager->Clear();
@@ -610,17 +606,17 @@ void SceneGame::Render()
 			// ハイスコアの読み取り
 			if (ImGui::Button("InputHighScore"))
 			{
-				InputHighScore();
+				InputSave();
 			}
 			// ハイスコアの書き込み
 			if (ImGui::Button("OutputHighScore"))
 			{
-				OutputHighScore();
+				OutputSave();
 			}
 			//ハイスコアの更新
 			if (ImGui::Button("UpdateHighScore"))
 			{
-				UpdateHighScore(player);
+				UpdateHighScore(player->GetScore());
 			}
 			// ハイスコアのリセット(書き込みも行う)
 			if (ImGui::Button("ResetHighScore"))
@@ -1336,46 +1332,6 @@ void SceneGame::UpdateStageUI()
 		sw, sh,
 		0.0f,
 		1.0f, 1.0f, 1.0f, 1.0f);
-}
-
-// ハイスコアの読み取り
-void SceneGame::InputHighScore()
-{
-	// ファイルの読み込み
-	read.open(fileName);
-	char command[256];
-
-	// 読み込めた場合
-	if (read)
-	{
-		while (read)
-		{
-			read >> command;
-			if (0 == strcmp(command, "hs"))		// 先頭の文字が"s"である場合
-			{
-				read.ignore(1);					// 1行開ける
-				read >> HighScore;				// 数値代入
-				read.ignore(1024, '\n');		// [\n(改行)]まで文字を削除する(最大1024文字)⇒次の行まで削除
-			}
-		}
-	}
-	read.close();
-}
-
-// ハイスコアの書き込み
-void SceneGame::OutputHighScore()
-{
-	// ファイルの書き込み
-	write.open(fileName);
-	write << "hs " << HighScore << "\n";
-	write.close();
-}
-
-// ハイスコアのリセット(書き込みも行う)
-void SceneGame::ResetHighScore()
-{
-	HighScore = 0;
-	OutputHighScore();
 }
 
 // 3D空間の描画

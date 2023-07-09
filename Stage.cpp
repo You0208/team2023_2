@@ -337,7 +337,8 @@ Stage::Stage(int stageNo)
     stageSideMax = StageSideMax;
     stageDepthMax = StageDepthMax;
 
-    if (SceneManager::Instance().IsNoneStage || stageNo < 0)
+    //if (SceneManager::Instance().IsNoneStage || stageNo < 0)
+    if (stageNo < 0)
     {
         AreaInfo infoN = RandSpawn(StageNONE);
         infoN(this);
@@ -415,7 +416,7 @@ void Stage::Draw(RenderContext rc, ModelShader* shader)
 void Stage::StageSpawn()
 {
     // 奥行
-    if (DepthSpawn()) SpawnStageCount++;    // ステージ生成数増加
+    isDepthSpawn = DepthSpawn();
     // 左
     LeftSpawn();
     // 右

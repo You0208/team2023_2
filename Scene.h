@@ -25,6 +25,23 @@ public:
 	// 準備完了設定
 	void SetReady() { ready = true; }
 
+protected:
+	static int HighScore;											//	ハイスコア
+	static int Point;												// ポイント
+	static constexpr char* fileName = "Data/Save/Save";	// 開くファイル名
+
+	// ハイスコアの更新
+	static void UpdateHighScore(const int score);
+
+	// ハイスコアのリセット(書き込みも行う)
+	static void ResetHighScore();
+public:
+	// セーブファイルの読み取り
+	static void InputSave();
+
+	// セーブファイルの書き込み
+	static void OutputSave();
+
 private:
 	bool	ready = false;
 };

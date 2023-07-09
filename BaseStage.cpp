@@ -1,11 +1,8 @@
 #include "BaseStage.h"
 
-int BaseStage::SpawnStageCount = 0;
-
 // ‰Šú‰»
 void BaseStage::clear()
 {
-    SpawnStageCount = 0;
 }
 
 // ƒXƒNƒ[ƒ‹ˆ—
