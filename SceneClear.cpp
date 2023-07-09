@@ -74,6 +74,13 @@ void SceneClear::Initialize()
     s_black = std::make_unique<Sprite>();
     s_black->SetShaderResourceView(t_black->GetShaderResourceView(), t_black->GetWidth(), t_black->GetHeight());
 
+    // 白
+    // スプライト初期化
+    t_White = std::make_unique<Texture>("Data/Texture/White.png");
+    // スプライト
+    s_White = std::make_unique<Sprite>();
+    s_White->SetShaderResourceView(t_White->GetShaderResourceView(), t_White->GetWidth(), t_White->GetHeight());
+
 
     // マスクテクスチャの読み込み
     maskTexture = std::make_unique<Texture>("Data/Texture/dissolve.png");
@@ -91,7 +98,10 @@ void SceneClear::Finalize()
 void SceneClear::Update(float elapsedTime)
 {
     if (!IsNext)dissolveThreshold -= 1.0 * elapsedTime;
-    if (dissolveThreshold <= 0.0f)dissolveThreshold = 0.0f;
+    if (dissolveThreshold <= 0.0f) {
+        dissolveThreshold = 0.0f;
+        IsWhite = false;
+    }
     if (IsNext)dissolveThreshold += 1.0 * elapsedTime;
 
     HamuY += cosf(Theta) * 1.0f;
@@ -154,6 +164,13 @@ void SceneClear::Update(float elapsedTime)
     //-------------------------------------------------------------------------------------------------------
 
     s_black->Update(0.0f, 0.0f,
+        Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
+        0.0f, 0.0f,
+        static_cast<float>(t_black->GetWidth()), static_cast<float>(t_black->GetHeight()),
+        0.0f,
+        1.0f, 1.0f, 1.0f, 1.0f);
+
+    s_White->Update(0.0f, 0.0f,
         Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
         0.0f, 0.0f,
         static_cast<float>(t_black->GetWidth()), static_cast<float>(t_black->GetHeight()),
@@ -247,6 +264,7 @@ void SceneClear::Render()
         SpriteShader* shader_mask = graphics.GetShader(SpriteShaderId::Mask);
         shader_mask->Begin(rc);
         shader_mask->Draw(rc, s_black.get());
+        if(IsWhite)shader_mask->Draw(rc, s_White.get());
         shader_mask->End(rc);
     }
 }

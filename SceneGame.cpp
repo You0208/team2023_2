@@ -351,35 +351,35 @@ void SceneGame::Update(float elapsedTime)
 		0.0f, 0.0f,
 		static_cast<float>(t_finish->GetWidth()), static_cast<float>(t_finish->GetHeight()),
 		0.0f,
-		1.0f, 1.0f, 1.0f, 1.0f);
+		1.0f, 1.0f, 1.0f, SelectTrans);
 
 	s_play->Update(iconPosX[SELECT_PLAY], 215.0f,
 		static_cast<float>(t_play->GetWidth()), static_cast<float>(t_play->GetHeight()),
 		0.0f, 0.0f,
 		static_cast<float>(t_play->GetWidth()), static_cast<float>(t_play->GetHeight()),
 		0.0f,
-		1.0f, 1.0f, 1.0f, 1.0f);
+		1.0f, 1.0f, 1.0f, SelectTrans);
 
 	s_rulu->Update(iconPosX[SELECT_RULE], 420.0f,
 		static_cast<float>(t_rulu->GetWidth()), static_cast<float>(t_rulu->GetHeight()),
 		0.0f, 0.0f,
 		static_cast<float>(t_rulu->GetWidth()), static_cast<float>(t_rulu->GetHeight()),
 		0.0f,
-		1.0f, 1.0f, 1.0f, 1.0f);
+		1.0f, 1.0f, 1.0f, SelectTrans);
 
 	s_select->Update(660.0f, 30.0f,
 		static_cast<float>(t_select->GetWidth()), static_cast<float>(t_select->GetHeight()),
 		0.0f, 0.0f,
 		static_cast<float>(t_select->GetWidth()), static_cast<float>(t_select->GetHeight()),
 		0.0f,
-		1.0f, 1.0f, 1.0f, 1.0f);
+		1.0f, 1.0f, 1.0f, SelectTrans);
 
 	s_score->Update(1120.0f, 830.0f,
 		static_cast<float>(t_score->GetWidth()), static_cast<float>(t_score->GetHeight()),
 		0.0f, 0.0f,
 		static_cast<float>(t_score->GetWidth()), static_cast<float>(t_score->GetHeight()),
 		0.0f,
-		1.0f, 1.0f, 1.0f, 1.0f);
+		1.0f, 1.0f, 1.0f, SelectTrans);
 
 	s_restart->Update(iconPosX_p[PAUSE_RE], 755.0f,
 		static_cast<float>(t_restart->GetWidth()), static_cast<float>(t_restart->GetHeight()),
@@ -425,6 +425,7 @@ void SceneGame::Update(float elapsedTime)
 	{
 		SceneManager::Instance().NotFinish = true;
 		SelectUpdate(elapsedTime);
+		UpdateHungerGage();			// 空腹ゲージの更新
 	}
 	else if (TransClear)
 	{
@@ -680,10 +681,10 @@ void SceneGame::Render()
 				, HighScore
 				, HighScoreTextPos.x, HighScoreTextPos.y
 				, HighScoreTextSize.x, HighScoreTextSize.y
-				, 1.0f, 1.0f, 1.0f, 1.0f
+				, 1.0f, 1.0f, 1.0f, SelectTrans
 			);
 		}
-		else	// ゲーム時
+		else if(!TransClear)	// ゲーム時
 		{
 			// 空腹ゲージ
 			shader->Draw(rc, sprite_hungerGageBack.get());
@@ -1037,6 +1038,7 @@ void SceneGame::SelectUpdate(float elapsedTime)
 	}
 }
 
+// クリア遷移
 void SceneGame::TransClearUpdate(float elapsedTime)
 {
 	ClearTimer++;
@@ -1044,6 +1046,12 @@ void SceneGame::TransClearUpdate(float elapsedTime)
 	cameraController->Update(elapsedTime);
 	// プレイヤー更新処理
 	player->ClearUpdate(elapsedTime);
+
+	//ステージ更新処理
+	stageManager->Update(player, elapsedTime);
+
+	postprocessingRenderer->setThreshold(postprocessingRenderer->getThreshold()-0.5*elapsedTime);
+
 
 	if (ClearTimer > 300)
 		SceneManager::Instance().ChangeScene(new SceneClear);
@@ -1085,9 +1093,11 @@ void SceneGame::RuleUpdate(float elapsedTime)
 
 void SceneGame::TransUpdate(float elapsedTime)
 {
-	range = lerp(range, 8.0f, 0.01f);
-	target.y = lerp(target.y, player->GetPosition().y + 3.0f, 0.01f);
-	target.x = lerp(target.x, player->GetPosition().x, 0.01f);
+	SelectTrans -= 1.0f * elapsedTime;
+	range += 1.0f * elapsedTime;
+	if (range >= 8.0f)range = 8.0f;
+	target.y = lerp(target.y, player->GetPosition().y + 2.5f, 0.06f);
+	target.x = lerp(target.x, player->GetPosition().x, 0.06f);
 
 	cameraController->setTarget(target);
 	cameraController->setRange(range);
@@ -1248,10 +1258,9 @@ void SceneGame::CollisionObsVsObs()
 
 void SceneGame::IsClear()
 {
-	if (stageManager->GetStageNo() == 5 && stageManager->GetDoneStageNum() >= 12)
+	if (stageManager->GetStageNo() == 4 && stageManager->GetDoneStageNum() > 12)
 	{
 		TransClear = true;
-		postprocessingRenderer->setThreshold(0.0f);
 	}
 }
 

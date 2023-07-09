@@ -57,9 +57,14 @@ private:
     std::unique_ptr<Sprite>	s_black;
     std::unique_ptr<Texture> t_black;
 
+    std::unique_ptr<Sprite>	s_White;
+    std::unique_ptr<Texture> t_White;
+
     float Theta = 0.0f;
     float HamuY = 400.0f;
     float time = 0;
+
+    bool IsWhite = true;
 
     float iconPosX[2] = { 1200.0f,1200.0f };
     int selectNum = 0;
