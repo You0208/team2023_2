@@ -29,6 +29,13 @@ void SceneOver::Initialize()
     // ポイントの加算
     AddPoint();
 
+    NotUseOVER_100 = (
+        (StageManager::GetEndless())
+        || (StageManager::stageNo == 0)
+        || (Point < 100)
+        );
+    selectNum = NotUseOVER_100 ? 1 : 0;
+
     //-------------------------------------------------------------------------------------------------------
     // ↓　この下はシェーダー関連
     //-------------------------------------------------------------------------------------------------------
@@ -111,12 +118,6 @@ void SceneOver::Initialize()
     dissolveThreshold = 1.0f;
     edgeThreshold = 0.2f; // 縁の閾値
     edgeColor = { 1, 0, 0, 1 }; // 縁の色
-
-    NotUseOVER_100 = (
-        (StageManager::GetEndless())
-        || (StageManager::stageNo == 0)
-        );
-    selectNum = NotUseOVER_100 ? 1 : 0;
 }
 
 // 終了化
@@ -166,8 +167,6 @@ void SceneOver::Update(float elapsedTime)
     {
         s_choice->Stop();
         s_choice->Play(false);
-        // 復活に必要なポイントが足らない場合はretrunする
-        if (selectNum == OVER_100 && Point < 100) return;
         isNext = true;
     }
     if (dissolveThreshold >= 1.0f)
@@ -429,6 +428,12 @@ bool SceneOver::AddPointPerform()
             Point += addPoint;
             ap_pos.y = p_pos.y;
             ap_color.w = 0.0f;
+            NotUseOVER_100 = (
+                (StageManager::GetEndless())
+                || (StageManager::stageNo == 0)
+                || (Point < 100)
+                );
+            selectNum = NotUseOVER_100 ? 1 : 0;
             addPointPerformState = AddPointPerformState::end;
         }
 
