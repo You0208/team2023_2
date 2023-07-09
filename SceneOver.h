@@ -87,7 +87,7 @@ private:
     DirectX::XMFLOAT2 p_pos = { PointPositionX,PointPositionY };// ポイント表示位置
     int addPoint = 0;                                           // 追加ポイント
     DirectX::XMFLOAT2 ap_pos{ PointPositionX,PointPositionY };  // 追加ポイント表示位置
-    DirectX::XMFLOAT4 ap_color{ 0.0f, 0.0f, 0.0f, 1.0f };       // 追加ポイント表示位置
+    DirectX::XMFLOAT4 ap_color{ 1.0f, 1.0f, 1.0f, 1.0f };       // 追加ポイント表示位置
     int addPointPerformState = AddPointPerformState::begin;
     enum OverNum
     {

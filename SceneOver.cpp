@@ -381,6 +381,7 @@ void SceneOver::Render()
                 {
                     addPointPerformState = AddPointPerformState::begin;
                 }
+                ImGui::ColorPicker4("color", &ap_color.x);
             }
             ImGui::Checkbox("debug", &debug);
         }
