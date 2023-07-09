@@ -111,8 +111,11 @@ void SceneTitle::Update(float elapsedTime)
     else
     {
         dissolveThreshold += 1.0 * elapsedTime;
-        if (dissolveThreshold >= 1.0f)
+        if (dissolveThreshold >= 1.0f) {
+            SceneManager::Instance().IsSelect = true;
+            SceneManager::Instance().IsNoneStage = true;
             SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
+        }
     }
 
     sprite->Update(0.0f, 0.0f,

@@ -97,6 +97,7 @@ private:
 	float accelFrame = 120.0f;
 	float p_w = 0.0f;
 
+	float SelectTrans = 1.0f;
 	bool TransClear;
 	int ClearTimer = 0;
 

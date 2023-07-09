@@ -34,6 +34,7 @@ public:
     void DrawDebugGUI();
 
     void setThreshold(float i) { bloomData.luminanceExtractionData.threshold = i; }
+    float getThreshold() { return bloomData.luminanceExtractionData.threshold; }
 
     void UpdateShold();
 private:
