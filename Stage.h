@@ -32,12 +32,16 @@ public:
     // アイテム・障害物の追加
     void AddObstacle(Obstacle* obstacle) { obstacles.emplace_back(obstacle); }
 
+    //エンドレスモードに挑戦できるフラグを折る
+    void FoldIsEndless() { IsEndless = false; }
+
 private:
     // ステージの生成
     void StageSpawn()override;
 
 private:                  // 障害物
     float offset        = 0.2f;
+    static bool IsEndless;    // エンドレスモードに挑戦できるフラグ
 
 private:
     // エリア情報
@@ -116,22 +120,24 @@ private:
     // ステージDebug
     static SpawnObstacleInfo stageDebug[];
 
-    static constexpr SpawnObstacleInfo* StageDebug[StageMax]
+    static constexpr SpawnObstacleInfo* StageDebug[StageMax + 1]
     {
         stageDebug
         ,stageDebug
         ,stageDebug
         ,stageDebug
         ,stageDebug
+        ,stageDebug
     };
 
-    static constexpr SpawnObstacleInfo* stageInfo[StageMax]
+    static constexpr SpawnObstacleInfo* stageInfo[StageMax + 1]
     {
         StageInfo01
         ,StageInfo02
         ,StageInfo03
         ,StageInfo04
         ,StageInfo05
+        ,StageInfoEndless
     };
 
 private:
