@@ -192,7 +192,7 @@ private:
     bool    a[3]                        = {};
 
     int     hungerLevel                 = 1;            // 空腹レベル
-    float   hungerPoint                = 50.0f;         // 空腹ポイント
+    float   hungerPoint                = 66.0f;         // 空腹ポイント
 
     // ===== 非使用　後で使うかも？ =====
     int     health = 5;              // 体力

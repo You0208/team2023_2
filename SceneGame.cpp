@@ -148,6 +148,14 @@ void SceneGame::Initialize()
 	sprite_StageUI = std::make_unique<Sprite>();
 	sprite_StageUI->SetShaderResourceView(texture_StageUI->GetShaderResourceView(),
 		texture_StageUI->GetWidth(), texture_StageUI->GetHeight());
+
+	// スコアフレーム
+	texture_score_frame = std::make_unique<Texture>("Data/Texture/UI/score_frame.png");
+	sprite_score_frame = std::make_unique<Sprite>();
+	sprite_score_frame->SetShaderResourceView(texture_score_frame->GetShaderResourceView(),
+		texture_score_frame->GetWidth(), texture_score_frame->GetHeight());
+
+
 	// テクスチャを読み込む
 	texture = std::make_unique<Texture>("Data/Texture/titleFrame.png");
 	// スプライト
@@ -406,6 +414,14 @@ void SceneGame::Update(float elapsedTime)
 		static_cast<float>(t_play2->GetWidth()), static_cast<float>(t_play2->GetHeight()),
 		0.0f, 0.0f,
 		static_cast<float>(t_play2->GetWidth()), static_cast<float>(t_play2->GetHeight()),
+		0.0f,
+		1.0f, 1.0f, 1.0f, 1.0f);
+
+	sprite_score_frame->Update(
+		0.0f, 0.0f,
+		texture_score_frame->GetWidth(), texture_score_frame->GetHeight(),
+		0.0f, 0.0f,
+		texture_score_frame->GetWidth(), texture_score_frame->GetHeight(),
 		0.0f,
 		1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -693,16 +709,13 @@ void SceneGame::Render()
 			shader->Draw(rc, sprite_hungerGage.get());
 			shader->Draw(rc, sprite_hungerGageFrame.get());
 
+			// スコアフレーム
+			shader->Draw(rc, sprite_score_frame.get());
+
 			// ステージレベル看板
 			shader->Draw(rc, sprite_StageUI.get());
 
-			// スコア表示(仮)
-			//text[fontNo]->textOut(rc
-			//	, "Score:" + std::to_string(player->GetScore())
-			//	, text_pos.x, text_pos.y
-			//	, text_size.x, text_size.y
-			//	, text_color.x, text_color.y, text_color.z, text_color.w
-			//);
+			// スコア表示
 			text_number->textOut(rc
 				, player->GetScore()
 				, text_pos.x, text_pos.y
