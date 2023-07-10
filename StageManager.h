@@ -143,6 +143,8 @@ public:
     
     // 初期無敵フラグを立てる
     void RaiseStateInvincible(){ stateInvincible = true; }
+    // 初期無敵フラグを取得する
+    bool GetStateInvincible(){ return stateInvincible; }
 
 private:
     // ステージの更新

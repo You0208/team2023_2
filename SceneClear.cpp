@@ -215,7 +215,7 @@ void SceneClear::Update(float elapsedTime)
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
 
-    s_point->Update(1320.0f, 0.0f,
+    s_point->Update(1920.0f - t_point->GetWidth(), 0.0f,
         static_cast<float>(t_point->GetWidth()), static_cast<float>(t_point->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_point->GetWidth()), static_cast<float>(t_point->GetHeight()),
@@ -282,6 +282,13 @@ void SceneClear::Render()
             , s_size, s_size
             , 1.0f, 1.0f, 1.0f, 1.0f
         );
+        // ハイスコア
+        text_number->textOut(rc
+            , HighScore
+            , p_pos.x, hs_posY
+            , p_size, p_size
+            , 1.0f, 1.0f, 1.0f, 1.0f
+        );
         // ポイント
         text_number->textOut(rc
             , Point
@@ -329,6 +336,11 @@ void SceneClear::Render()
                 {
                     Point += 100;
                 }
+            }
+            if (ImGui::CollapsingHeader("HighScore", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                ImGui::SliderFloat("hs_posX", &p_pos.x, 0.0f, 1920.0f);
+                ImGui::SliderFloat("hs_posY", &hs_posY, 0.0f, 1080.0f);
             }
             if (ImGui::CollapsingHeader("AddPoint", ImGuiTreeNodeFlags_DefaultOpen))
             {

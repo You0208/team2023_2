@@ -103,7 +103,8 @@ private:
     // 以下デバッグ用
     // テキスト位置デバッグ(位置決まれば削除する)
     float p_size = 45.0;
-    DirectX::XMFLOAT2 s_pos = { 1350.0f, 460.0f };
+    DirectX::XMFLOAT2 s_pos = { 1340.0f, 460.0f };
+    float hs_posY = 31.0f;
     float s_size = 45.0;
     float ap_size = 45.0;
     float rate = 0.005f;
