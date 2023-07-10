@@ -277,30 +277,30 @@ void SceneClear::Render()
 
         // スコア
         text_number->textOut(rc
-            , debug ? score : Player::GetScore()
-            , s_pos.x, s_pos.y
-            , s_size, s_size
+            , Player::GetScore()
+            , 1340.0f, 460.0f
+            , 45.0f, 45.0f
             , 1.0f, 1.0f, 1.0f, 1.0f
         );
         // ハイスコア
         text_number->textOut(rc
             , HighScore
-            , p_pos.x, hs_posY
-            , p_size, p_size
+            , p_pos.x, 31.0f
+            , 45.0f, 45.0f
             , 1.0f, 1.0f, 1.0f, 1.0f
         );
         // ポイント
         text_number->textOut(rc
             , Point
             , p_pos.x, p_pos.y
-            , p_size, p_size
+            , 45.0f, 45.0f
             , 1.0f, 1.0f, 1.0f, 1.0f
         );
         // 追加ポイント
         text_number->textOut(rc
             , addPoint
             , p_pos.x, ap_pos.y
-            , ap_size, ap_size
+            , 45.0f, 45.0f
             , ap_color.x, ap_color.y, ap_color.z, ap_color.w
         );
         shader->End(rc);
@@ -315,54 +315,6 @@ void SceneClear::Render()
         if(IsWhite)shader_mask->Draw(rc, s_White.get());
         shader_mask->End(rc);
     }
-    // デバッグ情報の表示
-    {
-        if (ImGui::Begin("Text", nullptr, ImGuiWindowFlags_None))
-        {
-            if (ImGui::CollapsingHeader("Score", ImGuiTreeNodeFlags_DefaultOpen))
-            {
-                ImGui::SliderFloat("s_posX", &s_pos.x, 0.0f, 1920.0f);
-                ap_pos.x = s_pos.x;
-                ImGui::SliderFloat("s_posY", &s_pos.y, 0.0f, 1080.0f);
-                ImGui::SliderFloat("s_size", &s_size, 30.0f, 80.0f);
-                ImGui::InputInt("score", &score);
-            }
-            if (ImGui::CollapsingHeader("Point", ImGuiTreeNodeFlags_DefaultOpen))
-            {
-                ImGui::SliderFloat("p_posX", &p_pos.x, 0.0f, 1920.0f);
-                ImGui::SliderFloat("p_posY", &p_pos.y, 0.0f, 1080.0f);
-                ImGui::SliderInt("Point", &Point, 0, 100000);
-                if (ImGui::Button("AddPoint"))
-                {
-                    Point += 100;
-                }
-            }
-            if (ImGui::CollapsingHeader("HighScore", ImGuiTreeNodeFlags_DefaultOpen))
-            {
-                ImGui::SliderFloat("hs_posX", &p_pos.x, 0.0f, 1920.0f);
-                ImGui::SliderFloat("hs_posY", &hs_posY, 0.0f, 1080.0f);
-            }
-            if (ImGui::CollapsingHeader("AddPoint", ImGuiTreeNodeFlags_DefaultOpen))
-            {
-                ImGui::SliderFloat("ap_posY", &ap_pos.y, 0.0f, 1080.0f);
-                ImGui::SliderFloat("ap_size", &ap_size, 10.0f, 80.0f);
-                ImGui::InputFloat("addPointMoveAmount", &AddPointMoveAmount);
-                ImGui::InputFloat("rate", &rate);
-                if (ImGui::Button("Perform"))
-                {
-                    addPointPerformState = AddPointPerformState::begin;
-                }
-                ImGui::ColorPicker4("color", &ap_color.x);
-            }
-            ImGui::Checkbox("debug", &debug);
-            if (ImGui::Button("AddScore"))
-            {
-                Player::AddScore(100);
-            }
-
-        }
-        ImGui::End();
-    }
 }
  
 // 追加ポイント演出
@@ -372,13 +324,12 @@ bool SceneClear::AddPointPerform()
     switch (addPointPerformState)
     {
     case SceneClear::begin:
-        addPoint = debug ? score / 10 : Player::GetScore() / 10;
+        addPoint = Player::GetScore() / 10;
         taget = p_pos.y + AddPointMoveAmount;
         ap_pos.y = taget;
         ap_color.w = 0.0f;
         addPointPerformState = AddPointPerformState::FeadIn;
     case SceneClear::FeadIn:
-        // ap_pos.y = lerp<float>(ap_pos.y, taget, rate);
         ap_color.w = lerp<float>(ap_color.w, 1.0f, rate);
 
         if ((fabs(1.0f - ap_color.w) < 0.01f))

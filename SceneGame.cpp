@@ -326,7 +326,7 @@ void SceneGame::Finalize()
 void SceneGame::Update(float elapsedTime)
 {
 	s_black->Update(0.0f, 0.0f,
-		Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
+		static_cast<float>(t_black->GetWidth()), static_cast<float>(t_black->GetHeight()),
 		0.0f, 0.0f,
 		static_cast<float>(t_black->GetWidth()), static_cast<float>(t_black->GetHeight()),
 		0.0f,
@@ -334,7 +334,7 @@ void SceneGame::Update(float elapsedTime)
 
 
 	s_black2->Update(0.0f, 0.0f,
-		Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
+		static_cast<float>(t_black->GetWidth()), static_cast<float>(t_black->GetHeight()),
 		0.0f, 0.0f,
 		static_cast<float>(t_black->GetWidth()), static_cast<float>(t_black->GetHeight()),
 		0.0f,

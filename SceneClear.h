@@ -76,7 +76,7 @@ private:
     DirectX::XMFLOAT2 p_pos = { PointPositionX,PointPositionY };// ポイント表示位置
     int addPoint = 0;                                           // 追加ポイント
     DirectX::XMFLOAT2 ap_pos{ PointPositionX,PointPositionY };  // 追加ポイント表示位置
-    DirectX::XMFLOAT4 ap_color{ 0.741f, 0.435f, 0.435f, 1.0f };;       // 追加ポイント表示位置
+    DirectX::XMFLOAT4 ap_color{ 0.741f, 0.435f, 0.435f, 0.0f };;       // 追加ポイント表示位置
     int addPointPerformState = AddPointPerformState::begin;
 
     float Theta = 0.0f;
@@ -98,16 +98,4 @@ private:
     float dissolveThreshold;
     float edgeThreshold; // 縁の閾値
     DirectX::XMFLOAT4 edgeColor; // 縁の色
-
-
-    // 以下デバッグ用
-    // テキスト位置デバッグ(位置決まれば削除する)
-    float p_size = 45.0;
-    DirectX::XMFLOAT2 s_pos = { 1340.0f, 460.0f };
-    float hs_posY = 31.0f;
-    float s_size = 45.0;
-    float ap_size = 45.0;
-    float rate = 0.005f;
-    int score = 0;
-    bool debug = false;
 };
