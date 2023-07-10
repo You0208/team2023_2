@@ -5,6 +5,8 @@
 int Scene::HighScore = 0;
 int Scene::Point = 0;
 
+float Scene::AddPointMoveAmount = 100.0f;
+
 // セーブファイルの読み取り
 void Scene::InputSave()
 {

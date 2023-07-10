@@ -9,11 +9,6 @@
 // タイトルシーン
 class SceneOver :public Scene
 {
-private:
-    static constexpr float PointPositionX = 1600.0f;    // 追加ポイント位置(X)
-    static constexpr float PointPositionY = 30.0f;      // 追加ポイント位置(Y)
-    static  float AddPointMoveAmount;// 追加ポイント移動量
-
 public:
     SceneOver() {}
     ~SceneOver()override {}
@@ -87,7 +82,7 @@ private:
     DirectX::XMFLOAT2 p_pos = { PointPositionX,PointPositionY };// ポイント表示位置
     int addPoint = 0;                                           // 追加ポイント
     DirectX::XMFLOAT2 ap_pos{ PointPositionX,PointPositionY };  // 追加ポイント表示位置
-    DirectX::XMFLOAT4 ap_color{ 1.0f, 1.0f, 1.0f, 1.0f };       // 追加ポイント表示位置
+    DirectX::XMFLOAT4 ap_color{ 0.49f, 0.274f, 0.274f, 1.0f };       // 追加ポイント表示位置
     int addPointPerformState = AddPointPerformState::begin;
     enum OverNum
     {

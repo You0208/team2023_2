@@ -3,6 +3,11 @@
 // シーン
 class Scene
 {
+protected:
+	// SceneOverとSceneClearの両方で使うのでSceneにおいている
+	static constexpr float PointPositionX = 1600.0f;    // 追加ポイント位置(X)
+	static constexpr float PointPositionY = 30.0f;      // 追加ポイント位置(Y)
+	static  float AddPointMoveAmount;// 追加ポイント移動量
 public:
 	Scene() {}
 	virtual ~Scene() {}
@@ -28,7 +33,7 @@ public:
 protected:
 	static int HighScore;											//	ハイスコア
 	static int Point;												// ポイント
-	static constexpr char* fileName = "Data/Save/Save";	// 開くファイル名
+	static constexpr char* fileName = "Data/Save/Save.txt";	// 開くファイル名
 
 	// ハイスコアの更新
 	static void UpdateHighScore(const int score);

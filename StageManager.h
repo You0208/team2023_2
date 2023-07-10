@@ -138,6 +138,8 @@ public:
     static void FoldIsClear() { IsClear = false; }
     // エンドレスフラグを折る
     static void FoldEndless() { Endless = false; }
+    // エンドレスフラグを立てる
+    static void RaiseEndless() { Endless = true; }
 
 private:
     // ステージの更新

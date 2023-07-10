@@ -27,6 +27,9 @@ public:
     void Render()override;
 
 private:
+    bool AddPointPerform();
+
+private:
     // BGM
     std::unique_ptr<AudioSource> b_gameClear;
     // SE
@@ -60,6 +63,22 @@ private:
     std::unique_ptr<Sprite>	s_White;
     std::unique_ptr<Texture> t_White;
 
+    std::unique_ptr<Texture>	texture_fonts_number;		// フォントテクスチャ(数字のみ)
+    std::unique_ptr<Text>		text_number;				// フォント(数字のみ)
+
+    enum AddPointPerformState
+    {
+        begin = 0,      // 初期設定
+        FeadIn,         // 出現
+        FeadOut,        // 消滅
+        end,            // 終了
+    };
+    DirectX::XMFLOAT2 p_pos = { PointPositionX,PointPositionY };// ポイント表示位置
+    int addPoint = 0;                                           // 追加ポイント
+    DirectX::XMFLOAT2 ap_pos{ PointPositionX,PointPositionY };  // 追加ポイント表示位置
+    DirectX::XMFLOAT4 ap_color{ 0.49f, 0.274f, 0.274, 1.0f };       // 追加ポイント表示位置
+    int addPointPerformState = AddPointPerformState::begin;
+
     float Theta = 0.0f;
     float HamuY = 400.0f;
     float time = 0;
@@ -79,4 +98,15 @@ private:
     float dissolveThreshold;
     float edgeThreshold; // 縁の閾値
     DirectX::XMFLOAT4 edgeColor; // 縁の色
+
+
+    // 以下デバッグ用
+    // テキスト位置デバッグ(位置決まれば削除する)
+    float p_size = 45.0;
+    DirectX::XMFLOAT2 s_pos = { 1350.0f, 460.0f };
+    float s_size = 45.0;
+    float ap_size = 45.0;
+    float rate = 0.005f;
+    int score = 0;
+    bool debug = false;
 };

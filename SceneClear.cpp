@@ -5,6 +5,7 @@
 #include "SceneClear.h"
 #include "SceneTitle.h"
 #include "Input/Input.h"
+#include "Tool.h"
 
 // 初期化
 void SceneClear::Initialize()
@@ -81,6 +82,11 @@ void SceneClear::Initialize()
     s_White = std::make_unique<Sprite>();
     s_White->SetShaderResourceView(t_White->GetShaderResourceView(), t_White->GetWidth(), t_White->GetHeight());
 
+    // フォント
+    texture_fonts_number = std::make_unique<Texture>("Data/fonts/font7.png");
+    text_number = std::make_unique<Text>();
+    text_number->SetShaderResourceView(texture_fonts_number->GetShaderResourceView(),
+        texture_fonts_number->GetWidth(), texture_fonts_number->GetHeight());
 
     // マスクテクスチャの読み込み
     maskTexture = std::make_unique<Texture>("Data/Texture/dissolve.png");
@@ -112,6 +118,8 @@ void SceneClear::Update(float elapsedTime)
     {
         time = 0;
     }
+
+    AddPointPerform();
 
     GamePad& gamePad = Input::Instance().GetGamePad();
     // アイコン選択処理
@@ -154,11 +162,13 @@ void SceneClear::Update(float elapsedTime)
         case 0:
             StageManager::stageNo = Stage::StageMax;
             StageManager::FoldIsClear();    // クリアフラグを折る
+            StageManager::RaiseEndless();   // エンドレスフラグを立てる
             SceneManager::Instance().IsSelect = false;
             SceneManager::Instance().IsNoneStage = true;
             SceneManager::Instance().ChangeScene(new SceneGame);
             break;
         case 1:
+            StageManager::stageNo = 0;      // ステージ0に戻す
             StageManager::FoldIsClear();    // クリアフラグを折る
             StageManager::FoldEndless();    // エンドレスフラグを折る
             SceneManager::Instance().ChangeScene(new SceneTitle);
@@ -264,6 +274,30 @@ void SceneClear::Render()
         shader->Draw(rc, s_result.get());
         shader->Draw(rc, s_score.get());
         shader->Draw(rc, s_title.get());
+
+        // スコア
+        text_number->textOut(rc
+            , debug ? score : Player::GetScore()
+            , s_pos.x, s_pos.y
+            , s_size, s_size
+            , 1.0f, 1.0f, 1.0f, 1.0f
+        );
+        // ポイント
+        text_number->textOut(rc
+            , Point
+            , p_pos.x, p_pos.y
+            , p_size, p_size
+            , 1.0f, 1.0f, 1.0f, 1.0f
+        );
+        // 追加ポイント
+        text_number->textOut(rc
+            , addPoint
+            , p_pos.x, ap_pos.y
+            , ap_size, ap_size
+            , ap_color.x, ap_color.y, ap_color.z, ap_color.w
+        );
+        shader->End(rc);
+
         shader->End(rc);
 
         rc.maskData.maskTexture = maskTexture->GetShaderResourceView().Get();
@@ -274,5 +308,89 @@ void SceneClear::Render()
         if(IsWhite)shader_mask->Draw(rc, s_White.get());
         shader_mask->End(rc);
     }
+    // デバッグ情報の表示
+    {
+        if (ImGui::Begin("Text", nullptr, ImGuiWindowFlags_None))
+        {
+            if (ImGui::CollapsingHeader("Score", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                ImGui::SliderFloat("s_posX", &s_pos.x, 0.0f, 1920.0f);
+                ap_pos.x = s_pos.x;
+                ImGui::SliderFloat("s_posY", &s_pos.y, 0.0f, 1080.0f);
+                ImGui::SliderFloat("s_size", &s_size, 30.0f, 80.0f);
+                ImGui::InputInt("score", &score);
+            }
+            if (ImGui::CollapsingHeader("Point", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                ImGui::SliderFloat("p_posX", &p_pos.x, 0.0f, 1920.0f);
+                ImGui::SliderFloat("p_posY", &p_pos.y, 0.0f, 1080.0f);
+                ImGui::SliderInt("Point", &Point, 0, 100000);
+                if (ImGui::Button("AddPoint"))
+                {
+                    Point += 100;
+                }
+            }
+            if (ImGui::CollapsingHeader("AddPoint", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                ImGui::SliderFloat("ap_posY", &ap_pos.y, 0.0f, 1080.0f);
+                ImGui::SliderFloat("ap_size", &ap_size, 10.0f, 80.0f);
+                ImGui::InputFloat("addPointMoveAmount", &AddPointMoveAmount);
+                ImGui::InputFloat("rate", &rate);
+                if (ImGui::Button("Perform"))
+                {
+                    addPointPerformState = AddPointPerformState::begin;
+                }
+                ImGui::ColorPicker4("color", &ap_color.x);
+            }
+            ImGui::Checkbox("debug", &debug);
+
+        }
+        ImGui::End();
+    }
 }
  
+// 追加ポイント演出
+bool SceneClear::AddPointPerform()
+{
+    static float taget = p_pos.y + AddPointMoveAmount;  // 移動(出現)する位置
+    switch (addPointPerformState)
+    {
+    case SceneClear::begin:
+        addPoint = debug ? score / 10 : Player::GetScore() / 10;
+        taget = p_pos.y + AddPointMoveAmount;
+        ap_pos.y = taget;
+        ap_color.w = 0.0f;
+        addPointPerformState = AddPointPerformState::FeadIn;
+    case SceneClear::FeadIn:
+        // ap_pos.y = lerp<float>(ap_pos.y, taget, rate);
+        ap_color.w = lerp<float>(ap_color.w, 1.0f, rate);
+
+        if ((fabs(1.0f - ap_color.w) < 0.01f))
+        {
+            ap_pos.y = taget;
+            ap_color.w = 1.0f;
+            addPointPerformState = AddPointPerformState::FeadOut;
+        }
+        break;
+    case SceneClear::FeadOut:
+        ap_pos.y = lerp<float>(ap_pos.y, p_pos.y, rate);
+        ap_color.w = lerp<float>(ap_color.w, 0.0f, rate);
+
+        if ((fabs(p_pos.y - ap_pos.y) < 8.0f))
+        {
+            Point += addPoint;
+            ap_pos.y = p_pos.y;
+            ap_color.w = 0.0f;
+            addPointPerformState = AddPointPerformState::end;
+        }
+
+        break;
+    case SceneClear::end:
+        //addPointPerformState = AddPointPerformState::begin;
+        break;
+    default:
+        break;
+    }
+
+    return true;
+}

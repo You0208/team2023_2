@@ -190,6 +190,7 @@ void SceneOver::Update(float elapsedTime)
             SceneManager::Instance().ChangeScene(new SceneGame);
             break;
         case OVER_TITLE:
+            StageManager::stageNo = 0;
             SceneManager::Instance().IsSelect = true;
             StageManager::FoldEndless();    // エンドレスフラグを折る
             SceneManager::Instance().ChangeScene(new SceneTitle);
@@ -283,7 +284,6 @@ float p_size = 45.0;
 DirectX::XMFLOAT2 s_pos = { 1350.0f, 460.0f };
 float s_size = 45.0;
 float ap_size = 45.0;
-float SceneOver::AddPointMoveAmount = 100.0f;
 float rate = 0.005f;
 int score = 0;
 bool debug = false;
@@ -384,6 +384,10 @@ void SceneOver::Render()
                 ImGui::ColorPicker4("color", &ap_color.x);
             }
             ImGui::Checkbox("debug", &debug);
+
+            ImGui::Text("StageManager::stageNo == 0:%d", static_cast<int>(StageManager::stageNo == 0));
+            ImGui::Text("Endless:%d", static_cast<int>(StageManager::GetEndless()));
+            ImGui::Text("Point < 100:%d", static_cast<int>(Point < 100));
         }
         ImGui::End();
     }

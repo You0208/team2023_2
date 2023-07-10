@@ -42,6 +42,7 @@ void StageManager::DrawDebugGUI()
 
     ImGui::Text("IsBreakTime:%d", static_cast<int>(IsBreakTime));
     ImGui::Text("IsSpawnNone:%d", static_cast<int>(IsSpawnNone_Side));
+    ImGui::Text("Endless:%d", static_cast<int>(Endless));
 
     // 残り休憩時間
     ImGui::Text("IsBreakTime:%lf", breakTimer);
@@ -478,7 +479,6 @@ void StageManager::UpdateBreakTime(float elapsedFrame, Player* player)
             if (IsClearVerge)
             {
                 IsClear = true;
-                Endless = true;
             }
             // 次のステージに進む場合
             else
