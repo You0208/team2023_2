@@ -88,7 +88,7 @@ public:
     // ダメージアニメが再生中であるかを取得
     bool GetIsDamageAnim() const { return isDamageAnim; }
     // スコアを加算する
-    void AddScore(int s) { score += s; }
+    static void AddScore(int s) { score += s; }
 
     // スコアを取得
     static int GetScore() { return score; }
@@ -110,9 +110,6 @@ private:
     // 傾き処理
     void Lean(float elapsedTime, float rate);
 
-
-
-    // == 追加した関数(この文はあとで削除する) ==
     // スケール更新
     void UpdateScale(float maxScale, float rate);
 

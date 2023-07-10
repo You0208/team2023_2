@@ -77,7 +77,7 @@ private:
     int addPoint = 0;                                           // 追加ポイント
     DirectX::XMFLOAT2 ap_pos{ PointPositionX,PointPositionY };  // 追加ポイント表示位置
     DirectX::XMFLOAT4 ap_color{ 0.49f, 0.274f, 0.274, 1.0f };       // 追加ポイント表示位置
-    int addPointPerformState = AddPointPerformState::begin;
+    int addPointPerformState = AddPointPerformState::end;
 
     float Theta = 0.0f;
     float HamuY = 400.0f;

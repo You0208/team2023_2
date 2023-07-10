@@ -42,7 +42,7 @@ void SceneGame::Initialize()
 
 	//プレイヤー初期設定
 	player = new Player();
-	player->ScoreClear();	// スコアのリセット
+	if(!StageManager::GetEndless()) player->ScoreClear();	// スコアのリセット(エンドレスモードはスコア引き継ぐ)
 
 	// 空初期設定
 	sky = new Sky();

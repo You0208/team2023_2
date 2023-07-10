@@ -343,6 +343,10 @@ void SceneClear::Render()
                 ImGui::ColorPicker4("color", &ap_color.x);
             }
             ImGui::Checkbox("debug", &debug);
+            if (ImGui::Button("AddScore"))
+            {
+                Player::AddScore(100);
+            }
 
         }
         ImGui::End();
@@ -386,6 +390,7 @@ bool SceneClear::AddPointPerform()
 
         break;
     case SceneClear::end:
+        ap_color.w = 0.0f;
         //addPointPerformState = AddPointPerformState::begin;
         break;
     default:
