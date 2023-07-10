@@ -63,6 +63,7 @@ private:
     static void AreaInfo07(Stage* stage);
     // エリア08
     static void AreaInfo08(Stage* stage);
+    // ステージ2以降 
     // エリア09
     static void AreaInfo09(Stage* stage);
     // エリア10
@@ -77,6 +78,56 @@ private:
     static void AreaInfo14(Stage* stage);
     // エリア15
     static void AreaInfo15(Stage* stage);
+    // エリア16
+    static void AreaInfo16(Stage* stage);
+    // エリア17
+    static void AreaInfo17(Stage* stage);
+    // エリア18
+    static void AreaInfo18(Stage* stage);
+    // エリア19
+    static void AreaInfo19(Stage* stage);
+    // エリア20
+    static void AreaInfo20(Stage* stage);
+    // エリア21
+    static void AreaInfo21(Stage* stage);
+    // エリア22
+    static void AreaInfo22(Stage* stage);
+    // エリア23
+    static void AreaInfo23(Stage* stage);
+    // エリア24
+    static void AreaInfo24(Stage* stage);
+    // エリア25
+    static void AreaInfo25(Stage* stage);
+    // エリア26
+    static void AreaInfo26(Stage* stage);
+    // エリア27
+    static void AreaInfo27(Stage* stage);
+    // エリア28
+    static void AreaInfo28(Stage* stage);
+    // エリア29
+    static void AreaInfo29(Stage* stage);
+    // エリア30
+    static void AreaInfo30(Stage* stage);
+    // エリア31
+    static void AreaInfo31(Stage* stage);
+    // エリア32
+    static void AreaInfo32(Stage* stage);
+    // エリア33
+    static void AreaInfo33(Stage* stage);
+    // エリア34
+    static void AreaInfo34(Stage* stage);
+    // エリア35
+    static void AreaInfo35(Stage* stage);
+    // エリア36
+    static void AreaInfo36(Stage* stage);
+    // エリア37
+    static void AreaInfo37(Stage* stage);
+    // エリア38
+    static void AreaInfo38(Stage* stage);
+    // エリア39
+    static void AreaInfo39(Stage* stage);
+    // エリア40
+    static void AreaInfo40(Stage* stage);
 
     // デバッグ用INFO
     static void  AreaInfoDebug(Stage* stage);
