@@ -93,6 +93,7 @@ private:
     float iconPosX[3] = { 1200.0f,1200.0f,1200.0f };
     int selectNum = 0;
     bool NotUseOVER_100 = false;   // trueの時OVER_100を使えなくする
+    bool NotUseOVER_RE = false;    // trueの時OVER_REを使えなくする
 
     // UVスクロールデータ
     UVScrollData uvScrollData;

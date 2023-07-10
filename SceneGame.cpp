@@ -394,7 +394,11 @@ void SceneGame::Update(float elapsedTime)
 		0.0f, 0.0f,
 		static_cast<float>(t_restart->GetWidth()), static_cast<float>(t_restart->GetHeight()),
 		0.0f,
-		1.0f, 1.0f, 1.0f, 1.0f);
+		StageManager::GetEndless() ? 0.5f : 1.0f,
+		StageManager::GetEndless() ? 0.5f : 1.0f,
+		StageManager::GetEndless() ? 0.5f : 1.0f,
+		1.0f
+	);
 
 	s_paused->Update(600.0f, 100.0f,
 		static_cast<float>(t_paused->GetWidth()), static_cast<float>(t_paused->GetHeight()),
@@ -557,13 +561,13 @@ void SceneGame::PausedUpdate(float elapsedTime)
 	GamePad& gamePad = Input::Instance().GetGamePad();
 	if (gamePad.GetButtonDown() & GamePad::BTN_UP)
 	{
-		selectNum_p--;
+		selectNum_p -= StageManager::GetEndless() ? 2:1;
 		s_selection->Stop();
 		s_selection->Play(false);		// SE再生
 	}
 	if (gamePad.GetButtonDown() & GamePad::BTN_DOWN)
 	{
-		selectNum_p++;
+		selectNum_p+= StageManager::GetEndless() ? 2 : 1;
 		s_selection->Stop();
 		s_selection->Play(false);		// SE再生
 	}
@@ -610,11 +614,14 @@ void SceneGame::PausedUpdate(float elapsedTime)
 				break;
 			case PAUSE_RE:
 				StageManager::stageNo = 0;
+				StageManager::FoldEndless();	// エンドレスモード中は呼べないが念のためフラグを折る
 				SceneManager::Instance().IsSelect = false;
 				SceneManager::Instance().IsNoneStage = true;
 				SceneManager::Instance().ChangeScene(new SceneGame);
 				break;
 			case PAUSE_TITLE:
+				StageManager::stageNo = 0;
+				StageManager::FoldEndless();
 				SceneManager::Instance().NotFinish = false;
 				SceneManager::Instance().ChangeScene(new SceneTitle);
 				break;

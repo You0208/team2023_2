@@ -34,7 +34,11 @@ void SceneOver::Initialize()
         || (StageManager::stageNo == 0)
         || (Point < 100)
         );
-    selectNum = NotUseOVER_100 ? 1 : 0;
+    
+    // エンドレスモードの時はリトライ出来なくする
+    NotUseOVER_RE = StageManager::GetEndless();
+
+    selectNum = NotUseOVER_100 ? (NotUseOVER_RE ? 2 : 1) : 0;
 
     //-------------------------------------------------------------------------------------------------------
     // ↓　この下はシェーダー関連
@@ -148,8 +152,13 @@ void SceneOver::Update(float elapsedTime)
         s_selection->Play(false);   // SE再生
         selectNum++;
     }
-    if (selectNum > 2)selectNum = NotUseOVER_100 ? 1 : 0;
-    if (selectNum < NotUseOVER_100 ? 1 : 0)selectNum = 2;
+
+    int selectNumMax = 2;
+    //int selectNumMin = 0;
+    int selectNumMin = NotUseOVER_100 ? (NotUseOVER_RE ? 2 : 1) : 0;
+
+    if (selectNum > selectNumMax)selectNum = selectNumMin;
+    if (selectNum < selectNumMin)selectNum = selectNumMax;
     // selectNumの値に応じてiconPosXの要素を設定
     for (int i = 0; i < 3; i++)
     {
@@ -179,20 +188,20 @@ void SceneOver::Update(float elapsedTime)
             Point -= 100;   // 100ポイント使用
             SceneManager::Instance().IsSelect = false;
             SceneManager::Instance().IsNoneStage = true;
-            StageManager::FoldEndless();    // エンドレスフラグを折る
+            StageManager::FoldEndless();    // エンドレスモード中は呼べないが念のためエンドレスフラグを折る
             SceneManager::Instance().ChangeScene(new SceneGame);
             break;
         case OVER_RE:
             StageManager::stageNo = 0;
+            StageManager::FoldEndless();    // エンドレスモード中は呼べないが念のためエンドレスフラグを折る
             SceneManager::Instance().IsSelect = false;
             SceneManager::Instance().IsNoneStage = true;
-            StageManager::FoldEndless();    // エンドレスフラグを折る
             SceneManager::Instance().ChangeScene(new SceneGame);
             break;
         case OVER_TITLE:
             StageManager::stageNo = 0;
-            SceneManager::Instance().IsSelect = true;
             StageManager::FoldEndless();    // エンドレスフラグを折る
+            SceneManager::Instance().IsSelect = true;
             SceneManager::Instance().ChangeScene(new SceneTitle);
             break;
         }
@@ -228,7 +237,12 @@ void SceneOver::Update(float elapsedTime)
         0.0f, 0.0f,
         static_cast<float>(t_restart->GetWidth()), static_cast<float>(t_restart->GetHeight()),
         0.0f,
-        1.0f, 1.0f, 1.0f, 1.0f);
+        //　色
+        NotUseOVER_RE ? 0.5f : 1.0f,
+        NotUseOVER_RE ? 0.5f : 1.0f,
+        NotUseOVER_RE ? 0.5f : 1.0f,
+        1.0f
+    );
 
     s_high->Update(1125.0f, 430.0f,
         static_cast<float>(t_high->GetWidth()), static_cast<float>(t_high->GetHeight()),
@@ -242,7 +256,7 @@ void SceneOver::Update(float elapsedTime)
         0.0f, 0.0f,
         static_cast<float>(t_100p->GetWidth()), static_cast<float>(t_100p->GetHeight()),
         0.0f,
-    //　色
+        //　色
         NotUseOVER_100 ? 0.5f : 1.0f,
         NotUseOVER_100 ? 0.5f : 1.0f,
         NotUseOVER_100 ? 0.5f : 1.0f,
