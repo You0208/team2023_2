@@ -284,7 +284,7 @@ void SceneOver::Update(float elapsedTime)
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
 
-    s_point->Update(1320.0f, 0.0f,
+    s_point->Update(1920.0f - t_point->GetWidth(), 0.0f,
         static_cast<float>(t_point->GetWidth()), static_cast<float>(t_point->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_point->GetWidth()), static_cast<float>(t_point->GetHeight()),
@@ -301,6 +301,7 @@ float ap_size = 45.0;
 float rate = 0.005f;
 int score = 0;
 bool debug = false;
+float hs_posY = 31.0f;
 
 // 描画処理
 void SceneOver::Render()
@@ -338,6 +339,13 @@ void SceneOver::Render()
             , debug ? score : Player::GetScore()
             , s_pos.x, s_pos.y
             , s_size, s_size
+            , 1.0f, 1.0f, 1.0f, 1.0f
+        );
+        // ハイスコア
+        text_number->textOut(rc
+            , HighScore
+            , p_pos.x, hs_posY
+            , p_size, p_size
             , 1.0f, 1.0f, 1.0f, 1.0f
         );
         // ポイント
