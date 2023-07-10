@@ -5,8 +5,8 @@ class Scene
 {
 protected:
 	// SceneOverとSceneClearの両方で使うのでSceneにおいている
-	static constexpr float PointPositionX = 1600.0f;    // 追加ポイント位置(X)
-	static constexpr float PointPositionY = 30.0f;      // 追加ポイント位置(Y)
+	static constexpr float PointPositionX = 1540.0f;    // 追加ポイント位置(X)
+	static constexpr float PointPositionY = 122.0f;      // 追加ポイント位置(Y)
 	static  float AddPointMoveAmount;// 追加ポイント移動量
 public:
 	Scene() {}

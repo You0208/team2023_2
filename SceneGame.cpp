@@ -1535,12 +1535,15 @@ void SceneGame::UpdateStageUI()
 	// クリアしていないときだけ処理する
 	if (!StageManager::GetIsClear() && !StageManager::GetEndless())
 	{
+		// ステージが1以下	最大より多い場合は以下の処理をしない
+		if ((StageManager::stageNo < 1) || (StageManager::stageNo > Stage::StageMax - 1)) return;
+
 		// 休憩フラグが立っているとき
-		if (stageManager->IsBreakTime)
+		if ((stageManager->IsBreakTime || stageManager->GetStateInvincible()))
 		{
 			StageUI_Position.x = lerp<float>(StageUI_Position.x, dx_end, 0.05f);
 		}
-		if (!stageManager->IsBreakTime)
+		if (!stageManager->IsBreakTime && !stageManager->GetStateInvincible())
 		{
 			StageUI_Position.x = lerp<float>(StageUI_Position.x, screen_width, 0.05f);
 		}
