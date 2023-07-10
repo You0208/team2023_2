@@ -392,11 +392,11 @@ Husen_gum::Husen_gum()
     //ÉÇÉfÉãÇì«Ç›çûÇ›
     model = std::make_unique<Model>("Data/Model/Obstacle/husen_gum/husen_gum.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
-    scale.x = scale.y = scale.z = 9.0f;
-    height = 9.0f;
-    radius = 1.5f;
+    scale.x = scale.y = scale.z = 18.0f;
+    height = 18.0f;
+    radius = 4.6f;
     Type = TYPE::CYLINDERS;
-    CollisionNum = 3;
+    CollisionNum = 2;
 }
 
 void Husen_gum::DrawDebugPrimitive()
@@ -425,11 +425,11 @@ Orange_gum::Orange_gum()
     //ÉÇÉfÉãÇì«Ç›çûÇ›
     model = std::make_unique<Model>("Data/Model/Obstacle/orange_gum/orange_gum.mdl");
     angle.y = DirectX::XMConvertToRadians(180);
-    scale.x = scale.y = scale.z = 9.0f;
-    height = 9.0f;
-    radius = 1.5f;
+    scale.x = scale.y = scale.z = 18.0f;
+    height = 18.0f;
+    radius = 4.6f;
     Type = TYPE::CYLINDERS;
-    CollisionNum = 3;
+    CollisionNum = 2;
 }
 
 void Orange_gum::DrawDebugPrimitive()

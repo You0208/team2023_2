@@ -263,7 +263,7 @@ public:
 class Husen_gum : public Obstacle
 {
 public:
-    static float constexpr MaxUp        = 20.0f;      // 上下移動の最大値      
+    static float constexpr MaxUp        = 40.0f;      // 上下移動の最大値      
     static float constexpr MaxDown      = 0.0f;      // 上下移動の最小値 
     static float constexpr MaxPos[2] =
     {
@@ -311,8 +311,8 @@ public:
 class Marble_chocolate : public Obstacle
 {
 private:
-    static float constexpr MaxMoveDistance = 30.0f;     // 移動距離の最大値
-    static float constexpr MoveSpeed = 80.0f;           // 移動距離の最大値
+    static float constexpr MaxMoveDistance = 50.0f;     // 移動距離の最大値
+    static float constexpr MoveSpeed = 30.0f;           // 移動距離の最大値
 
 public:
     Marble_chocolate();
