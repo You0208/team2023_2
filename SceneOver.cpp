@@ -116,7 +116,6 @@ void SceneOver::Initialize()
     s_black = std::make_unique<Sprite>();
     s_black->SetShaderResourceView(t_black->GetShaderResourceView(), t_black->GetWidth(), t_black->GetHeight());
 
-
     // マスクテクスチャの読み込み
     maskTexture = std::make_unique<Texture>("Data/Texture/dissolve.png");
     dissolveThreshold = 1.0f;

@@ -42,7 +42,7 @@ void SceneClear::Initialize()
 
     // ポイント
     // スプライト初期化
-    t_point = std::make_unique<Texture>("Data/Texture/Clear/point.png");
+    t_point = std::make_unique<Texture>("Data/Texture/highscore_point.png");
     // スプライト
     s_point = std::make_unique<Sprite>();
     s_point->SetShaderResourceView(t_point->GetShaderResourceView(), t_point->GetWidth(), t_point->GetHeight());
@@ -81,6 +81,13 @@ void SceneClear::Initialize()
     // スプライト
     s_White = std::make_unique<Sprite>();
     s_White->SetShaderResourceView(t_White->GetShaderResourceView(), t_White->GetWidth(), t_White->GetHeight());
+
+    // ハイスコア
+    // スプライト初期化
+    t_HighScore = std::make_unique<Texture>("Data/Texture/highscore.png");
+    // スプライト
+    s_HighScore = std::make_unique<Sprite>();
+    s_HighScore->SetShaderResourceView(t_HighScore->GetShaderResourceView(), t_HighScore->GetWidth(), t_HighScore->GetHeight());
 
     // フォント
     texture_fonts_number = std::make_unique<Texture>("Data/fonts/font7.png");
@@ -234,6 +241,13 @@ void SceneClear::Update(float elapsedTime)
         0.0f, 0.0f,
         static_cast<float>(t_score->GetWidth()), static_cast<float>(t_score->GetHeight()),
         0.0f,
+        1.0f, 1.0f, 1.0f, 1.0f);    
+    
+    s_HighScore->Update(1125.0f, 430.0f + static_cast<float>(t_score->GetHeight()),
+        static_cast<float>(t_HighScore->GetWidth()), static_cast<float>(t_HighScore->GetHeight()),
+        0.0f, 0.0f,
+        static_cast<float>(t_HighScore->GetWidth()), static_cast<float>(t_HighScore->GetHeight()),
+        0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
 
     s_title->Update(iconPosX[1], 755.0f,
@@ -274,6 +288,7 @@ void SceneClear::Render()
         shader->Draw(rc, s_result.get());
         shader->Draw(rc, s_score.get());
         shader->Draw(rc, s_title.get());
+        shader->Draw(rc, s_HighScore.get());
 
         // スコア
         text_number->textOut(rc

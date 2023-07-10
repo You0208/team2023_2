@@ -63,6 +63,9 @@ private:
     std::unique_ptr<Sprite>	s_White;
     std::unique_ptr<Texture> t_White;
 
+    std::unique_ptr<Sprite>	s_HighScore;
+    std::unique_ptr<Texture> t_HighScore;
+
     std::unique_ptr<Texture>	texture_fonts_number;		// フォントテクスチャ(数字のみ)
     std::unique_ptr<Text>		text_number;				// フォント(数字のみ)
 
