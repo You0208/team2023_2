@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Scene.h"
+#include "Effect.h"
 
 // シーンマネージャー
 class SceneManager

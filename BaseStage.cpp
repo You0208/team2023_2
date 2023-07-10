@@ -1,4 +1,5 @@
 #include "BaseStage.h"
+#include "SceneManager.h"
 
 void BaseStage::GetDelete()
 {
@@ -11,8 +12,9 @@ void BaseStage::GetDelete()
             if (obstacles[i]->ItemEffect != nullptr)
             {
                 obstacles[i]->ItemEffect->Stop(obstacles[i]->handle);
-                delete obstacles[i]->ItemEffect;
-                obstacles[i]->ItemEffect = nullptr;
+                obstacles[i]->once=true;
+                //delete obstacles[i]->ItemEffect;
+                //obstacles[i]->ItemEffect = nullptr;
             }
             delete obstacles[i];
             // —v‘f‚ğíœ‚·‚é

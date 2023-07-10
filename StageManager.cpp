@@ -55,6 +55,7 @@ void StageManager::DrawDebugGUI()
 // 更新処理
 void StageManager::Update(Player* player, float elapsedTIme)
 {
+
     // プレイヤーのダメージアニメ再生は以下の処理を行わない
     if(player->GetIsDamageAnim()) return;
 

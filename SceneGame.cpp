@@ -318,7 +318,7 @@ void SceneGame::Finalize()
 void SceneGame::Update(float elapsedTime)
 {
 	s_black->Update(0.0f, 0.0f,
-		Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
+		static_cast<float>(t_black->GetWidth()), static_cast<float>(t_black->GetHeight()),
 		0.0f, 0.0f,
 		static_cast<float>(t_black->GetWidth()), static_cast<float>(t_black->GetHeight()),
 		0.0f,
@@ -326,7 +326,7 @@ void SceneGame::Update(float elapsedTime)
 
 
 	s_black2->Update(0.0f, 0.0f,
-		Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
+		static_cast<float>(t_black->GetWidth()), static_cast<float>(t_black->GetHeight()),
 		0.0f, 0.0f,
 		static_cast<float>(t_black->GetWidth()), static_cast<float>(t_black->GetHeight()),
 		0.0f,
@@ -438,7 +438,7 @@ void SceneGame::Update(float elapsedTime)
 
 		// ポーズ処理
 		GamePad& gamePad = Input::Instance().GetGamePad();
-		if (GetAsyncKeyState(VK_ESCAPE) & 0x8000)
+		if (gamePad.GetButtonDown() & GamePad::BTN_BACK)
 			isPaused = true;       // 0コンのスタートボタンが押されたらポーズ状態が反転
 		if (isPaused) {
 			PausedUpdate(elapsedTime);
@@ -855,17 +855,11 @@ void SceneGame::CollisionPlayerVsObs()
 							it2->GetHeight(),
 							outPosition))
 						{
-							cameraController->flag = true;
-							// ヒットエフェクト再生
-							{
-								DirectX::XMFLOAT3 e = player->GetPosition();
-								hitEffect->Play(e);
-							}
-							player->OnDead();
-							DeathMoment();
-							it2->IsHit = true;
-							s_clash->Stop();			// SE再生
-							s_clash->Play(false);		// SE再生
+							//player->OnDead();
+							//DeathMoment();
+							//it2->IsHit = true;
+							//s_clash->Stop();			// SE再生
+							//s_clash->Play(false);		// SE再生
 						}
 					break;
 					case TYPE::CYLINDERS:// 直方体
@@ -881,11 +875,11 @@ void SceneGame::CollisionPlayerVsObs()
 								it2->GetHeight(),
 								outPosition))
 							{
-								player->OnDead();
-								DeathMoment();
-								it2->IsHit = true;
-								s_clash->Stop();			// SE再生
-								s_clash->Play(false);		// SE再生
+								//player->OnDead();
+								//DeathMoment();
+								//it2->IsHit = true;
+								//s_clash->Stop();			// SE再生
+								//s_clash->Play(false);		// SE再生
 							}
 						}
 						break;
@@ -1086,7 +1080,7 @@ void SceneGame::RuleUpdate(float elapsedTime)
 	if(!ruleIn&&!ruleOut)
 	{
 		GamePad& gamePad = Input::Instance().GetGamePad();
-		if (GetAsyncKeyState(VK_ESCAPE) & 0x8000)
+		if (gamePad.GetButtonDown() & GamePad::BTN_BACK)
 			ruleOut=true;
 	}
 }
@@ -1121,8 +1115,7 @@ void SceneGame::DeathUpdate(float elapsedTime)
 
 void SceneGame::DeathMoment()
 {
-
-	// ヒットエフェクト再生
+	 //ヒットエフェクト再生
 	{
 		DirectX::XMFLOAT3 e = player->GetPosition();
 		hitEffect->Play(e);

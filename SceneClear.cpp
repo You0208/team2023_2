@@ -178,7 +178,7 @@ void SceneClear::Update(float elapsedTime)
         1.0f, 1.0f, 1.0f, 1.0f);
 
     s_back->Update(0.0f, 0.0f,
-        static_cast<float>(t_back->GetWidth()), static_cast<float>(t_back->GetHeight()),
+        Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
         0.0f, 0.0f,
         static_cast<float>(t_back->GetWidth()), static_cast<float>(t_back->GetHeight()),
         0.0f,

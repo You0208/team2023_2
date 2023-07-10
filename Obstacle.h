@@ -3,6 +3,7 @@
 #include "graphics/shader.h"
 #include "graphics/model.h"
 #include "Effect.h"
+#include "SceneManager.h"
 
 enum TYPE
 {
@@ -24,12 +25,14 @@ class Obstacle
 {
 public:
     Obstacle(){
+        once = true;
         // ヒットエフェクト読み込み
-       ItemEffect = new Effect("Data/e/item_white_0703_2.efk");
+        ItemEffect = new Effect("Data/e/item_white_0703_2.efk");
     }
 
 
     ~Obstacle() {
+        ItemEffect->Stop(handle);
         // エフェクト終了
         if (ItemEffect != nullptr)
         {

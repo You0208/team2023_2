@@ -3,7 +3,9 @@
 #include "Graphics/Shader.h"
 #include "Graphics/Model.h"
 #include "BaseStage.h"
+#include "BaseStage.h"
 #include "Obstacle.h"
+#include "SceneManager.h"
 
 // ステージ
 class Stage: public BaseStage
@@ -30,7 +32,9 @@ public:
     void Draw(RenderContext rc, ModelShader* shader);
 
     // アイテム・障害物の追加
-    void AddObstacle(Obstacle* obstacle) { obstacles.emplace_back(obstacle); }
+    void AddObstacle(Obstacle* obstacle) { 
+        obstacles.emplace_back(obstacle); 
+    }
 
 private:
     // ステージの生成

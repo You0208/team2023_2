@@ -3,6 +3,7 @@
 #include "Tool.h"
 #include "Graphics/Graphics.h"
 #include "EffectManager.h"
+#include "SceneManager.h"
 
 //-------------------------------------------------------------------------------------------------------
 // 
@@ -260,11 +261,6 @@ void Marshmallow_Base::Update(float elapsedTime)
     score = 15;
     hungerPoint = 15;
     scale.x = scale.y = scale.z = 3.0f;
-    // ヒットエフェクト再生
-    {
-        // エフェクトの座標を変更
-        ItemEffect->SetPosition(handle, position);
-    }
 }
 void Marshmallow_Base::DrawDebugPrimitive()
 {

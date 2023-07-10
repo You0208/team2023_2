@@ -25,3 +25,5 @@ public:
 private:
     Effekseer::EffectRef effekseerEffect;
 };
+
+

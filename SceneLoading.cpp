@@ -80,14 +80,14 @@ void SceneLoading::Update(float elapsedTime)
     sprite->Update(0.0f, 0.0f,
         Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
         p_w, 0.0f,
-        1920, static_cast<float>(texture->GetHeight()),
+        1920, static_cast<float>(texture->GetHeight()), 
         angle,
         1.0f, 1.0f, 1.0f, 1.0f);
 
     s_black->Update(0.0f, 0.0f,
         Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
         p_w, 0.0f,
-        1920, static_cast<float>(t_black->GetHeight()),
+        1920,static_cast<float>(t_black->GetHeight()),
         angle,
         1.0f, 1.0f, 1.0f, 1.0f);
 }
