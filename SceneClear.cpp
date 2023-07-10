@@ -108,7 +108,9 @@ void SceneClear::Update(float elapsedTime)
         dissolveThreshold = 0.0f;
         IsWhite = false;
     }
-    if (IsNext)dissolveThreshold += 1.0 * elapsedTime;
+    if (IsNext 
+        && (selectNum == 0 || AddPointPerform()))   // エンドレスモードが選択される || ポイント加算の演出が終了する
+        dissolveThreshold += 1.0 * elapsedTime;
 
     HamuY += cosf(Theta) * 1.0f;
     Theta += 0.01f;
@@ -118,8 +120,6 @@ void SceneClear::Update(float elapsedTime)
     {
         time = 0;
     }
-
-    AddPointPerform();
 
     GamePad& gamePad = Input::Instance().GetGamePad();
     // アイコン選択処理
@@ -390,12 +390,11 @@ bool SceneClear::AddPointPerform()
 
         break;
     case SceneClear::end:
-        ap_color.w = 0.0f;
-        //addPointPerformState = AddPointPerformState::begin;
+        return true;
         break;
     default:
         break;
     }
 
-    return true;
+    return false;
 }

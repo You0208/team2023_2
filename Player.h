@@ -14,8 +14,9 @@ public:
     static constexpr float LeanRate     = 0.03f;        // 傾きの補間係数
     static constexpr float LeanRate_0   = 0.01f;        // 戻る時の傾き補間係数
 
-    static constexpr float MaxHungerPoint       = 100.0f;   // 空腹量の最大値
-    static constexpr float DecreaseHungerPoint   = 1.0f;    // 空腹量の減少量
+    static constexpr float MaxHungerPoint       = 100.0f;       // 空腹量の最大値
+    static constexpr float DecreaseHungerPoint  = 1.0f;         // 空腹量の減少量
+    static constexpr float StateHungerPoint     = 50.0f;        // 初期の空腹量
     // 各空腹レベルでのスケール
     static constexpr float MaxScale[3] =
     {
@@ -189,7 +190,7 @@ private:
     bool    a[3]                        = {};
 
     int     hungerLevel                 = 1;            // 空腹レベル
-    float   hungerPoint                = 66.0f;         // 空腹ポイント
+    float   hungerPoint                 = StateHungerPoint;         // 空腹ポイント
 
     // ===== 非使用　後で使うかも？ =====
     int     health = 5;              // 体力

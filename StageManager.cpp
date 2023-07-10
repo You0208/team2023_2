@@ -36,13 +36,18 @@ void StageManager::DrawDebugGUI()
         ImGui::SliderFloat("terrainScrollVelocityZ", &terrainScrollVelocity.z, 0.0f, -300.0f);
     }
 
-    ImGui::Text("DoneStageNu:%ld", doneStageNum);
+    ImGui::Text("DoneStageNum:%ld", doneStageNum);
     ImGui::Text("stageNo:%ld", stageNo);
     ImGui::Text("accelerationTimer:%d", static_cast<int>(accelerationTimer));
 
-    ImGui::Text("IsBreakTime:%d", static_cast<int>(IsBreakTime));
-    ImGui::Text("IsSpawnNone:%d", static_cast<int>(IsSpawnNone_Side));
-    ImGui::Text("Endless:%d", static_cast<int>(Endless));
+    bool dummy = IsBreakTime;
+    ImGui::Checkbox("IsBreakTime", &dummy);
+    dummy = IsSpawnNone_Side;
+    ImGui::Checkbox("IsSpawnNone", &dummy);
+    dummy = Endless;
+    ImGui::Checkbox("Endless", &dummy);
+    dummy = stateInvincible;
+    ImGui::Checkbox("stateInvincible", &dummy);
 
     // 残り休憩時間
     ImGui::Text("IsBreakTime:%lf", breakTimer);
@@ -82,9 +87,12 @@ void StageManager::Update(Player* player, float elapsedTIme)
     // 地形更新
     TerrainUpdate(elapsedTIme);
 
+    // 初期無敵時間更新
+    UpdateStateInvincible();
+
     // 休憩時間更新
     UpdateBreakTime(elapsedTIme, player);
-    player->IsBreakTime = IsBreakTime;
+    player->IsBreakTime = (IsBreakTime || stateInvincible);
 }
 
 // セレクト更新
@@ -501,8 +509,15 @@ void StageManager::UpdateBreakTime(float elapsedFrame, Player* player)
         IsBreakTime = false;
         doneStageNum = 0;
     }
+}
 
+// 初期無敵時間更新
+void StageManager::UpdateStateInvincible()
+{
+    // フラグが立っていないと以下の処理しない
+    if (!stateInvincible) return;
 
+    stateInvincible = (doneStageNum < MaxBreakTime);
 }
 
 // doneStageNumの加算

@@ -140,6 +140,9 @@ public:
     static void FoldEndless() { Endless = false; }
     // エンドレスフラグを立てる
     static void RaiseEndless() { Endless = true; }
+    
+    // 初期無敵フラグを立てる
+    void RaiseStateInvincible(){ stateInvincible = true; }
 
 private:
     // ステージの更新
@@ -165,6 +168,9 @@ private:
 
     // 休憩時間更新
     void UpdateBreakTime(float elapsedFrame, Player* player);
+
+    // 初期無敵時間更新
+    void UpdateStateInvincible();
 
     // doneStageNumの加算
     void AddDoneStageNum(float elapsedTIme);
@@ -201,7 +207,7 @@ private:
     std::vector<DirectX::XMFLOAT3>      terrainSpawns;                  // 生成リスト(位置だけ持っている)
 
     float breakTimer = 0.0f;                                             // 休憩タイマー
-    int breakTime = 0;                                                   // 休憩タイマー
+    int breakTime = 0;                                                   // 休憩タイマー(進むべきタイル数)
     int breakTime_State = 0;                                             // ブレイクタイム開始するステージ
     int breakTime_End = 0;                                               // ブレイクタイム終了するステージ
     bool IsClearVerge = false;                                           // クリア目前フラグ
@@ -209,6 +215,8 @@ private:
     float moveVecX = 0.0f;                                              // 移動方向ベクトル
     float maxPlayerVelocity = 20.0f;                                    // プレイヤーの最大速度
     int doneStageNum        = 0;                                        // プレイヤーが超えたステージの数
+
+    bool stateInvincible = true;                                       // 開始直後の無敵時間(空腹ゲージが減少しない)
 
    // ===== 非使用　後で使うかも？ =====
     float friction = 5.0f;                                              // 減速

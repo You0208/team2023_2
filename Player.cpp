@@ -331,7 +331,7 @@ void Player::RemoveHungerPoint(float elapsedTime,float Remove)
     // ブレイクタイム中なら回復する
     if (IsBreakTime)
     {
-        float target = MaxHungerPoint * 0.5f;
+        float target = StateHungerPoint;
 
         hungerPoint = lerp<float>(hungerPoint, target, 0.01f);
     }
