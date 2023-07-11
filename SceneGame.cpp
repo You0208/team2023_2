@@ -451,14 +451,18 @@ void SceneGame::Update(float elapsedTime)
 
 		// ポーズ処理
 		GamePad& gamePad = Input::Instance().GetGamePad();
-		if (gamePad.GetButtonDown() & GamePad::BTN_BACK)
-			isPaused = true;       // 0コンのスタートボタンが押されたらポーズ状態が反転
 		if (isPaused) {
 			PausedUpdate(elapsedTime);
 			return;           // この時点でポーズ中ならリターン
 		}
+		if (gamePad.GetButtonDown() & GamePad::BTN_BACK && dissolveThreshold <= 0.001f)
+		{
+			dissolveThreshold = 0.0f;
+			isPaused = true;       // 0コンのスタートボタンが押されたらポーズ状態が反転
+		}
 		// クリアしたかどうか
 		IsClear();
+
 
 		if (cameraController->flag)
 		{
