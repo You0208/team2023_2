@@ -709,7 +709,7 @@ void SceneGame::Render()
 				, Point
 				, 1510.0f, 945.0f
 				, 55.0f, 55.0f
-				, 1.0f, 1.0f, 1.0f, 1.0f
+				, 1.0f, 1.0f, 1.0f, SelectTrans
 			);
 
 		}
