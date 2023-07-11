@@ -34,7 +34,7 @@ public:
 protected:
 	static int HighScore;											//	ハイスコア
 	static int Point;												// ポイント
-	static constexpr char* fileName = "Data/Save/Save.txt";	// 開くファイル名
+	static constexpr char* fileName = "Data/Save/Save";	// 開くファイル名
 
 	// ハイスコアの更新
 	static bool UpdateHighScore(const int score);

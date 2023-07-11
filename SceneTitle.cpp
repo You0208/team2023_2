@@ -207,14 +207,4 @@ void SceneTitle::Render()
         shader_mask->Draw(rc, sprite.get());
         shader_mask->End(rc);
     }
-
-    // デバッグ情報の表示
-    {
-        ImGui::Separator();
-        if (ImGui::TreeNode("Mask"))
-        {
-            ImGui::SliderFloat("Dissolve Threshold", &dissolveThreshold, 0.0f, 1.0f);
-            ImGui::TreePop();
-        }
-    }
 }

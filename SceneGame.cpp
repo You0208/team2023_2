@@ -467,24 +467,6 @@ void SceneGame::Update(float elapsedTime)
 		// クリアしたかどうか
 		IsClear();
 
-		// デバッグ
-		if (gamePad.GetButtonDown() & GamePad::BTN_Y)
-		{
-			//player->IsDeath = true;
-			//player->OnDead();
-			//DeathMoment();
-			//player->Gashi = true;
-			//accel = true;
-			// ヒットエフェクト再生
-			//{
-			//	DirectX::XMFLOAT3 e = player->GetPosition();
-			//	accelEffect->Play(e);
-			//}
-			TransClear = true;
-			StageManager::IsClear = true;
-			StageManager::Endless = true;
-		}
-
 		if (cameraController->flag)
 		{
 			// カメラコントローラー更新処理化
@@ -737,68 +719,6 @@ void SceneGame::Render()
 		if (IsRule)	shader->Draw(rc, sprite.get());
 	
 		shader->End(rc);
-
-		// デバッグ情報の表示
-		{
-			ImGui::Separator();
-			if (ImGui::TreeNode("Mask"))
-			{
-				ImGui::SliderFloat("Dissolve Threshold", &dissolveThreshold, 0.0f, 1.0f);
-				ImGui::TreePop();
-			}
-			ImGui::Separator();
-			LightManager::Instane().DrawDebugGUI();
-			ImGui::Separator();
-			if (ImGui::TreeNode("Shadowmap"))
-			{
-				ImGui::SliderFloat("DrawRect", &shadowDrawRect, 1.0f, 2048.0f);
-				ImGui::ColorEdit3("Color", &shadowColor.x);
-				ImGui::SliderFloat("Bias", &shadowBias, 0.0f, 0.1f);
-				ImGui::Text("texture");
-				ImGui::Image(shadowmapDepthStencil->GetShaderResourceView().Get(), { 256, 256 }, { 0, 0 }, { 1, 1 },
-					{ 1, 1, 1, 1 });
-				ImGui::TreePop();
-			}
-			ImGui::Separator();
-		}
-		// 2DデバッグGUI描画
-		{
-			// stageManager
-			player->DrawDebugGUI();
-			stageManager->DrawDebugGUI();
-			postprocessingRenderer->DrawDebugGUI();
-		}
-		// スコア表示
-		{
-			ImGui::Separator();
-			if (ImGui::TreeNode("SCORE"))
-			{
-				ImGui::Text("HighScore:%ld", HighScore);
-				ImGui::TreePop();
-			}
-			// ハイスコアの読み取り
-			if (ImGui::Button("InputHighScore"))
-			{
-				InputSave();
-			}
-			// ハイスコアの書き込み
-			if (ImGui::Button("OutputHighScore"))
-			{
-				OutputSave();
-			}
-			//ハイスコアの更新
-			if (ImGui::Button("UpdateHighScore"))
-			{
-				UpdateHighScore(player->GetScore());
-			}
-			// ハイスコアのリセット(書き込みも行う)
-			if (ImGui::Button("ResetHighScore"))
-			{
-				ResetHighScore();
-			}
-
-			ImGui::Separator();
-		}
 	
 		{
 			rc.maskData.maskTexture = maskTexture->GetShaderResourceView().Get();
@@ -1589,14 +1509,5 @@ void SceneGame::Render3DScene()
 	// 3Dエフェクト描画
 	{
 		EffectManager::Instance().Render(rc.view, rc.projection);
-	}
-	// デバッグプリミティブの表示
-	{
-		// ライトのデバッグプリミティブの描画
-		LightManager::Instane().DrawDebugPrimitive();
-		// ラインレンダラ描画実行
-		graphics.GetLineRenderer()->Render(dc, camera.GetView(), camera.GetProjection());
-		// デバッグレンダラ描画実行
-		graphics.GetDebugRenderer()->Render(dc, camera.GetView(), camera.GetProjection());
 	}
 }

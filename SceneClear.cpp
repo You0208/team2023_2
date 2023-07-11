@@ -351,16 +351,6 @@ void SceneClear::Render()
         if(IsWhite)shader_mask->Draw(rc, s_White.get());
         shader_mask->End(rc);
     }
-    // デバッグ
-    {
-        if (ImGui::Begin("Text", nullptr, ImGuiWindowFlags_None))
-        {
-            ImGui::ColorPicker4("color", &HighScoreColor.x);
-            ImGui::InputFloat("posX", &HighScorePoition.x);
-            ImGui::InputFloat("posY", &HighScorePoition.y);
-        }
-        ImGui::End();
-    }
 }
  
 // 追加ポイント演出
