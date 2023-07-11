@@ -175,11 +175,9 @@ Stage::SpawnObstacleInfo Stage::StageInfo05[] =
 // エンドレスモード
 Stage::SpawnObstacleInfo Stage::StageInfoEndless[] =
 {
- {AreaInfo01,Stage::SpawnLevel::low}
+  {AreaInfo01,Stage::SpawnLevel::low}
     ,{AreaInfo01,Stage::SpawnLevel::middle}
     ,{AreaInfo01,Stage::SpawnLevel::high}
-
-
     ,{AreaInfo02,Stage::SpawnLevel::low}
     ,{AreaInfo02,Stage::SpawnLevel::middle}
     ,{AreaInfo02,Stage::SpawnLevel::high}
@@ -201,27 +199,102 @@ Stage::SpawnObstacleInfo Stage::StageInfoEndless[] =
     ,{AreaInfo08,Stage::SpawnLevel::low}
     ,{AreaInfo08,Stage::SpawnLevel::middle}
     ,{AreaInfo08,Stage::SpawnLevel::high}
-    ,{AreaInfo09,Stage::SpawnLevel::low}
-    ,{AreaInfo09,Stage::SpawnLevel::middle}
-    ,{AreaInfo09,Stage::SpawnLevel::high}
-    ,{AreaInfo10,Stage::SpawnLevel::low}
-    ,{AreaInfo10,Stage::SpawnLevel::middle}
-    ,{AreaInfo10,Stage::SpawnLevel::high}
-    ,{AreaInfo11,Stage::SpawnLevel::low}
-    ,{AreaInfo11,Stage::SpawnLevel::middle}
-    ,{AreaInfo11,Stage::SpawnLevel::high}
-    ,{AreaInfo12,Stage::SpawnLevel::low}
-    ,{AreaInfo12,Stage::SpawnLevel::middle}
-    ,{AreaInfo12,Stage::SpawnLevel::high}
-    ,{AreaInfo13,Stage::SpawnLevel::low}
-    ,{AreaInfo13,Stage::SpawnLevel::middle}
-    ,{AreaInfo13,Stage::SpawnLevel::high}
-    ,{AreaInfo14,Stage::SpawnLevel::low}
-    ,{AreaInfo14,Stage::SpawnLevel::middle}
-    ,{AreaInfo14,Stage::SpawnLevel::high}
-    //            ,{AreaInfo15,Stage::SpawnLevel::low}
-    //,{AreaInfo15,Stage::SpawnLevel::middle}
-    //,{AreaInfo15,Stage::SpawnLevel::high}
+    ,{AreaInfo09,Stage::SpawnLevel::low }
+    , { AreaInfo09,Stage::SpawnLevel::middle }
+    , { AreaInfo09,Stage::SpawnLevel::high }
+    , { AreaInfo10,Stage::SpawnLevel::low }
+    , { AreaInfo10,Stage::SpawnLevel::middle }
+    , { AreaInfo10,Stage::SpawnLevel::high }
+    , { AreaInfo11,Stage::SpawnLevel::low }
+    , { AreaInfo11,Stage::SpawnLevel::middle }
+    , { AreaInfo11,Stage::SpawnLevel::high }
+    , { AreaInfo12,Stage::SpawnLevel::low }
+    , { AreaInfo12,Stage::SpawnLevel::middle }
+    , { AreaInfo12,Stage::SpawnLevel::high }
+    , { AreaInfo13,Stage::SpawnLevel::low }
+    , { AreaInfo13,Stage::SpawnLevel::middle }
+    , { AreaInfo13,Stage::SpawnLevel::high }
+    , { AreaInfo14,Stage::SpawnLevel::low }
+    , { AreaInfo14,Stage::SpawnLevel::middle }
+    , { AreaInfo14,Stage::SpawnLevel::high }
+    , { AreaInfo15,Stage::SpawnLevel::low }
+    , { AreaInfo15,Stage::SpawnLevel::middle }
+    , { AreaInfo15,Stage::SpawnLevel::high }
+    , { AreaInfo16,Stage::SpawnLevel::low }
+    , { AreaInfo16,Stage::SpawnLevel::middle }
+    , { AreaInfo16,Stage::SpawnLevel::high }
+,{AreaInfo17, Stage::SpawnLevel::low}
+, { AreaInfo17,Stage::SpawnLevel::middle }
+, { AreaInfo17,Stage::SpawnLevel::high }
+, { AreaInfo18,Stage::SpawnLevel::low }
+, { AreaInfo18,Stage::SpawnLevel::middle }
+, { AreaInfo18,Stage::SpawnLevel::high }
+, { AreaInfo19,Stage::SpawnLevel::low }
+, { AreaInfo19,Stage::SpawnLevel::middle }
+, { AreaInfo19,Stage::SpawnLevel::high }
+, { AreaInfo20,Stage::SpawnLevel::low }
+, { AreaInfo20,Stage::SpawnLevel::middle }
+, { AreaInfo20,Stage::SpawnLevel::high }
+, { AreaInfo21,Stage::SpawnLevel::low }
+, { AreaInfo21,Stage::SpawnLevel::middle }
+, { AreaInfo21,Stage::SpawnLevel::high }
+, { AreaInfo22,Stage::SpawnLevel::low }
+, { AreaInfo22,Stage::SpawnLevel::middle }
+, { AreaInfo22,Stage::SpawnLevel::high }
+, { AreaInfo23,Stage::SpawnLevel::low }
+, { AreaInfo23,Stage::SpawnLevel::middle }
+, { AreaInfo23,Stage::SpawnLevel::high }
+, { AreaInfo24,Stage::SpawnLevel::low }
+, { AreaInfo24,Stage::SpawnLevel::middle }
+, { AreaInfo24,Stage::SpawnLevel::high }
+,{AreaInfo25, Stage::SpawnLevel::low}
+, { AreaInfo25,Stage::SpawnLevel::middle }
+, { AreaInfo25,Stage::SpawnLevel::high }
+, { AreaInfo26,Stage::SpawnLevel::low }
+, { AreaInfo26,Stage::SpawnLevel::middle }
+, { AreaInfo26,Stage::SpawnLevel::high }
+, { AreaInfo27,Stage::SpawnLevel::low }
+, { AreaInfo27,Stage::SpawnLevel::middle }
+, { AreaInfo27,Stage::SpawnLevel::high }
+, { AreaInfo28,Stage::SpawnLevel::low }
+, { AreaInfo28,Stage::SpawnLevel::middle }
+, { AreaInfo28,Stage::SpawnLevel::high }
+, { AreaInfo29,Stage::SpawnLevel::low }
+, { AreaInfo29,Stage::SpawnLevel::middle }
+, { AreaInfo29,Stage::SpawnLevel::high }
+, { AreaInfo30,Stage::SpawnLevel::low }
+, { AreaInfo30,Stage::SpawnLevel::middle }
+, { AreaInfo30,Stage::SpawnLevel::high }
+, { AreaInfo31,Stage::SpawnLevel::low }
+, { AreaInfo31,Stage::SpawnLevel::middle }
+, { AreaInfo31,Stage::SpawnLevel::high }
+, { AreaInfo32,Stage::SpawnLevel::low }
+, { AreaInfo32,Stage::SpawnLevel::middle }
+, { AreaInfo32,Stage::SpawnLevel::high }
+,{AreaInfo33, Stage::SpawnLevel::low}
+, { AreaInfo33,Stage::SpawnLevel::middle }
+, { AreaInfo33,Stage::SpawnLevel::high }
+, { AreaInfo34,Stage::SpawnLevel::low }
+, { AreaInfo34,Stage::SpawnLevel::middle }
+, { AreaInfo34,Stage::SpawnLevel::high }
+, { AreaInfo35,Stage::SpawnLevel::low }
+, { AreaInfo35,Stage::SpawnLevel::middle }
+, { AreaInfo35,Stage::SpawnLevel::high }
+, { AreaInfo36,Stage::SpawnLevel::low }
+, { AreaInfo36,Stage::SpawnLevel::middle }
+, { AreaInfo36,Stage::SpawnLevel::high }
+, { AreaInfo37,Stage::SpawnLevel::low }
+, { AreaInfo37,Stage::SpawnLevel::middle }
+, { AreaInfo37,Stage::SpawnLevel::high }
+, { AreaInfo38,Stage::SpawnLevel::low }
+, { AreaInfo38,Stage::SpawnLevel::middle }
+, { AreaInfo38,Stage::SpawnLevel::high }
+, { AreaInfo39,Stage::SpawnLevel::low }
+, { AreaInfo39,Stage::SpawnLevel::middle }
+, { AreaInfo39,Stage::SpawnLevel::high }
+, { AreaInfo40,Stage::SpawnLevel::low }
+, { AreaInfo40,Stage::SpawnLevel::middle }
+, { AreaInfo40,Stage::SpawnLevel::high }
 
 ,{nullptr,0} // END
 };
