@@ -141,100 +141,9 @@ void SceneOver::Finalize()
 // 更新処理
 void SceneOver::Update(float elapsedTime)
 {
-    if(!isNext)dissolveThreshold -= 1.0 * elapsedTime;
-    if (dissolveThreshold <= 0.0f)dissolveThreshold = 0.0f;
-    if (isNext)dissolveThreshold += 1.0 * elapsedTime;
-    // 追加ポイント演出
-    AddPointPerform();
-
-    GamePad& gamePad = Input::Instance().GetGamePad();
-    // アイコン選択処理
-    if (gamePad.GetButtonDown() & GamePad::BTN_UP && !isNext)
-    {
-        s_selection->Stop();        // SE停止 
-        s_selection->Play(false);   // SE再生
-        selectNum--;
-    }
-    if (gamePad.GetButtonDown() & GamePad::BTN_DOWN  && !isNext)
-    {
-        s_selection->Stop();        // SE停止 
-        s_selection->Play(false);   // SE再生
-        selectNum++;
-    }
-
-    int selectNumMax = 2;
-    //int selectNumMin = 0;
-    int selectNumMin = NotUseOVER_100 ? (NotUseOVER_RE ? 2 : 1) : 0;
-
-    if (selectNum > selectNumMax)selectNum = selectNumMin;
-    if (selectNum < selectNumMin)selectNum = selectNumMax;
-    // selectNumの値に応じてiconPosXの要素を設定
-    for (int i = 0; i < 3; i++)
-    {
-        if (i == selectNum)
-        {
-            iconPosX[i] = 1075.0f;
-        }
-        else
-        {
-            iconPosX[i] = 1175.0f;
-        }
-    }
-
-    if (gamePad.GetButtonDown() & GamePad::BTN_B)
-    {
-        s_choice->Stop();
-        s_choice->Play(false);
-        isNext = true;
-    }
-    if (dissolveThreshold >= 1.0f)
-    {
-        switch (selectNum)
-        {
-        case OVER_100:
-            if(addPointPerformState != AddPointPerformState::end) Point += addPoint;
-
-            Point -= 100;   // 100ポイント使用
-            SceneManager::Instance().IsSelect = false;
-            SceneManager::Instance().IsNoneStage = true;
-            StageManager::FoldEndless();    // エンドレスモード中は呼べないが念のためエンドレスフラグを折る
-            SceneManager::Instance().ChangeScene(new SceneGame);
-            break;
-        case OVER_RE:
-            StageManager::stageNo = 0;
-            StageManager::FoldEndless();    // エンドレスモード中は呼べないが念のためエンドレスフラグを折る
-            SceneManager::Instance().IsSelect = false;
-            SceneManager::Instance().IsNoneStage = true;
-            SceneManager::Instance().ChangeScene(new SceneGame);
-            break;
-        case OVER_TITLE:
-            StageManager::stageNo = 0;
-            StageManager::FoldEndless();    // エンドレスフラグを折る
-            SceneManager::Instance().IsSelect = true;
-            SceneManager::Instance().ChangeScene(new SceneTitle);
-            break;
-        }
-    }
-
-    if (scoreUpdate)HighscoreTime += 60.0f * elapsedTime;
-
-    if (HighscoreTime >= 60)
-    {
-        HighscoreTime = 0;
-    }
-
-    if (HighscoreTime <= 30)
-    {
-        HighScoreColor.w = 0.0f;
-    }
-    else
-    {
-        HighScoreColor.w = 1.0f;
-    }
-
     //-------------------------------------------------------------------------------------------------------
-    // ↓　この下はシェーダー関連
-    //-------------------------------------------------------------------------------------------------------
+ // ↓　この下はシェーダー関連
+ //-------------------------------------------------------------------------------------------------------
 
     s_black->Update(0.0f, 0.0f,
         Graphics::Instance().GetScreenWidth(), Graphics::Instance().GetScreenHeight(),
@@ -323,6 +232,104 @@ void SceneOver::Update(float elapsedTime)
         0.0f,
         HighScoreColor.x, HighScoreColor.y, HighScoreColor.z, HighScoreColor.w);
 
+
+    if(!isNext)dissolveThreshold -= 1.0 * elapsedTime;
+    if (dissolveThreshold <= 0.0f)
+    {
+        dissolveThreshold = 0.0f;
+        start = true;
+    }
+    if (isNext)dissolveThreshold += 1.0 * elapsedTime;
+    if (!start)return;
+    // 追加ポイント演出
+    AddPointPerform();
+
+    GamePad& gamePad = Input::Instance().GetGamePad();
+    // アイコン選択処理
+    if (gamePad.GetButtonDown() & GamePad::BTN_UP && !isNext)
+    {
+        s_selection->Stop();        // SE停止 
+        s_selection->Play(false);   // SE再生
+        selectNum--;
+    }
+    if (gamePad.GetButtonDown() & GamePad::BTN_DOWN  && !isNext)
+    {
+        s_selection->Stop();        // SE停止 
+        s_selection->Play(false);   // SE再生
+        selectNum++;
+    }
+
+    int selectNumMax = 2;
+    //int selectNumMin = 0;
+    int selectNumMin = NotUseOVER_100 ? (NotUseOVER_RE ? 2 : 1) : 0;
+
+    if (selectNum > selectNumMax)selectNum = selectNumMin;
+    if (selectNum < selectNumMin)selectNum = selectNumMax;
+    // selectNumの値に応じてiconPosXの要素を設定
+    for (int i = 0; i < 3; i++)
+    {
+        if (i == selectNum)
+        {
+            iconPosX[i] = 1075.0f;
+        }
+        else
+        {
+            iconPosX[i] = 1175.0f;
+        }
+    }
+
+    if (gamePad.GetButtonDown() & GamePad::BTN_B)
+    {
+        s_choice->Stop();
+        s_choice->Play(false);
+        isNext = true;
+    }
+    if (dissolveThreshold >= 1.0f)
+    {
+        switch (selectNum)
+        {
+        case OVER_100:
+            if(addPointPerformState != AddPointPerformState::end) Point += addPoint;
+
+            Point -= 100;   // 100ポイント使用
+            SceneManager::Instance().IsSelect = false;
+            SceneManager::Instance().IsNoneStage = true;
+            StageManager::FoldEndless();    // エンドレスモード中は呼べないが念のためエンドレスフラグを折る
+            SceneManager::Instance().ChangeScene(new SceneGame);
+            break;
+        case OVER_RE:
+            StageManager::stageNo = 0;
+            StageManager::FoldEndless();    // エンドレスモード中は呼べないが念のためエンドレスフラグを折る
+            SceneManager::Instance().IsSelect = false;
+            SceneManager::Instance().IsNoneStage = true;
+            SceneManager::Instance().ChangeScene(new SceneGame);
+            break;
+        case OVER_TITLE:
+            StageManager::stageNo = 0;
+            StageManager::FoldEndless();    // エンドレスフラグを折る
+            SceneManager::Instance().IsSelect = true;
+            SceneManager::Instance().ChangeScene(new SceneTitle);
+            break;
+        }
+    }
+
+    if (scoreUpdate)HighscoreTime += 60.0f * elapsedTime;
+
+    if (HighscoreTime >= 60)
+    {
+        HighscoreTime = 0;
+    }
+
+    if (HighscoreTime <= 30)
+    {
+        HighScoreColor.w = 0.0f;
+    }
+    else
+    {
+        HighScoreColor.w = 1.0f;
+    }
+
+ 
 }
 
 // 描画処理
