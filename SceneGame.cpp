@@ -463,7 +463,7 @@ void SceneGame::Update(float elapsedTime)
 		if (cameraController->flag)
 		{
 			// カメラコントローラー更新処理化
-			cameraController->Shake(120, player->GetPosition().y + 0.5f);
+			cameraController->Shake(120, player->GetPosition().y + 2.5f);
 		}
 		else
 		{
@@ -734,26 +734,6 @@ void SceneGame::Render()
 
 void SceneGame::DrawDebugParameter(DirectX::XMFLOAT4X4& transform, const char* label)
 {
-	ImGui::PushID(label);
-	if (ImGui::TreeNode(label))
-	{
-		DirectX::XMVECTOR Scale, Rotation, Position;
-		DirectX::XMMatrixDecompose(&Scale, &Rotation, &Position, DirectX::XMLoadFloat4x4(&transform));
-		DirectX::XMFLOAT3 scale, rotation, position;
-		DirectX::XMStoreFloat3(&scale, Scale);
-		DirectX::XMStoreFloat3(&rotation, Rotation);
-		DirectX::XMStoreFloat3(&position, Position);
-		ImGui::SliderFloat3("scale", &scale.x, 0.0f, 10.0f);
-		ImGui::SliderFloat3("rotation", &rotation.x, -DirectX::XM_PI, DirectX::XM_PI);
-		ImGui::SliderFloat3("position", &position.x, -300.0f, 1000.0f);
-		DirectX::XMMATRIX Transform;
-		Transform	= DirectX::XMMatrixScaling(scale.x, scale.y, scale.z)
-					* DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z)
-					* DirectX::XMMatrixTranslation(position.x, position.y, position.z);
-		DirectX::XMStoreFloat4x4(&transform, Transform);
-		ImGui::TreePop();
-	}
-	ImGui::PopID();
 }
 
 // プレイヤー×障害物
@@ -973,8 +953,11 @@ void SceneGame::TransClearUpdate(float elapsedTime)
 	postprocessingRenderer->setThreshold(postprocessingRenderer->getThreshold()-0.5*elapsedTime);
 
 
-	if (ClearTimer > 300)
+	if (ClearTimer > 300) {
+
+		SceneManager::Instance().NotFinish = false;
 		SceneManager::Instance().ChangeScene(new SceneClear);
+	}
 }
 
 void SceneGame::RuleUpdate(float elapsedTime)

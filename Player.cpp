@@ -136,54 +136,6 @@ void Player::UpdateInvincibleTimer(float elapsedTime)
 //デバッグGUI描画
 void Player::DrawDebugGUI()
 {
-    ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
-
-    if (ImGui::Begin("Player", nullptr, ImGuiWindowFlags_None))
-    {
-        //トランスフォーム
-        if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
-        {
-            //位置
-            ImGui::InputFloat3("Position", &position.x);
-            //回転
-            DirectX::XMFLOAT3 a;
-            a.x = DirectX::XMConvertToDegrees(angle.x);
-            a.y = DirectX::XMConvertToDegrees(angle.y);
-            a.z = DirectX::XMConvertToDegrees(angle.z);
-            ImGui::InputFloat3("Angle", &a.x);
-            angle.x = DirectX::XMConvertToRadians(a.x);
-            angle.y = DirectX::XMConvertToRadians(a.y);
-            angle.z = DirectX::XMConvertToRadians(a.z);
-            //スケール
-            ImGui::InputFloat3("Scale", &scale.x);
-            // 速度
-            ImGui::InputFloat3("velocity", &velocity.x);
-            ImGui::InputInt("score", &score);
-
-            // スコア
-            ImGui::Text("score:%ld", score);
-        }
-    }
-
-
-    if (ImGui::CollapsingHeader("HungerPoint", ImGuiTreeNodeFlags_DefaultOpen))
-    {
-        // 空腹レベル
-        ImGui::SliderInt("hungerLevel", &hungerLevel, 0, 2);
-        // 空腹量
-        ImGui::SliderFloat("hungerAmount", &hungerPoint, 0.0f, MaxHungerPoint);
-        // 加算量
-        static float add = 10.0f;
-        ImGui::InputFloat("AddAmount", &add);
-        // 空腹量加算
-        if (ImGui::Button("add"))
-        {
-            AddHungerPoint(add);
-        }
-    }
-
-    ImGui::End();
 }
 
 //行列更新処理

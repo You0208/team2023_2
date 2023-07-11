@@ -2948,26 +2948,4 @@ namespace
 //デバッグGUI描画
 void Stage::DrawDebugGUI_()
 {
-    ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
-
-    if (ImGui::Begin("Stage", nullptr, ImGuiWindowFlags_None))
-    {
-        // 生成オブジェクトの設定
-        if (ImGui::BeginCombo("SpawnItem", OBSTACLE_NAME, ImGuiComboFlags_NoArrowButton))
-        {
-            for (int n = 0; n < IM_ARRAYSIZE(obstacle_name); n++)
-            {
-                bool is_selected = (OBSTACLE_NAME == obstacle_name[n]);
-                if (ImGui::Selectable(obstacle_name[n]))
-                {
-                    ObstacleNumber = n;
-                    OBSTACLE_NAME = obstacle_name[n];
-                }
-                if (is_selected) ImGui::SetItemDefaultFocus();
-            }
-            ImGui::EndCombo();
-        }
-    }
-    ImGui::End();
 }

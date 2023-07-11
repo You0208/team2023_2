@@ -8,6 +8,8 @@
 // 初期化
 void SceneTitle::Initialize()
 {
+    // ESC聞くように
+    SceneManager::Instance().NotFinish = false;
     // スプライト初期化
     texture = std::make_unique<Texture>("Data/Texture/Title/black.png");
     // スプライト

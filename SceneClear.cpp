@@ -10,6 +10,9 @@
 // 初期化
 void SceneClear::Initialize()
 {
+    // ESC聞くように
+    SceneManager::Instance().NotFinish = false;
+
     // オーディオ初期化
     b_gameClear = Audio::Instance().LoadAudioSource("Data/Audio/BGM/BGM_GameClear.wav");
     b_gameClear->SetVolume(0.2f);

@@ -6,16 +6,6 @@
 //更新処理
 void CameraController::Update(float elapsedTime)
 {
-    GamePad& gamePad = Input::Instance().GetGamePad();
-    float ax = gamePad.GetAxisRX();
-    float ay = gamePad.GetAxisRY();
-    // カメラの回転速度
-    float speed = rollSpeed * elapsedTime;
-
-    // スティックの入力値に合わせてX軸とY軸を回転
-    angle.x -= ay * speed;
-    angle.y += ax * speed;
-
     // カメラの回転値を回転行列に変換
     DirectX::XMMATRIX Transform = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
 
@@ -81,6 +71,7 @@ void CameraController::Shake(int t,float n)
         }
     }
 }
+
 
 void CameraController::DeathCamera()
 {
