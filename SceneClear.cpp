@@ -21,6 +21,8 @@ void SceneClear::Initialize()
     s_choice->SetVolume(0.3f);
     s_selection = Audio::Instance().LoadAudioSource("Data/Audio/SE/Selection.wav");
     s_selection->SetVolume(1.0f);
+    s_addPoint = Audio::Instance().LoadAudioSource("Data/Audio/SE/AddPoint.wav");
+    s_addPoint->SetVolume(0.2f);
 
     // クリア
     // スプライト初期化
@@ -359,10 +361,12 @@ void SceneClear::Render()
 // 追加ポイント演出
 bool SceneClear::AddPointPerform()
 {
+    static bool OneSe = false;                          // 1度だけSEを再生
     static float taget = p_pos.y + AddPointMoveAmount;  // 移動(出現)する位置
     switch (addPointPerformState)
     {
     case SceneClear::begin:
+        OneSe = false;
         addPoint = Player::GetScore() / 10;
         taget = p_pos.y + AddPointMoveAmount;
         ap_pos.y = taget;
@@ -379,6 +383,11 @@ bool SceneClear::AddPointPerform()
         }
         break;
     case SceneClear::FeadOut:
+        if (!OneSe)
+        {
+            OneSe = true;
+            s_addPoint->Play(false);
+        }
         ap_pos.y = lerp<float>(ap_pos.y, p_pos.y, rate);
         ap_color.w = lerp<float>(ap_color.w, 0.0f, rate);
 

@@ -19,6 +19,8 @@ void SceneOver::Initialize()
     s_choice->SetVolume(0.3f);
     s_selection = Audio::Instance().LoadAudioSource("Data/Audio/SE/Selection.wav");
     s_selection->SetVolume(1.0f);
+    s_addPoint = Audio::Instance().LoadAudioSource("Data/Audio/SE/AddPoint.wav");
+    s_addPoint->SetVolume(0.2f);
 
     // フォント
     texture_fonts_number = std::make_unique<Texture>("Data/fonts/font7.png");
@@ -408,10 +410,12 @@ bool SceneOver::AddPoint()
 // 追加ポイント演出
 bool SceneOver::AddPointPerform()
 {
+    static bool OneSe = false;                          // 1度だけSEを再生する
     static float taget = p_pos.y + AddPointMoveAmount;  // 移動(出現)する位置
     switch (addPointPerformState)
     {
     case SceneOver::begin:
+        OneSe = false;
         addPoint = Player::GetScore() / 10;
         taget = p_pos.y + AddPointMoveAmount;
         ap_pos.y = taget;
@@ -428,6 +432,12 @@ bool SceneOver::AddPointPerform()
         }
         break;
     case SceneOver::FeadOut:
+        if (!OneSe)
+        {
+            OneSe = true;
+            s_addPoint->Play(false);
+        }
+
         ap_pos.y = lerp<float>(ap_pos.y, p_pos.y, rate);
         ap_color.w = lerp<float>(ap_color.w, 0.0f, rate);
 

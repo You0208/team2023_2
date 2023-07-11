@@ -8,7 +8,7 @@ protected:
 	static constexpr float PointPositionX = 1524.0f;    // 追加ポイント位置(X)
 	static constexpr float PointPositionY = 122.0f;      // 追加ポイント位置(Y)
 	static  float AddPointMoveAmount;// 追加ポイント移動量
-	static constexpr float rate = 0.005f;
+	static constexpr float rate = 0.02f;
 public:
 	Scene() {}
 	virtual ~Scene() {}
