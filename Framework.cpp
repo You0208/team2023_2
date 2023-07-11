@@ -159,6 +159,8 @@ int Framework::Run()
 // メッセージハンドラ
 LRESULT CALLBACK Framework::HandleMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	if (SceneManager::Instance().IsFinishAll)PostMessage(hWnd, WM_CLOSE, 0, 0);
+
 	if (Graphics::Instance().GetImGuiRenderer()->HandleMessage(hWnd, msg, wParam, lParam))
 		return true;
 
