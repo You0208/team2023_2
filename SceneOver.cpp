@@ -147,13 +147,13 @@ void SceneOver::Update(float elapsedTime)
 
     GamePad& gamePad = Input::Instance().GetGamePad();
     // アイコン選択処理
-    if (gamePad.GetButtonDown() & GamePad::BTN_UP)
+    if (gamePad.GetButtonDown() & GamePad::BTN_UP && !isNext)
     {
         s_selection->Stop();        // SE停止 
         s_selection->Play(false);   // SE再生
         selectNum--;
     }
-    if (gamePad.GetButtonDown() & GamePad::BTN_DOWN)
+    if (gamePad.GetButtonDown() & GamePad::BTN_DOWN  && !isNext)
     {
         s_selection->Stop();        // SE停止 
         s_selection->Play(false);   // SE再生

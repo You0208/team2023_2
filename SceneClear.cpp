@@ -116,9 +116,13 @@ void SceneClear::Update(float elapsedTime)
         dissolveThreshold = 0.0f;
         IsWhite = false;
     }
-    if (IsNext 
-        && (selectNum == 0 || AddPointPerform()))   // エンドレスモードが選択される || ポイント加算の演出が終了する
-        dissolveThreshold += 1.0 * elapsedTime;
+    if (IsNext)   // エンドレスモードが選択される
+    {
+        if (selectNum == 0 || AddPointPerform()) // ポイント加算の演出が終了する
+        {
+            dissolveThreshold += 1.0 * elapsedTime;
+        }
+    }
 
     HamuY += cosf(Theta) * 1.0f;
     Theta += 0.01f;
@@ -131,13 +135,13 @@ void SceneClear::Update(float elapsedTime)
 
     GamePad& gamePad = Input::Instance().GetGamePad();
     // アイコン選択処理
-    if (gamePad.GetButtonDown() & GamePad::BTN_UP)
+    if (gamePad.GetButtonDown() & GamePad::BTN_UP && !IsNext)
     {
         s_selection->Stop();        // SE停止
         s_selection->Play(false);   // SE再生
         selectNum--;
     }
-    if (gamePad.GetButtonDown() & GamePad::BTN_DOWN)
+    if (gamePad.GetButtonDown() & GamePad::BTN_DOWN && !IsNext)
     {
         s_selection->Stop();        // SE停止
         s_selection->Play(false);   // SE再生
