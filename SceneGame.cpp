@@ -700,14 +700,14 @@ void SceneGame::Render()
 			// ハイスコア表示
 			text_number->textOut(rc
 				, HighScore
-				, 1510.0f, 857.0f 
+				, 1510.0f, 836.0f
 				, 55.0f, 55.0f
 				, 1.0f, 1.0f, 1.0f, SelectTrans
 			);
 			// ポイント
 			text_number->textOut(rc
 				, Point
-				, 1510.0f, 945.0f
+				, 1510.0f, 923.0f
 				, 55.0f, 55.0f
 				, 1.0f, 1.0f, 1.0f, SelectTrans
 			);
