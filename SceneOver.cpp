@@ -29,6 +29,17 @@ void SceneOver::Initialize()
     // ポイントの加算
     AddPoint();
 
+    NotUseOVER_100 = (
+        (StageManager::GetEndless())
+        || (StageManager::stageNo == 0)
+        || (Point < 100)
+        );
+    
+    // エンドレスモードの時はリトライ出来なくする
+    NotUseOVER_RE = StageManager::GetEndless();
+
+    selectNum = NotUseOVER_100 ? (NotUseOVER_RE ? 2 : 1) : 0;
+
     //-------------------------------------------------------------------------------------------------------
     // ↓　この下はシェーダー関連
     //-------------------------------------------------------------------------------------------------------
@@ -62,6 +73,13 @@ void SceneOver::Initialize()
     // スプライト
     s_high = std::make_unique<Sprite>();
     s_high->SetShaderResourceView(t_high->GetShaderResourceView(), t_high->GetWidth(), t_high->GetHeight());
+
+    // ハイスコア
+    // スプライト初期化
+    t_HighScore = std::make_unique<Texture>("Data/Texture/highscore.png");
+    // スプライト
+    s_HighScore = std::make_unique<Sprite>();
+    s_HighScore->SetShaderResourceView(t_HighScore->GetShaderResourceView(), t_HighScore->GetWidth(), t_HighScore->GetHeight());
 
     // 100ポイント
     // スプライト初期化
@@ -105,7 +123,6 @@ void SceneOver::Initialize()
     s_black = std::make_unique<Sprite>();
     s_black->SetShaderResourceView(t_black->GetShaderResourceView(), t_black->GetWidth(), t_black->GetHeight());
 
-
     // マスクテクスチャの読み込み
     maskTexture = std::make_unique<Texture>("Data/Texture/dissolve.png");
     dissolveThreshold = 1.0f;
@@ -116,6 +133,7 @@ void SceneOver::Initialize()
 // 終了化
 void SceneOver::Finalize()
 {
+    scoreUpdate = false;    // ハイスコア更新フラグを折る
 }
 
 // 更新処理
@@ -141,8 +159,13 @@ void SceneOver::Update(float elapsedTime)
         s_selection->Play(false);   // SE再生
         selectNum++;
     }
-    if (selectNum > 2)selectNum = 0;
-    if (selectNum < 0)selectNum = 2;
+
+    int selectNumMax = 2;
+    //int selectNumMin = 0;
+    int selectNumMin = NotUseOVER_100 ? (NotUseOVER_RE ? 2 : 1) : 0;
+
+    if (selectNum > selectNumMax)selectNum = selectNumMin;
+    if (selectNum < selectNumMin)selectNum = selectNumMax;
     // selectNumの値に応じてiconPosXの要素を設定
     for (int i = 0; i < 3; i++)
     {
@@ -158,6 +181,8 @@ void SceneOver::Update(float elapsedTime)
 
     if (gamePad.GetButtonDown() & GamePad::BTN_B)
     {
+        s_choice->Stop();
+        s_choice->Play(false);
         isNext = true;
     }
     if (dissolveThreshold >= 1.0f)
@@ -165,27 +190,44 @@ void SceneOver::Update(float elapsedTime)
         switch (selectNum)
         {
         case OVER_100:
-        s_choice->Stop();
-        s_choice->Play(false);
-            if (Point < 100) return;
             if(addPointPerformState != AddPointPerformState::end) Point += addPoint;
 
             Point -= 100;   // 100ポイント使用
             SceneManager::Instance().IsSelect = false;
             SceneManager::Instance().IsNoneStage = true;
+            StageManager::FoldEndless();    // エンドレスモード中は呼べないが念のためエンドレスフラグを折る
             SceneManager::Instance().ChangeScene(new SceneGame);
             break;
         case OVER_RE:
             StageManager::stageNo = 0;
+            StageManager::FoldEndless();    // エンドレスモード中は呼べないが念のためエンドレスフラグを折る
             SceneManager::Instance().IsSelect = false;
             SceneManager::Instance().IsNoneStage = true;
             SceneManager::Instance().ChangeScene(new SceneGame);
             break;
         case OVER_TITLE:
+            StageManager::stageNo = 0;
+            StageManager::FoldEndless();    // エンドレスフラグを折る
             SceneManager::Instance().IsSelect = true;
             SceneManager::Instance().ChangeScene(new SceneTitle);
             break;
         }
+    }
+
+    if (scoreUpdate)HighscoreTime += 60.0f * elapsedTime;
+
+    if (HighscoreTime >= 60)
+    {
+        HighscoreTime = 0;
+    }
+
+    if (HighscoreTime <= 30)
+    {
+        HighScoreColor.w = 0.0f;
+    }
+    else
+    {
+        HighScoreColor.w = 1.0f;
     }
 
     //-------------------------------------------------------------------------------------------------------
@@ -218,7 +260,12 @@ void SceneOver::Update(float elapsedTime)
         0.0f, 0.0f,
         static_cast<float>(t_restart->GetWidth()), static_cast<float>(t_restart->GetHeight()),
         0.0f,
-        1.0f, 1.0f, 1.0f, 1.0f);
+        //　色
+        NotUseOVER_RE ? 0.5f : 1.0f,
+        NotUseOVER_RE ? 0.5f : 1.0f,
+        NotUseOVER_RE ? 0.5f : 1.0f,
+        1.0f
+    );
 
     s_high->Update(1125.0f, 430.0f,
         static_cast<float>(t_high->GetWidth()), static_cast<float>(t_high->GetHeight()),
@@ -232,7 +279,12 @@ void SceneOver::Update(float elapsedTime)
         0.0f, 0.0f,
         static_cast<float>(t_100p->GetWidth()), static_cast<float>(t_100p->GetHeight()),
         0.0f,
-        1.0f, 1.0f, 1.0f, 1.0f);
+        //　色
+        NotUseOVER_100 ? 0.5f : 1.0f,
+        NotUseOVER_100 ? 0.5f : 1.0f,
+        NotUseOVER_100 ? 0.5f : 1.0f,
+        1.0f
+    );
 
     s_over->Update(235.0f, 130.0f,
         static_cast<float>(t_over->GetWidth()), static_cast<float>(t_over->GetHeight()),
@@ -255,24 +307,21 @@ void SceneOver::Update(float elapsedTime)
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
 
-    s_point->Update(1320.0f, 0.0f,
+    s_point->Update(1920.0f - t_point->GetWidth(), 0.0f,
         static_cast<float>(t_point->GetWidth()), static_cast<float>(t_point->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_point->GetWidth()), static_cast<float>(t_point->GetHeight()),
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
 
-}
+    s_HighScore->Update(HighScorePoition.x, HighScorePoition.y,
+        static_cast<float>(t_HighScore->GetWidth()), static_cast<float>(t_HighScore->GetHeight()),
+        0.0f, 0.0f,
+        static_cast<float>(t_HighScore->GetWidth()), static_cast<float>(t_HighScore->GetHeight()),
+        0.0f,
+        HighScoreColor.x, HighScoreColor.y, HighScoreColor.z, HighScoreColor.w);
 
-// テキスト位置デバッグ(位置決まれば削除する)
-float p_size = 45.0;
-DirectX::XMFLOAT2 s_pos = { 1350.0f, 460.0f };
-float s_size = 45.0;
-float ap_size = 45.0;
-float SceneOver::AddPointMoveAmount = 100.0f;
-float rate = 0.005f;
-int score = 0;
-bool debug = false;
+}
 
 // 描画処理
 void SceneOver::Render()
@@ -305,25 +354,34 @@ void SceneOver::Render()
         shader->Draw(rc, s_result.get());
         shader->Draw(rc, s_title.get());
         shader->Draw(rc, s_restart.get());
+        shader->Draw(rc, s_HighScore.get());
+
         // スコア
         text_number->textOut(rc
-            , debug ? score : Player::GetScore()
-            , s_pos.x, s_pos.y
-            , s_size, s_size
+            , Player::GetScore()
+            , 1340.0f, 460.0f
+            , 45.0f, 45.0f
+            , 1.0f, 1.0f, 1.0f, 1.0f
+        );
+        // ハイスコア
+        text_number->textOut(rc
+            , HighScore
+            , p_pos.x, 31.0f
+            , 45.0f, 45.0f
             , 1.0f, 1.0f, 1.0f, 1.0f
         );
         // ポイント
         text_number->textOut(rc
             , Point
             , p_pos.x, p_pos.y
-            , p_size, p_size
+            , 45.0f, 45.0f
             , 1.0f, 1.0f, 1.0f, 1.0f
         );
         // 追加ポイント
         text_number->textOut(rc
             , addPoint
             , p_pos.x, ap_pos.y
-            , ap_size, ap_size
+            , 45.0f, 45.0f
             , ap_color.x, ap_color.y, ap_color.z, ap_color.w
         );
         shader->End(rc);
@@ -334,43 +392,6 @@ void SceneOver::Render()
         shader_mask->Begin(rc);
         shader_mask->Draw(rc, s_black.get());
         shader_mask->End(rc);
-    }
-    // デバッグ情報の表示
-    {
-        if (ImGui::Begin("Text", nullptr, ImGuiWindowFlags_None))
-        {
-            if (ImGui::CollapsingHeader("Score", ImGuiTreeNodeFlags_DefaultOpen))
-            {
-                ImGui::SliderFloat("s_posX", &s_pos.x, 0.0f, 1920.0f);
-                ap_pos.x = s_pos.x;
-                ImGui::SliderFloat("s_posY", &s_pos.y, 0.0f, 1080.0f);
-                ImGui::SliderFloat("s_size", &s_size, 30.0f, 80.0f);
-                ImGui::InputInt("score", &score);
-            }
-            if (ImGui::CollapsingHeader("Point", ImGuiTreeNodeFlags_DefaultOpen))
-            {
-                ImGui::SliderFloat("p_posX", &p_pos.x, 0.0f, 1920.0f);
-                ImGui::SliderFloat("p_posY", &p_pos.y, 0.0f, 1080.0f);
-                ImGui::SliderInt("Point", &Point,0, 100000);
-                if(ImGui::Button("AddPoint"))
-                {
-                    Point += 100;
-                }
-            }
-            if (ImGui::CollapsingHeader("AddPoint", ImGuiTreeNodeFlags_DefaultOpen))
-            {
-                ImGui::SliderFloat("ap_posY", &ap_pos.y, 0.0f, 1080.0f);
-                ImGui::SliderFloat("ap_size", &ap_size, 10.0f, 80.0f);
-                ImGui::InputFloat("addPointMoveAmount", &AddPointMoveAmount);
-                ImGui::InputFloat("rate", &rate);
-                if (ImGui::Button("Perform"))
-                {
-                    addPointPerformState = AddPointPerformState::begin;
-                }
-            }
-            ImGui::Checkbox("debug", &debug);
-        }
-        ImGui::End();
     }
 }
 
@@ -389,13 +410,12 @@ bool SceneOver::AddPointPerform()
     switch (addPointPerformState)
     {
     case SceneOver::begin:
-        addPoint = debug ? score / 10 : Player::GetScore() / 10;
+        addPoint = Player::GetScore() / 10;
         taget = p_pos.y + AddPointMoveAmount;
         ap_pos.y = taget;
         ap_color.w = 0.0f;
         addPointPerformState = AddPointPerformState::FeadIn;
     case SceneOver::FeadIn:
-       // ap_pos.y = lerp<float>(ap_pos.y, taget, rate);
         ap_color.w = lerp<float>(ap_color.w, 1.0f, rate);
 
         if((fabs(1.0f - ap_color.w) < 0.01f))
@@ -414,6 +434,12 @@ bool SceneOver::AddPointPerform()
             Point += addPoint;
             ap_pos.y = p_pos.y;
             ap_color.w = 0.0f;
+            NotUseOVER_100 = (
+                (StageManager::GetEndless())
+                || (StageManager::stageNo == 0)
+                || (Point < 100)
+                );
+            selectNum = NotUseOVER_100 ? 1 : 0;
             addPointPerformState = AddPointPerformState::end;
         }
 

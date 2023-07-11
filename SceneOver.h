@@ -9,11 +9,6 @@
 // タイトルシーン
 class SceneOver :public Scene
 {
-private:
-    static constexpr float PointPositionX = 1600.0f;    // 追加ポイント位置(X)
-    static constexpr float PointPositionY = 30.0f;      // 追加ポイント位置(Y)
-    static  float AddPointMoveAmount;// 追加ポイント移動量
-
 public:
     SceneOver() {}
     ~SceneOver()override {}
@@ -73,6 +68,9 @@ private:
     std::unique_ptr<Sprite>	s_black;
     std::unique_ptr<Texture> t_black;
 
+    std::unique_ptr<Sprite>	s_HighScore;
+    std::unique_ptr<Texture> t_HighScore;
+
     std::unique_ptr<Texture>	texture_fonts_number;		// フォントテクスチャ(数字のみ)
     std::unique_ptr<Text>		text_number;				// フォント(数字のみ)
 
@@ -87,7 +85,7 @@ private:
     DirectX::XMFLOAT2 p_pos = { PointPositionX,PointPositionY };// ポイント表示位置
     int addPoint = 0;                                           // 追加ポイント
     DirectX::XMFLOAT2 ap_pos{ PointPositionX,PointPositionY };  // 追加ポイント表示位置
-    DirectX::XMFLOAT4 ap_color{ 0.0f, 0.0f, 0.0f, 1.0f };       // 追加ポイント表示位置
+    DirectX::XMFLOAT4 ap_color{ 0.741f, 0.435f, 0.435f, 1.0f };       // 追加ポイント表示位置
     int addPointPerformState = AddPointPerformState::begin;
     enum OverNum
     {
@@ -97,7 +95,13 @@ private:
     };
     float iconPosX[3] = { 1200.0f,1200.0f,1200.0f };
     int selectNum = 0;
+    bool NotUseOVER_100 = false;   // trueの時OVER_100を使えなくする
+    bool NotUseOVER_RE = false;    // trueの時OVER_REを使えなくする
 
+    float HighscoreTime = 0.0f;
+
+    DirectX::XMFLOAT4 HighScoreColor{ 0.0f,0.0f ,0.0f ,1.0f };
+    DirectX::XMFLOAT2 HighScorePoition{ 1160.0f ,520.0f };
 
     // UVスクロールデータ
     UVScrollData uvScrollData;

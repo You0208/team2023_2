@@ -5,6 +5,7 @@
 #include "SceneClear.h"
 #include "SceneTitle.h"
 #include "Input/Input.h"
+#include "Tool.h"
 
 // 初期化
 void SceneClear::Initialize()
@@ -41,7 +42,7 @@ void SceneClear::Initialize()
 
     // ポイント
     // スプライト初期化
-    t_point = std::make_unique<Texture>("Data/Texture/Clear/point.png");
+    t_point = std::make_unique<Texture>("Data/Texture/highscore_point.png");
     // スプライト
     s_point = std::make_unique<Sprite>();
     s_point->SetShaderResourceView(t_point->GetShaderResourceView(), t_point->GetWidth(), t_point->GetHeight());
@@ -81,6 +82,18 @@ void SceneClear::Initialize()
     s_White = std::make_unique<Sprite>();
     s_White->SetShaderResourceView(t_White->GetShaderResourceView(), t_White->GetWidth(), t_White->GetHeight());
 
+    // ハイスコア
+    // スプライト初期化
+    t_HighScore = std::make_unique<Texture>("Data/Texture/highscore.png");
+    // スプライト
+    s_HighScore = std::make_unique<Sprite>();
+    s_HighScore->SetShaderResourceView(t_HighScore->GetShaderResourceView(), t_HighScore->GetWidth(), t_HighScore->GetHeight());
+
+    // フォント
+    texture_fonts_number = std::make_unique<Texture>("Data/fonts/font7.png");
+    text_number = std::make_unique<Text>();
+    text_number->SetShaderResourceView(texture_fonts_number->GetShaderResourceView(),
+        texture_fonts_number->GetWidth(), texture_fonts_number->GetHeight());
 
     // マスクテクスチャの読み込み
     maskTexture = std::make_unique<Texture>("Data/Texture/dissolve.png");
@@ -92,6 +105,7 @@ void SceneClear::Initialize()
 // 終了化
 void SceneClear::Finalize()
 {
+    scoreUpdate = false;        // ハイスコア更新フラグを折る
 }
 
 // 更新処理
@@ -102,7 +116,9 @@ void SceneClear::Update(float elapsedTime)
         dissolveThreshold = 0.0f;
         IsWhite = false;
     }
-    if (IsNext)dissolveThreshold += 1.0 * elapsedTime;
+    if (IsNext 
+        && (selectNum == 0 || AddPointPerform()))   // エンドレスモードが選択される || ポイント加算の演出が終了する
+        dissolveThreshold += 1.0 * elapsedTime;
 
     HamuY += cosf(Theta) * 1.0f;
     Theta += 0.01f;
@@ -152,11 +168,36 @@ void SceneClear::Update(float elapsedTime)
         switch (selectNum)
         {
         case 0:
+            StageManager::stageNo = Stage::StageMax;
+            StageManager::FoldIsClear();    // クリアフラグを折る
+            StageManager::RaiseEndless();   // エンドレスフラグを立てる
+            SceneManager::Instance().IsSelect = false;
+            SceneManager::Instance().IsNoneStage = true;
+            SceneManager::Instance().ChangeScene(new SceneGame);
             break;
         case 1:
+            StageManager::stageNo = 0;      // ステージ0に戻す
+            StageManager::FoldIsClear();    // クリアフラグを折る
+            StageManager::FoldEndless();    // エンドレスフラグを折る
             SceneManager::Instance().ChangeScene(new SceneTitle);
             break;
         }
+    }
+
+    if (scoreUpdate)HighscoreTime += 60.0f * elapsedTime;
+
+    if (HighscoreTime >= 60)
+    {
+        HighscoreTime = 0;
+    }
+
+    if (HighscoreTime <= 30)
+    {
+        HighScoreColor.w = 0.0f;
+    }
+    else
+    {
+        HighScoreColor.w = 1.0f;
     }
 
     //-------------------------------------------------------------------------------------------------------
@@ -198,7 +239,7 @@ void SceneClear::Update(float elapsedTime)
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
 
-    s_point->Update(1320.0f, 0.0f,
+    s_point->Update(1920.0f - t_point->GetWidth(), 0.0f,
         static_cast<float>(t_point->GetWidth()), static_cast<float>(t_point->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_point->GetWidth()), static_cast<float>(t_point->GetHeight()),
@@ -217,7 +258,14 @@ void SceneClear::Update(float elapsedTime)
         0.0f, 0.0f,
         static_cast<float>(t_score->GetWidth()), static_cast<float>(t_score->GetHeight()),
         0.0f,
-        1.0f, 1.0f, 1.0f, 1.0f);
+        1.0f, 1.0f, 1.0f, 1.0f);    
+    
+    s_HighScore->Update(HighScorePoition.x, HighScorePoition.y,
+        static_cast<float>(t_HighScore->GetWidth()), static_cast<float>(t_HighScore->GetHeight()),
+        0.0f, 0.0f,
+        static_cast<float>(t_HighScore->GetWidth()), static_cast<float>(t_HighScore->GetHeight()),
+        0.0f,
+        HighScoreColor.x, HighScoreColor.y, HighScoreColor.z, HighScoreColor.w);
 
     s_title->Update(iconPosX[1], 755.0f,
         static_cast<float>(t_title->GetWidth()), static_cast<float>(t_title->GetHeight()),
@@ -257,6 +305,38 @@ void SceneClear::Render()
         shader->Draw(rc, s_result.get());
         shader->Draw(rc, s_score.get());
         shader->Draw(rc, s_title.get());
+        shader->Draw(rc, s_HighScore.get());
+
+        // スコア
+        text_number->textOut(rc
+            , Player::GetScore()
+            , 1340.0f, 460.0f
+            , 45.0f, 45.0f
+            , 1.0f, 1.0f, 1.0f, 1.0f
+        );
+        // ハイスコア
+        text_number->textOut(rc
+            , HighScore
+            , p_pos.x, 31.0f
+            , 45.0f, 45.0f
+            , 1.0f, 1.0f, 1.0f, 1.0f
+        );
+        // ポイント
+        text_number->textOut(rc
+            , Point
+            , p_pos.x, p_pos.y
+            , 45.0f, 45.0f
+            , 1.0f, 1.0f, 1.0f, 1.0f
+        );
+        // 追加ポイント
+        text_number->textOut(rc
+            , addPoint
+            , p_pos.x, ap_pos.y
+            , 45.0f, 45.0f
+            , ap_color.x, ap_color.y, ap_color.z, ap_color.w
+        );
+        shader->End(rc);
+
         shader->End(rc);
 
         rc.maskData.maskTexture = maskTexture->GetShaderResourceView().Get();
@@ -267,5 +347,59 @@ void SceneClear::Render()
         if(IsWhite)shader_mask->Draw(rc, s_White.get());
         shader_mask->End(rc);
     }
+    // デバッグ
+    {
+        if (ImGui::Begin("Text", nullptr, ImGuiWindowFlags_None))
+        {
+            ImGui::ColorPicker4("color", &HighScoreColor.x);
+            ImGui::InputFloat("posX", &HighScorePoition.x);
+            ImGui::InputFloat("posY", &HighScorePoition.y);
+        }
+        ImGui::End();
+    }
 }
  
+// 追加ポイント演出
+bool SceneClear::AddPointPerform()
+{
+    static float taget = p_pos.y + AddPointMoveAmount;  // 移動(出現)する位置
+    switch (addPointPerformState)
+    {
+    case SceneClear::begin:
+        addPoint = Player::GetScore() / 10;
+        taget = p_pos.y + AddPointMoveAmount;
+        ap_pos.y = taget;
+        ap_color.w = 0.0f;
+        addPointPerformState = AddPointPerformState::FeadIn;
+    case SceneClear::FeadIn:
+        ap_color.w = lerp<float>(ap_color.w, 1.0f, rate);
+
+        if ((fabs(1.0f - ap_color.w) < 0.01f))
+        {
+            ap_pos.y = taget;
+            ap_color.w = 1.0f;
+            addPointPerformState = AddPointPerformState::FeadOut;
+        }
+        break;
+    case SceneClear::FeadOut:
+        ap_pos.y = lerp<float>(ap_pos.y, p_pos.y, rate);
+        ap_color.w = lerp<float>(ap_color.w, 0.0f, rate);
+
+        if ((fabs(p_pos.y - ap_pos.y) < 8.0f))
+        {
+            Point += addPoint;
+            ap_pos.y = p_pos.y;
+            ap_color.w = 0.0f;
+            addPointPerformState = AddPointPerformState::end;
+        }
+
+        break;
+    case SceneClear::end:
+        return true;
+        break;
+    default:
+        break;
+    }
+
+    return false;
+}

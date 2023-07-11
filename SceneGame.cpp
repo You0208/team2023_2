@@ -42,7 +42,7 @@ void SceneGame::Initialize()
 
 	//プレイヤー初期設定
 	player = new Player();
-	player->ScoreClear();	// スコアのリセット
+	if(!StageManager::GetEndless()) player->ScoreClear();	// スコアのリセット(エンドレスモードはスコア引き継ぐ)
 
 	// 空初期設定
 	sky = new Sky();
@@ -148,6 +148,14 @@ void SceneGame::Initialize()
 	sprite_StageUI = std::make_unique<Sprite>();
 	sprite_StageUI->SetShaderResourceView(texture_StageUI->GetShaderResourceView(),
 		texture_StageUI->GetWidth(), texture_StageUI->GetHeight());
+
+	// スコアフレーム
+	texture_score_frame = std::make_unique<Texture>("Data/Texture/UI/score_frame.png");
+	sprite_score_frame = std::make_unique<Sprite>();
+	sprite_score_frame->SetShaderResourceView(texture_score_frame->GetShaderResourceView(),
+		texture_score_frame->GetWidth(), texture_score_frame->GetHeight());
+
+
 	// テクスチャを読み込む
 	texture = std::make_unique<Texture>("Data/Texture/titleFrame.png");
 	// スプライト
@@ -284,7 +292,7 @@ void SceneGame::Initialize()
 void SceneGame::Finalize()
 {
 	// ハイスコアの更新
-	UpdateHighScore(player->GetScore());
+	scoreUpdate = UpdateHighScore(player->GetScore());
 
 	// ステージ終了
 	stageManager->Clear();
@@ -386,7 +394,11 @@ void SceneGame::Update(float elapsedTime)
 		0.0f, 0.0f,
 		static_cast<float>(t_restart->GetWidth()), static_cast<float>(t_restart->GetHeight()),
 		0.0f,
-		1.0f, 1.0f, 1.0f, 1.0f);
+		StageManager::GetEndless() ? 0.5f : 1.0f,
+		StageManager::GetEndless() ? 0.5f : 1.0f,
+		StageManager::GetEndless() ? 0.5f : 1.0f,
+		1.0f
+	);
 
 	s_paused->Update(600.0f, 100.0f,
 		static_cast<float>(t_paused->GetWidth()), static_cast<float>(t_paused->GetHeight()),
@@ -406,6 +418,14 @@ void SceneGame::Update(float elapsedTime)
 		static_cast<float>(t_play2->GetWidth()), static_cast<float>(t_play2->GetHeight()),
 		0.0f, 0.0f,
 		static_cast<float>(t_play2->GetWidth()), static_cast<float>(t_play2->GetHeight()),
+		0.0f,
+		1.0f, 1.0f, 1.0f, 1.0f);
+
+	sprite_score_frame->Update(
+		0.0f, 0.0f,
+		texture_score_frame->GetWidth(), texture_score_frame->GetHeight(),
+		0.0f, 0.0f,
+		texture_score_frame->GetWidth(), texture_score_frame->GetHeight(),
 		0.0f,
 		1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -461,6 +481,8 @@ void SceneGame::Update(float elapsedTime)
 			//	accelEffect->Play(e);
 			//}
 			TransClear = true;
+			StageManager::IsClear = true;
+			StageManager::Endless = true;
 		}
 
 		if (cameraController->flag)
@@ -539,13 +561,13 @@ void SceneGame::PausedUpdate(float elapsedTime)
 	GamePad& gamePad = Input::Instance().GetGamePad();
 	if (gamePad.GetButtonDown() & GamePad::BTN_UP)
 	{
-		selectNum_p--;
+		selectNum_p -= StageManager::GetEndless() ? 2:1;
 		s_selection->Stop();
 		s_selection->Play(false);		// SE再生
 	}
 	if (gamePad.GetButtonDown() & GamePad::BTN_DOWN)
 	{
-		selectNum_p++;
+		selectNum_p+= StageManager::GetEndless() ? 2 : 1;
 		s_selection->Stop();
 		s_selection->Play(false);		// SE再生
 	}
@@ -592,11 +614,14 @@ void SceneGame::PausedUpdate(float elapsedTime)
 				break;
 			case PAUSE_RE:
 				StageManager::stageNo = 0;
+				StageManager::FoldEndless();	// エンドレスモード中は呼べないが念のためフラグを折る
 				SceneManager::Instance().IsSelect = false;
 				SceneManager::Instance().IsNoneStage = true;
 				SceneManager::Instance().ChangeScene(new SceneGame);
 				break;
 			case PAUSE_TITLE:
+				StageManager::stageNo = 0;
+				StageManager::FoldEndless();
 				SceneManager::Instance().NotFinish = false;
 				SceneManager::Instance().ChangeScene(new SceneTitle);
 				break;
@@ -605,10 +630,6 @@ void SceneGame::PausedUpdate(float elapsedTime)
 	}
 	cameraController->Update(elapsedTime);
 }
-
-// デバッグ用(削除する)
-DirectX::XMFLOAT2 HighScoreTextPos	= { 1510.0f, 857.0f };
-DirectX::XMFLOAT2 HighScoreTextSize = { 55.0f, 55.0f };
 
 // 描画処理
 void SceneGame::Render()
@@ -679,10 +700,18 @@ void SceneGame::Render()
 			// ハイスコア表示
 			text_number->textOut(rc
 				, HighScore
-				, HighScoreTextPos.x, HighScoreTextPos.y
-				, HighScoreTextSize.x, HighScoreTextSize.y
+				, 1510.0f, 857.0f 
+				, 55.0f, 55.0f
 				, 1.0f, 1.0f, 1.0f, SelectTrans
 			);
+			// ポイント
+			text_number->textOut(rc
+				, Point
+				, 1510.0f, 945.0f
+				, 55.0f, 55.0f
+				, 1.0f, 1.0f, 1.0f, SelectTrans
+			);
+
 		}
 		else if(!TransClear)	// ゲーム時
 		{
@@ -691,16 +720,13 @@ void SceneGame::Render()
 			shader->Draw(rc, sprite_hungerGage.get());
 			shader->Draw(rc, sprite_hungerGageFrame.get());
 
+			// スコアフレーム
+			shader->Draw(rc, sprite_score_frame.get());
+
 			// ステージレベル看板
 			shader->Draw(rc, sprite_StageUI.get());
 
-			// スコア表示(仮)
-			//text[fontNo]->textOut(rc
-			//	, "Score:" + std::to_string(player->GetScore())
-			//	, text_pos.x, text_pos.y
-			//	, text_size.x, text_size.y
-			//	, text_color.x, text_color.y, text_color.z, text_color.w
-			//);
+			// スコア表示
 			text_number->textOut(rc
 				, player->GetScore()
 				, text_pos.x, text_pos.y
@@ -741,26 +767,6 @@ void SceneGame::Render()
 			player->DrawDebugGUI();
 			stageManager->DrawDebugGUI();
 			postprocessingRenderer->DrawDebugGUI();
-		}
-		// テキスト
-		{
-			if (ImGui::TreeNode("Text Score"))
-			{
-				ImGui::SliderInt("fontNo", &fontNo, 0, 6);
-				ImGui::SliderFloat("posX", &text_pos.x, 0.0f, 1920.0f);
-				ImGui::SliderFloat("posY", &text_pos.y, 0.0f, 1080.0f);
-				ImGui::SliderFloat("size", &text_size.x, 0.0f, 500.0f);
-				text_size.y = text_size.x;
-				ImGui::ColorPicker4("color", &text_color.x);
-				ImGui::TreePop();
-			}
-			if (ImGui::TreeNode("Text HighScore"))
-			{
-				ImGui::InputFloat2("Pos", &HighScoreTextPos.x);
-				ImGui::InputFloat("Size", &HighScoreTextSize.x);
-				HighScoreTextSize.y = HighScoreTextSize.x;
-				ImGui::TreePop();
-			}
 		}
 		// スコア表示
 		{
@@ -1251,7 +1257,7 @@ void SceneGame::CollisionObsVsObs()
 
 void SceneGame::IsClear()
 {
-	if (stageManager->GetStageNo() == 4 && stageManager->GetDoneStageNum() > 12)
+	if (stageManager->GetIsClear())
 	{
 		TransClear = true;
 	}
@@ -1503,16 +1509,21 @@ void SceneGame::UpdateStageUI()
 	// 速度
 	float speed = 10.0f;
 
-	// 休憩フラグが立っているとき
-	if (stageManager->IsBreakTime)
+	// クリアしていないときだけ処理する
+	if (!StageManager::GetIsClear() && !StageManager::GetEndless())
 	{
-		StageUI_Position.x = lerp<float>(StageUI_Position.x,dx_end,0.05f);
+		// ステージが1以下	最大より多い場合は以下の処理をしない
+		if ((StageManager::stageNo < 1) || (StageManager::stageNo > Stage::StageMax - 1)) return;
 
-		// アニメーションしたい
-	}
-	if (!stageManager->IsBreakTime)
-	{
-		StageUI_Position.x = lerp<float>(StageUI_Position.x, screen_width, 0.05f);
+		// 休憩フラグが立っているとき
+		if ((stageManager->IsBreakTime || stageManager->GetStateInvincible()))
+		{
+			StageUI_Position.x = lerp<float>(StageUI_Position.x, dx_end, 0.05f);
+		}
+		if (!stageManager->IsBreakTime && !stageManager->GetStateInvincible())
+		{
+			StageUI_Position.x = lerp<float>(StageUI_Position.x, screen_width, 0.05f);
+		}
 	}
 
 	// 背景

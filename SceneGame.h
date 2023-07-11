@@ -107,9 +107,9 @@ private:
 	float rotation;// セレクト用
 
 	int fontNo = 4;	// フォント番号
-	DirectX::XMFLOAT2 text_size = { 50.0f,50.0f };
-	DirectX::XMFLOAT2 text_pos = { 0.0f,105.0f };
-	DirectX::XMFLOAT4 text_color = { 0.0f,1.0f,0.0f,1.0f };
+	DirectX::XMFLOAT2 text_size = { 45.0f,45.0f };
+	DirectX::XMFLOAT2 text_pos = { 15.0f,26.0f };
+	DirectX::XMFLOAT4 text_color = { 1.0f,1.0f,1.0f,1.0f };
 
 	enum SelectNum
 	{
@@ -171,10 +171,12 @@ private:
 	std::unique_ptr<Texture>	texture_hungerGage;			// 空腹ゲージのテクスチャ(白)
 	std::unique_ptr<Texture>	texture_hungerGageFrame;	// 空腹ゲージのフレームのテクスチャ
 	std::unique_ptr<Texture>	texture_StageUI;			// ステージレベルの看板のテクスチャ
+	std::unique_ptr<Texture>	texture_score_frame;		// スコアフレームのテクスチャ
 	std::unique_ptr<Sprite>		sprite_hungerGage;			// 空腹ゲージ
 	std::unique_ptr<Sprite>		sprite_hungerGageFrame;		// 空腹ゲージのフレーム
 	std::unique_ptr<Sprite>		sprite_hungerGageBack;		// 空腹ゲージの背景
 	std::unique_ptr<Sprite>		sprite_StageUI;				// ステージレベルの看板
+	std::unique_ptr<Sprite>		sprite_score_frame;			// スコアフレーム 
 	std::unique_ptr<Texture>	texture_fonts[7];			// フォントテクスチャ
 	std::unique_ptr<Text>		text[7];					// フォント
 	std::unique_ptr<Texture>	texture_fonts_number;		// フォントテクスチャ(数字のみ)
