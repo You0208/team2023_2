@@ -48,112 +48,6 @@ Stage::SpawnObstacleInfo Stage::StageInfo01[] =
     ,{AreaInfo08,Stage::SpawnLevel::high}
 
 
-
-
-    //{AreaInfo09,Stage::SpawnLevel::low}
-    //,{AreaInfo09,Stage::SpawnLevel::middle}
-    //,{AreaInfo09,Stage::SpawnLevel::high}
-    //,{AreaInfo10,Stage::SpawnLevel::low}
-    //,{AreaInfo10,Stage::SpawnLevel::middle}
-    //,{AreaInfo10,Stage::SpawnLevel::high}
-    //,{AreaInfo11,Stage::SpawnLevel::low}
-    //,{AreaInfo11,Stage::SpawnLevel::middle}
-    //,{AreaInfo11,Stage::SpawnLevel::high}
-    //,{AreaInfo12,Stage::SpawnLevel::low}
-    //,{AreaInfo12,Stage::SpawnLevel::middle}
-    //,{AreaInfo12,Stage::SpawnLevel::high}
-    //,{AreaInfo13,Stage::SpawnLevel::low}
-    //,{AreaInfo13,Stage::SpawnLevel::middle}
-    //,{AreaInfo13,Stage::SpawnLevel::high}
-    //,{AreaInfo14,Stage::SpawnLevel::low}
-    //,{AreaInfo14,Stage::SpawnLevel::middle}
-    //,{AreaInfo14,Stage::SpawnLevel::high}
-    //,{AreaInfo15,Stage::SpawnLevel::low}
-    //,{AreaInfo15,Stage::SpawnLevel::middle}
-    //,{AreaInfo15,Stage::SpawnLevel::high}
-    //    ,{AreaInfo16,Stage::SpawnLevel::low}
-    //,{AreaInfo16,Stage::SpawnLevel::middle}
-    //,{AreaInfo16,Stage::SpawnLevel::high}
-
-
-
-
-    //    {AreaInfo17,Stage::SpawnLevel::low}
-    //,{AreaInfo17,Stage::SpawnLevel::middle}
-    //,{AreaInfo17,Stage::SpawnLevel::high}
-    //,{AreaInfo18,Stage::SpawnLevel::low}
-    //,{AreaInfo18,Stage::SpawnLevel::middle}
-    //,{AreaInfo18,Stage::SpawnLevel::high}
-    //,{AreaInfo19,Stage::SpawnLevel::low}
-    //,{AreaInfo19,Stage::SpawnLevel::middle}
-    //,{AreaInfo19,Stage::SpawnLevel::high}
-    //,{AreaInfo20,Stage::SpawnLevel::low}
-    //,{AreaInfo20,Stage::SpawnLevel::middle}
-    //,{AreaInfo20,Stage::SpawnLevel::high}
-    //,{AreaInfo21,Stage::SpawnLevel::low}
-    //,{AreaInfo21,Stage::SpawnLevel::middle}
-    //,{AreaInfo21,Stage::SpawnLevel::high}
-    //,{AreaInfo22,Stage::SpawnLevel::low}
-    //,{AreaInfo22,Stage::SpawnLevel::middle}
-    //,{AreaInfo22,Stage::SpawnLevel::high}
-    //,{AreaInfo23,Stage::SpawnLevel::low}
-    //,{AreaInfo23,Stage::SpawnLevel::middle}
-    //,{AreaInfo23,Stage::SpawnLevel::high}
-    //    ,{AreaInfo24,Stage::SpawnLevel::low}
-    //,{AreaInfo24,Stage::SpawnLevel::middle}
-    //,{AreaInfo24,Stage::SpawnLevel::high}
-
-
-    // {AreaInfo25,Stage::SpawnLevel::low}
-    //,{AreaInfo25,Stage::SpawnLevel::middle}
-    //,{AreaInfo25,Stage::SpawnLevel::high}
-    //,{AreaInfo26,Stage::SpawnLevel::low}
-    //,{AreaInfo26,Stage::SpawnLevel::middle}
-    //,{AreaInfo26,Stage::SpawnLevel::high}
-    //,{AreaInfo27,Stage::SpawnLevel::low}
-    //,{AreaInfo27,Stage::SpawnLevel::middle}
-    //,{AreaInfo27,Stage::SpawnLevel::high}
-    //,{AreaInfo28,Stage::SpawnLevel::low}
-    //,{AreaInfo28,Stage::SpawnLevel::middle}
-    //,{AreaInfo28,Stage::SpawnLevel::high}
-    //,{AreaInfo29,Stage::SpawnLevel::low}
-    //,{AreaInfo29,Stage::SpawnLevel::middle}
-    //,{AreaInfo29,Stage::SpawnLevel::high}
-    //,{AreaInfo30,Stage::SpawnLevel::low}
-    //,{AreaInfo30,Stage::SpawnLevel::middle}
-    //,{AreaInfo30,Stage::SpawnLevel::high}
-    //,{AreaInfo31,Stage::SpawnLevel::low}
-    //,{AreaInfo31,Stage::SpawnLevel::middle}
-    //,{AreaInfo31,Stage::SpawnLevel::high}
-    //    ,{AreaInfo32,Stage::SpawnLevel::low}
-    //,{AreaInfo32,Stage::SpawnLevel::middle}
-    //,{AreaInfo32,Stage::SpawnLevel::high}
-
-    //{AreaInfo33, Stage::SpawnLevel::low}
-    //, { AreaInfo33,Stage::SpawnLevel::middle }
-    //    , { AreaInfo33,Stage::SpawnLevel::high }
-    //    , { AreaInfo34,Stage::SpawnLevel::low }
-    //    , { AreaInfo34,Stage::SpawnLevel::middle }
-    //    , { AreaInfo34,Stage::SpawnLevel::high }
-    //    , { AreaInfo35,Stage::SpawnLevel::low }
-    //    , { AreaInfo35,Stage::SpawnLevel::middle }
-    //    , { AreaInfo35,Stage::SpawnLevel::high }
-    //    , { AreaInfo36,Stage::SpawnLevel::low }
-    //    , { AreaInfo36,Stage::SpawnLevel::middle }
-    //    , { AreaInfo36,Stage::SpawnLevel::high }
-    //    , { AreaInfo37,Stage::SpawnLevel::low }
-    //    , { AreaInfo37,Stage::SpawnLevel::middle }
-    //    , { AreaInfo37,Stage::SpawnLevel::high }
-    //    , { AreaInfo38,Stage::SpawnLevel::low }
-    //    , { AreaInfo38,Stage::SpawnLevel::middle }
-    //    , { AreaInfo38,Stage::SpawnLevel::high }
-    //    , { AreaInfo39,Stage::SpawnLevel::low }
-    //    , { AreaInfo39,Stage::SpawnLevel::middle }
-    //    , { AreaInfo39,Stage::SpawnLevel::high }
-    //    , { AreaInfo40,Stage::SpawnLevel::low }
-    //    , { AreaInfo40,Stage::SpawnLevel::middle }
-    //    , { AreaInfo40,Stage::SpawnLevel::high }
-
 ,{nullptr,0} // END
 };
 // ステージ2
@@ -249,127 +143,30 @@ Stage::SpawnObstacleInfo Stage::StageInfo04[] =
 // ステージ5
 Stage::SpawnObstacleInfo Stage::StageInfo05[] =
 {
-
-     {AreaInfo01,Stage::SpawnLevel::low}
-    ,{AreaInfo01,Stage::SpawnLevel::middle}
-    ,{AreaInfo01,Stage::SpawnLevel::high}
-    ,{AreaInfo02,Stage::SpawnLevel::low}
-    ,{AreaInfo02,Stage::SpawnLevel::middle}
-    ,{AreaInfo02,Stage::SpawnLevel::high}
-    ,{AreaInfo03,Stage::SpawnLevel::low}
-    ,{AreaInfo03,Stage::SpawnLevel::middle}
-    ,{AreaInfo03,Stage::SpawnLevel::high}
-    ,{AreaInfo04,Stage::SpawnLevel::low}
-    ,{AreaInfo04,Stage::SpawnLevel::middle}
-    ,{AreaInfo04,Stage::SpawnLevel::high}
-    ,{AreaInfo05,Stage::SpawnLevel::low}
-    ,{AreaInfo05,Stage::SpawnLevel::middle}
-    ,{AreaInfo05,Stage::SpawnLevel::high}
-    ,{AreaInfo06,Stage::SpawnLevel::low}
-    ,{AreaInfo06,Stage::SpawnLevel::middle}
-    ,{AreaInfo06,Stage::SpawnLevel::high}
-    ,{AreaInfo07,Stage::SpawnLevel::low}
-    ,{AreaInfo07,Stage::SpawnLevel::middle}
-    ,{AreaInfo07,Stage::SpawnLevel::high}
-    ,{AreaInfo08,Stage::SpawnLevel::low}
-    ,{AreaInfo08,Stage::SpawnLevel::middle}
-    ,{AreaInfo08,Stage::SpawnLevel::high}
-        ,{AreaInfo09,Stage::SpawnLevel::low}
-    ,{AreaInfo09,Stage::SpawnLevel::middle}
-    ,{AreaInfo09,Stage::SpawnLevel::high}
-    ,{AreaInfo10,Stage::SpawnLevel::low}
-    ,{AreaInfo10,Stage::SpawnLevel::middle}
-    ,{AreaInfo10,Stage::SpawnLevel::high}
-    ,{AreaInfo11,Stage::SpawnLevel::low}
-    ,{AreaInfo11,Stage::SpawnLevel::middle}
-    ,{AreaInfo11,Stage::SpawnLevel::high}
-    ,{AreaInfo12,Stage::SpawnLevel::low}
-    ,{AreaInfo12,Stage::SpawnLevel::middle}
-    ,{AreaInfo12,Stage::SpawnLevel::high}
-    ,{AreaInfo13,Stage::SpawnLevel::low}
-    ,{AreaInfo13,Stage::SpawnLevel::middle}
-    ,{AreaInfo13,Stage::SpawnLevel::high}
-    ,{AreaInfo14,Stage::SpawnLevel::low}
-    ,{AreaInfo14,Stage::SpawnLevel::middle}
-    ,{AreaInfo14,Stage::SpawnLevel::high}
-    ,{AreaInfo15,Stage::SpawnLevel::low}
-    ,{AreaInfo15,Stage::SpawnLevel::middle}
-    ,{AreaInfo15,Stage::SpawnLevel::high}
-        ,{AreaInfo16,Stage::SpawnLevel::low}
-    ,{AreaInfo16,Stage::SpawnLevel::middle}
-    ,{AreaInfo16,Stage::SpawnLevel::high}
-            ,{AreaInfo17,Stage::SpawnLevel::low}
-    ,{AreaInfo17,Stage::SpawnLevel::middle}
-    ,{AreaInfo17,Stage::SpawnLevel::high}
-    ,{AreaInfo18,Stage::SpawnLevel::low}
-    ,{AreaInfo18,Stage::SpawnLevel::middle}
-    ,{AreaInfo18,Stage::SpawnLevel::high}
-    ,{AreaInfo19,Stage::SpawnLevel::low}
-    ,{AreaInfo19,Stage::SpawnLevel::middle}
-    ,{AreaInfo19,Stage::SpawnLevel::high}
-    ,{AreaInfo20,Stage::SpawnLevel::low}
-    ,{AreaInfo20,Stage::SpawnLevel::middle}
-    ,{AreaInfo20,Stage::SpawnLevel::high}
-    ,{AreaInfo21,Stage::SpawnLevel::low}
-    ,{AreaInfo21,Stage::SpawnLevel::middle}
-    ,{AreaInfo21,Stage::SpawnLevel::high}
-    ,{AreaInfo22,Stage::SpawnLevel::low}
-    ,{AreaInfo22,Stage::SpawnLevel::middle}
-    ,{AreaInfo22,Stage::SpawnLevel::high}
-    ,{AreaInfo23,Stage::SpawnLevel::low}
-    ,{AreaInfo23,Stage::SpawnLevel::middle}
-    ,{AreaInfo23,Stage::SpawnLevel::high}
-        ,{AreaInfo24,Stage::SpawnLevel::low}
-    ,{AreaInfo24,Stage::SpawnLevel::middle}
-    ,{AreaInfo24,Stage::SpawnLevel::high}
-         ,{AreaInfo25,Stage::SpawnLevel::low}
-    ,{AreaInfo25,Stage::SpawnLevel::middle}
-    ,{AreaInfo25,Stage::SpawnLevel::high}
-    ,{AreaInfo26,Stage::SpawnLevel::low}
-    ,{AreaInfo26,Stage::SpawnLevel::middle}
-    ,{AreaInfo26,Stage::SpawnLevel::high}
-    ,{AreaInfo27,Stage::SpawnLevel::low}
-    ,{AreaInfo27,Stage::SpawnLevel::middle}
-    ,{AreaInfo27,Stage::SpawnLevel::high}
-    ,{AreaInfo28,Stage::SpawnLevel::low}
-    ,{AreaInfo28,Stage::SpawnLevel::middle}
-    ,{AreaInfo28,Stage::SpawnLevel::high}
-    ,{AreaInfo29,Stage::SpawnLevel::low}
-    ,{AreaInfo29,Stage::SpawnLevel::middle}
-    ,{AreaInfo29,Stage::SpawnLevel::high}
-    ,{AreaInfo30,Stage::SpawnLevel::low}
-    ,{AreaInfo30,Stage::SpawnLevel::middle}
-    ,{AreaInfo30,Stage::SpawnLevel::high}
-    ,{AreaInfo31,Stage::SpawnLevel::low}
-    ,{AreaInfo31,Stage::SpawnLevel::middle}
-    ,{AreaInfo31,Stage::SpawnLevel::high}
-        ,{AreaInfo32,Stage::SpawnLevel::low}
-    ,{AreaInfo32,Stage::SpawnLevel::middle}
-    ,{AreaInfo32,Stage::SpawnLevel::high}
-    // {AreaInfo33,Stage::SpawnLevel::low}
-    //,{AreaInfo33,Stage::SpawnLevel::middle}
-    //,{AreaInfo33,Stage::SpawnLevel::high}
-    //,{AreaInfo34,Stage::SpawnLevel::low}
-    //,{AreaInfo34,Stage::SpawnLevel::middle}
-    //,{AreaInfo34,Stage::SpawnLevel::high}
-    //,{AreaInfo35,Stage::SpawnLevel::low}
-    //,{AreaInfo35,Stage::SpawnLevel::middle}
-    //,{AreaInfo35,Stage::SpawnLevel::high}
-    //,{AreaInfo36,Stage::SpawnLevel::low}
-    //,{AreaInfo36,Stage::SpawnLevel::middle}
-    //,{AreaInfo36,Stage::SpawnLevel::high}
-    //,{AreaInfo37,Stage::SpawnLevel::low}
-    //,{AreaInfo37,Stage::SpawnLevel::middle}
-    //,{AreaInfo37,Stage::SpawnLevel::high}
-    //,{AreaInfo38,Stage::SpawnLevel::low}
-    //,{AreaInfo38,Stage::SpawnLevel::middle}
-    //,{AreaInfo38,Stage::SpawnLevel::high}
-    //,{AreaInfo39,Stage::SpawnLevel::low}
-    //,{AreaInfo39,Stage::SpawnLevel::middle}
-    //,{AreaInfo39,Stage::SpawnLevel::high}
-    //,{AreaInfo40,Stage::SpawnLevel::low}
-    //,{AreaInfo40,Stage::SpawnLevel::middle}
-    //,{AreaInfo40,Stage::SpawnLevel::high}
+     {AreaInfo33,Stage::SpawnLevel::low}
+    ,{AreaInfo33,Stage::SpawnLevel::middle}
+    ,{AreaInfo33,Stage::SpawnLevel::high}
+    ,{AreaInfo34,Stage::SpawnLevel::low}
+    ,{AreaInfo34,Stage::SpawnLevel::middle}
+    ,{AreaInfo34,Stage::SpawnLevel::high}
+    ,{AreaInfo35,Stage::SpawnLevel::low}
+    ,{AreaInfo35,Stage::SpawnLevel::middle}
+    ,{AreaInfo35,Stage::SpawnLevel::high}
+    ,{AreaInfo36,Stage::SpawnLevel::low}
+    ,{AreaInfo36,Stage::SpawnLevel::middle}
+    ,{AreaInfo36,Stage::SpawnLevel::high}
+    ,{AreaInfo37,Stage::SpawnLevel::low}
+    ,{AreaInfo37,Stage::SpawnLevel::middle}
+    ,{AreaInfo37,Stage::SpawnLevel::high}
+    ,{AreaInfo38,Stage::SpawnLevel::low}
+    ,{AreaInfo38,Stage::SpawnLevel::middle}
+    ,{AreaInfo38,Stage::SpawnLevel::high}
+    ,{AreaInfo39,Stage::SpawnLevel::low}
+    ,{AreaInfo39,Stage::SpawnLevel::middle}
+    ,{AreaInfo39,Stage::SpawnLevel::high}
+    ,{AreaInfo40,Stage::SpawnLevel::low}
+    ,{AreaInfo40,Stage::SpawnLevel::middle}
+    ,{AreaInfo40,Stage::SpawnLevel::high}
 
 
 
@@ -2418,43 +2215,121 @@ void Stage::AreaInfo32(Stage* stage)
     SpawnObstacle<Marshmallow_Blue>({ -190.0f,3.0f,-230.0f }, stage);
     SpawnObstacle<Marshmallow_Blue>({ 0.0f,3.0f,0.0f }, stage);
 }
-
 void Stage::AreaInfo33(Stage* stage)
 {
+    SpawnObstacle<Cola>({ 0.0f,0.0f,190.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,170.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,130.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,110.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,90.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,70.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,30.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,10.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,-10.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,-30.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,-50.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,-70.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,-90.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,-110.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,-130.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,-170.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,-190.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,-210.0f }, stage);
+    SpawnObstacle<Cola>({ 0.0f,0.0f,-230.0f }, stage);
 
+    SpawnObstacle<Cola>({ 110.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Cola>({ 110.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Cola>({ 95.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Cola>({ 80.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Cola>({ 65.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Cola>({ 50.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle< Marshmallow_Blue >({ 20.0f,3.0f,-150.0f }, stage);
+
+    SpawnObstacle<Marshmallow_Pink>({ 90.0f,3.0f,150.0f }, stage);
+    SpawnObstacle<Cola>({ 75.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Cola>({ 60.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Cola>({ 45.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Cola>({ 30.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Cola>({ 15.0f,0.0f,150.0f }, stage);
+
+
+    SpawnObstacle<Cola>({ 125.0f,0.0f,190.0f }, stage);
+    SpawnObstacle<Cola>({ 125.0f,0.0f,170.0f }, stage);
+    SpawnObstacle<Cola>({ 125.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Cola>({ 125.0f,0.0f,130.0f }, stage);
+    SpawnObstacle<Cola>({ 125.0f,0.0f,110.0f }, stage);
+    SpawnObstacle<Cola>({ 125.0f,0.0f,90.0f }, stage);
+    SpawnObstacle<Cola>({ 125.0f,0.0f,70.0f }, stage);
+    SpawnObstacle<Cola>({ 125.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Cola>({ 125.0f,0.0f,30.0f }, stage);
+    SpawnObstacle<Cola>({ 125.0f,0.0f,10.0f }, stage);
+    SpawnObstacle<Cola>({ 125.0f,0.0f,-10.0f }, stage);
+    SpawnObstacle<Cola>({ 125.0f,0.0f,-30.0f }, stage);
+    SpawnObstacle<Cola>({ 125.0f,0.0f,-50.0f }, stage);
+    SpawnObstacle<Cola>({ 125.0f,0.0f,-70.0f }, stage);
+    SpawnObstacle<Cola>({ 125.0f,0.0f,-90.0f }, stage);
+    SpawnObstacle<Cola>({ 125.0f,0.0f,-110.0f }, stage);
+    SpawnObstacle<Cola>({ 125.0f,0.0f,-130.0f }, stage);
+    SpawnObstacle<Cola>({ 125.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Cola>({ 125.0f,0.0f,-170.0f }, stage);
+    SpawnObstacle<Cola>({ 140.0f,0.0f,-190.0f }, stage);
+    SpawnObstacle<Cola>({ 155.0f,0.0f,-210.0f }, stage);
+    SpawnObstacle<Cola>({ 170.0f,0.0f,-230.0f }, stage);
+
+    SpawnObstacle<Cola>({ -110.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Cola>({ -95.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Cola>({ -80.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Cola>({ -65.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Cola>({ -50.0f,0.0f,-150.0f }, stage);
+
+
+
+    SpawnObstacle<Cola>({ -90.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Cola>({ -75.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Cola>({ -60.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Cola>({ -45.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Cola>({ -30.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Cola>({ -15.0f,0.0f,0.0f }, stage);
+
+    SpawnObstacle<Cola>({ -110.0f,0.0f,200.0f }, stage);
+    SpawnObstacle<Cola>({ -95.0f,0.0f,200.0f }, stage);
+    SpawnObstacle<Cola>({ -80.0f,0.0f,200.0f }, stage);
+    SpawnObstacle<Cola>({ -65.0f,0.0f,200.0f }, stage);
+    SpawnObstacle<Cola>({ -50.0f,0.0f,200.0f }, stage);
+    SpawnObstacle<Cola>({ -35.0f,0.0f,200.0f }, stage);
+
+
+    SpawnObstacle<Cupcake_Pink>({ -20.0f,3.0f,200.0f }, stage);
+
+
+    SpawnObstacle<Cola>({ -125.0f,0.0f,190.0f }, stage);
+    SpawnObstacle<Cola>({ -125.0f,0.0f,170.0f }, stage);
+    SpawnObstacle<Cola>({ -125.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Cola>({ -125.0f,0.0f,130.0f }, stage);
+    SpawnObstacle<Cola>({ -125.0f,0.0f,110.0f }, stage);
+    SpawnObstacle<Cola>({ -125.0f,0.0f,90.0f }, stage);
+    SpawnObstacle<Cola>({ -125.0f,0.0f,70.0f }, stage);
+    SpawnObstacle<Cola>({ -125.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Cola>({ -125.0f,0.0f,30.0f }, stage);
+    SpawnObstacle<Cola>({ -125.0f,0.0f,10.0f }, stage);
+    SpawnObstacle<Cola>({ -125.0f,0.0f,-10.0f }, stage);
+    SpawnObstacle<Cola>({ -125.0f,0.0f,-30.0f }, stage);
+    SpawnObstacle<Cola>({ -125.0f,0.0f,-50.0f }, stage);
+    SpawnObstacle<Cola>({ -125.0f,0.0f,-70.0f }, stage);
+    SpawnObstacle<Cola>({ -125.0f,0.0f,-90.0f }, stage);
+    SpawnObstacle<Cola>({ -125.0f,0.0f,-110.0f }, stage);
+    SpawnObstacle<Cola>({ -125.0f,0.0f,-130.0f }, stage);
+    SpawnObstacle<Cola>({ -125.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Cola>({ -125.0f,0.0f,-170.0f }, stage);
+    SpawnObstacle<Cola>({ -140.0f,0.0f,-190.0f }, stage);
+    SpawnObstacle<Cola>({ -155.0f,0.0f,-210.0f }, stage);
+    SpawnObstacle<Cola>({ -170.0f,0.0f,-230.0f }, stage);
 }
 
 void Stage::AreaInfo34(Stage* stage)
-{
-
-}
-
-void Stage::AreaInfo35(Stage* stage)
-{
-
-}
-
-void Stage::AreaInfo36(Stage* stage)
-{
-
-}
-
-void Stage::AreaInfo37(Stage* stage)
-{
-
-}
-
-void Stage::AreaInfo38(Stage* stage)
-{
-
-}
-
-void Stage::AreaInfo39(Stage* stage)
-{
-
-}
-
-void Stage::AreaInfo40(Stage* stage)
 {
     SpawnObstacle<Grape_can>({ 30.0f,0.0f,-90.0f }, stage);
     SpawnObstacle<Grape_can>({ 30.0f,0.0f,90.0f }, stage);
@@ -2553,6 +2428,404 @@ void Stage::AreaInfo40(Stage* stage)
     SpawnObstacle<Marshmallow_Pink>({ 0.0f,3.0f,180.0f }, stage);
 }
 
+void Stage::AreaInfo35(Stage* stage)
+{
+    SpawnObstacle<Pokey>({ 0.0f,0.0f,-150 }, stage);
+    SpawnObstacle<Pokey>({ 25.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ 50.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ 75.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ -25.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ -50.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ -75.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ 125.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ 150.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ 175.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ -125.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ -150.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ -175.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ 200.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ 225.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ -200.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ -225.0f,0.0f,-200.0f }, stage);
+
+    SpawnObstacle<Pokey>({ -230.0f,0.0f,-100.0f }, stage);
+    SpawnObstacle<Pokey>({ 230.0f,0.0f,-100.0f }, stage);
+    SpawnObstacle<Pokey>({ -180.0f,0.0f,-100.0f }, stage);
+    SpawnObstacle<Pokey>({ 180.0f,0.0f,-100.0f }, stage);
+    SpawnObstacle<Pokey>({ -120.0f,0.0f,-100.0f }, stage);
+    SpawnObstacle<Pokey>({ 120.0f,0.0f,-100.0f }, stage);
+    SpawnObstacle<Pokey>({ -50.0f,0.0f,-100.0f }, stage);
+    SpawnObstacle<Pokey>({ 50.0f,0.0f,-100.0f }, stage);
+    SpawnObstacle<Pokey>({ -40.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Pokey>({ 40.0f,0.0f,-0.0f }, stage);
+    SpawnObstacle<Pokey>({ -100.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Pokey>({ 100.0f,0.0f,-0.0f }, stage);
+    SpawnObstacle<Pokey>({ -180.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Pokey>({ 180.0f,0.0f,-0.0f }, stage);
+    SpawnObstacle<Pokey>({ -225.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Pokey>({ 225.0f,0.0f,-0.0f }, stage);
+    SpawnObstacle<Pokey>({ 0.0f,0.0f,0.0f }, stage);
+
+    SpawnObstacle<Pokey>({ -55.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Pokey>({ 55.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Pokey>({ -105.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Pokey>({ 105.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Pokey>({ -155.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Pokey>({ 155.0f,0.0f,100.0f }, stage);
+
+    SpawnObstacle<Pokey>({ -25.0f,0.0f,200.0f }, stage);
+    SpawnObstacle<Pokey>({ 25.0f,0.0f,200.0f }, stage);
+    SpawnObstacle<Pokey>({ -130.0f,0.0f,200.0f }, stage);
+    SpawnObstacle<Pokey>({ 130.0f,0.0f,200.0f }, stage);
+    SpawnObstacle<Pokey>({ -195.0f,0.0f,200.0f }, stage);
+    SpawnObstacle<Pokey>({ 195.0f,0.0f,200.0f }, stage);
+}
+
+void Stage::AreaInfo36(Stage* stage)
+{
+
+    SpawnObstacle<Marble_chocolate>({ 0.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Marble_chocolate>({ -100.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Marble_chocolate>({ -50.0f,0.0f,-100.0f }, stage);
+    SpawnObstacle<Marble_chocolate>({ -150.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Marble_chocolate>({ -200.0f,0.0f,200.0f }, stage);
+
+    SpawnObstacle<Prits>({ 0.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Prits>({ 50.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Prits>({ 100.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Prits>({ 150.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Prits>({ 200.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Prits>({ -50.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Prits>({ -100.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Prits>({ -150.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Prits>({ -200.0f,0.0f,50.0f }, stage);
+
+    SpawnObstacle<Prits>({ 30.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Prits>({ 80.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Prits>({ 130.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Prits>({ 180.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Prits>({ 230.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Prits>({ -30.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Prits>({ -80.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Prits>({ -130.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Prits>({ -180.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Prits>({ -230.0f,0.0f,150.0f }, stage);
+
+    SpawnObstacle<Prits>({ 30.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Prits>({ 80.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Prits>({ 130.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Prits>({ 180.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Prits>({ 230.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Prits>({ -30.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Prits>({ -80.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Prits>({ -130.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Prits>({ -180.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Prits>({ -230.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Pudding>({ 0.0f,3.0f,-50.0f }, stage);
+
+}
+
+void Stage::AreaInfo37(Stage* stage)
+{
+    SpawnObstacle<Marble_chocolate>({ 0.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Marble_chocolate>({ -100.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Marble_chocolate>({ -50.0f,0.0f,-100.0f }, stage);
+    SpawnObstacle<Marble_chocolate>({ -150.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Marble_chocolate>({ -200.0f,0.0f,200.0f }, stage);
+
+    SpawnObstacle<Prits>({ 0.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Prits>({ 50.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Prits>({ 100.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Prits>({ 150.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Prits>({ 200.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Prits>({ -50.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Prits>({ -100.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Prits>({ -150.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Prits>({ -200.0f,0.0f,50.0f }, stage);
+
+    SpawnObstacle<Prits>({ 30.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Prits>({ 80.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Prits>({ 130.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Prits>({ 180.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Prits>({ 230.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Prits>({ -30.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Prits>({ -80.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Prits>({ -130.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Prits>({ -180.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Prits>({ -230.0f,0.0f,150.0f }, stage);
+
+    SpawnObstacle<Prits>({ 30.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Prits>({ 80.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Prits>({ 130.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Prits>({ 180.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Prits>({ 230.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Prits>({ -30.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Prits>({ -80.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Prits>({ -130.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Prits>({ -180.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Prits>({ -230.0f,0.0f,-150.0f }, stage);
+}
+
+void Stage::AreaInfo38(Stage* stage)
+{
+    SpawnObstacle<Marble_chocolate>({ 70.0f,0.0f,-70.0f }, stage);
+
+    SpawnObstacle<Husen_gum>({ 0.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 50.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 100.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 150.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 200.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -50.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -100.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -150.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -200.0f,0.0f,0.0f }, stage);
+    SpawnObstacle<Marble_chocolate>({ -230.0f,0.0f,-50.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 0.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 50.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 100.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 150.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 200.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -50.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -100.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -150.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -200.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Marble_chocolate>({ -230.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Marble_chocolate>({ -130.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Marble_chocolate>({ -170.0f,0.0f,25.0f }, stage);
+
+    SpawnObstacle<Chocolate_ball>({ -200.0f,0.0f,-220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ -150.0f,0.0f,-220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ -100.0f,0.0f,-220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ -50.0f,0.0f,-220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ 0.0f,0.0f,-220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ 50.0f,0.0f,-220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ 100.0f,0.0f,-220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ 150.0f,0.0f,-220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ 200.0f,0.0f,-220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ 240.0f,0.0f,-220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ -200.0f,0.0f,220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ -150.0f,0.0f,220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ -100.0f,0.0f,220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ -50.0f,0.0f,220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ 0.0f,0.0f,220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ 50.0f,0.0f,220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ 100.0f,0.0f,220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ 150.0f,0.0f,220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ 200.0f,0.0f,220.0f }, stage);
+    SpawnObstacle<Chocolate_ball>({ 240.0f,0.0f,220.0f }, stage);
+
+
+
+    SpawnObstacle<Husen_gum>({ 25.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 75.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 125.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 175.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 225.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -25.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -75.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -125.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -175.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -225.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -250.0f,0.0f,100.0f }, stage);
+
+
+    SpawnObstacle<Jellybeans_Pink>({ -25.0f,3.0f,245.0f }, stage);
+    SpawnObstacle<Jellybeans_Pink>({ -75.0f,3.0f,245.0f }, stage);
+    SpawnObstacle<Jellybeans_Pink>({ 25.0f,3.0f,245.0f }, stage);
+    SpawnObstacle<Jellybeans_Pink>({ 75.0f,3.0f,245.0f }, stage);
+
+
+}
+
+void Stage::AreaInfo39(Stage* stage)
+{
+    SpawnObstacle<Orange_can>({ 0.0f,0.0f,-220.0f }, stage);
+    SpawnObstacle<Orange_can>({ 9.0f,18.0f,-220.0f }, stage);
+    SpawnObstacle<Orange_can>({ -9.0f,18.0f,-220.0f }, stage);
+
+    SpawnObstacle<Orange_can>({ 100.0f,0.0f,-220.0f }, stage);
+    SpawnObstacle<Orange_can>({ 109.0f,18.0f,-220.0f }, stage);
+    SpawnObstacle<Orange_can>({ 91.0f,18.0f,-220.0f }, stage);
+
+    SpawnObstacle<Orange_can>({ -100.0f,0.0f,-220.0f }, stage);
+    SpawnObstacle<Orange_can>({ -109.0f,18.0f,-220.0f }, stage);
+    SpawnObstacle<Orange_can>({ -91.0f,18.0f,-220.0f }, stage);
+
+    SpawnObstacle<Orange_can>({ -200.0f,0.0f,-220.0f }, stage);
+    SpawnObstacle<Orange_can>({ -209.0f,18.0f,-220.0f }, stage);
+    SpawnObstacle<Orange_can>({ -191.0f,18.0f,-220.0f }, stage);
+    SpawnObstacle<Orange_can>({ 200.0f,0.0f,-220.0f }, stage);
+    SpawnObstacle<Orange_can>({ 209.0f,18.0f,-220.0f }, stage);
+    SpawnObstacle<Orange_can>({ 191.0f,18.0f,-220.0f }, stage);
+
+    SpawnObstacle<Orange_can>({ -250.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Orange_can>({ -220.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Orange_can>({ -190.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Orange_can>({ -160.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Orange_can>({ -130.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Orange_can>({ -100.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Orange_can>({ -70.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Orange_can>({ -40.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Orange_can>({ -10.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Orange_can>({ 20.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Orange_can>({ 50.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Orange_can>({ 80.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Orange_can>({ 110.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Orange_can>({ 140.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Orange_can>({ 170.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Orange_can>({ 200.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Orange_can>({ 230.0f,0.0f,-150.0f }, stage);
+
+    SpawnObstacle<Orange_gum>({ -30.0f,0.0f,-75.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -60.0f,0.0f,-75.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -90.0f,0.0f,-75.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -120.0f,0.0f,-75.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -150.0f,0.0f,-75.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -180.0f,0.0f,-75.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -210.0f,0.0f,-75.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -240.0f,0.0f,-75.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 0.0f,0.0f,-75.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 30.0f,0.0f,-75.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 60.0f,0.0f,-75.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 90.0f,0.0f,-75.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 120.0f,0.0f,-75.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 150.0f,0.0f,-75.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 180.0f,0.0f,-75.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 210.0f,0.0f,-75.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 240.0f,0.0f,-75.0f }, stage);
+    SpawnObstacle<Candy_gate>({ 0.0f,0.0f,-25.0f }, stage);
+    SpawnObstacle<Candy_gate>({ -50.0f,0.0f,-25.0f }, stage);
+    SpawnObstacle<Candy_gate>({ 50.0f,0.0f,-25.0f }, stage);
+    SpawnObstacle<Candy_gate>({ 100.0f,0.0f,-25.0f }, stage);
+    SpawnObstacle<Candy_gate>({ -100.0f,0.0f,-25.0f }, stage);
+    SpawnObstacle<Candy_gate>({ -150.0f,0.0f,-25.0f }, stage);
+    SpawnObstacle<Candy_gate>({ 150.0f,0.0f,-25.0f }, stage);
+    SpawnObstacle<Candy_gate>({ 200.0f,0.0f,-25.0f }, stage);
+    SpawnObstacle<Candy_gate>({ -200.0f,0.0f,-25.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 75.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -75.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 150.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -150.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 225.0f,0.0f,100.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -225.0f,0.0f,100.0f }, stage);
+
+    SpawnObstacle<Husen_gum>({ 25.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -25.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 75.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -75.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 125.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -125.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 175.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -175.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Husen_gum>({ 225.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Husen_gum>({ -225.0f,0.0f,150.0f }, stage);
+
+    SpawnObstacle<Cupcake_Pink>({ 0.0f,3.0f,150.0f }, stage);
+    SpawnObstacle<Cupcake_Pink>({ 150.0f,3.0f,150.0f }, stage);
+    SpawnObstacle<Cupcake_Pink>({ -150.0f,3.0f,150.0f }, stage);
+
+    SpawnObstacle<Orange_gum>({ -80.0f,0.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -110.0f,0.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -140.0f,0.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -170.0f,0.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -200.0f,0.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -230.0f,0.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -50.0f,0.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -20.0f,0.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 20.0f,0.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 50.0f,0.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 80.0f,0.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 110.0f,0.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 140.0f,0.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 170.0f,0.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 200.0f,0.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 230.0f,0.0f,230.0f }, stage);
+
+    SpawnObstacle<Orange_gum>({ -80.0f,18.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -110.0f,18.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -140.0f,18.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -170.0f,18.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -200.0f,18.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -230.0f,18.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -50.0f,18.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ -20.0f,18.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 20.0f,18.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 50.0f,18.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 80.0f,18.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 110.0f,18.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 140.0f,18.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 170.0f,18.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 200.0f,18.0f,230.0f }, stage);
+    SpawnObstacle<Orange_gum>({ 230.0f,18.0f,230.0f }, stage);
+
+    SpawnObstacle<Marble_chocolate>({ -200.0f,0.0f,125.0f }, stage);
+    SpawnObstacle<Marble_chocolate>({ -50.0f,0.0f,75.0f }, stage);
+}
+
+void Stage::AreaInfo40(Stage* stage)
+{
+    SpawnObstacle<Cupcake_Choco>({ 120.0f,3.0f,-120.0f }, stage);
+    SpawnObstacle<Pokey>({ 0.0f,0.0f,-150 }, stage);
+    SpawnObstacle<Pokey>({ 25.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ 50.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ 75.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ -25.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ -50.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ -75.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ 125.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ 150.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ 175.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ -125.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ -150.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ -175.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ 200.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ 225.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ -200.0f,0.0f,-200.0f }, stage);
+    SpawnObstacle<Pokey>({ -225.0f,0.0f,-200.0f }, stage);
+
+    SpawnObstacle<Pokey>({ -100.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Pokey>({ 100.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Pokey>({ -155.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Pokey>({ 155.0f,0.0f,-150.0f }, stage);
+
+    SpawnObstacle<Pokey>({ -40.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Pokey>({ 40.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Pokey>({ -185.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Pokey>({ 185.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Pokey>({ -215.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Pokey>({ 215.0f,0.0f,-150.0f }, stage);
+    SpawnObstacle<Pokey>({ -235.0f,0.0f,-50.0f }, stage);
+    SpawnObstacle<Pokey>({ 235.0f,0.0f,-50.0f }, stage);
+    SpawnObstacle<Pokey>({ -75.0f,0.0f,-50.0f }, stage);
+    SpawnObstacle<Pokey>({ 75.0f,0.0f,-50.0f }, stage);
+    SpawnObstacle<Pokey>({ -45.0f,0.0f,-50.0f }, stage);
+    SpawnObstacle<Pokey>({ 45.0f,0.0f,-50.0f }, stage);
+    SpawnObstacle<Pokey>({ 124.0f,0.0f,-50.0f }, stage);
+    SpawnObstacle<Pokey>({ -124.0f,0.0f,-50.0f }, stage);
+
+    SpawnObstacle<Pokey>({ -70.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Pokey>({ 70.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Pokey>({ -25.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Pokey>({ 25.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Pokey>({ 120.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Pokey>({ -120.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Pokey>({ 195.0f,0.0f,50.0f }, stage);
+    SpawnObstacle<Pokey>({ -195.0f,0.0f,50.0f }, stage);
+
+
+    SpawnObstacle<Pokey>({ 0.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Pokey>({ -50.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Pokey>({ 50.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Pokey>({ -100.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Pokey>({ 100.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Pokey>({ 150.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Pokey>({ -150.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Pokey>({ 200.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Pokey>({ -200.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Pokey>({ 233.0f,0.0f,150.0f }, stage);
+    SpawnObstacle<Pokey>({ -233.0f,0.0f,150.0f }, stage);
+}
+
 // デバッグ用エリア
 void Stage::AreaInfoDebug(Stage* stage)
 {
@@ -2566,6 +2839,7 @@ void Stage::AreaInfoDebug(Stage* stage)
 
     SpawnObstacle<Macaron_Maccha>({ 0.0f,3.0f,20.0f }, stage);
 }
+
 
 
 // === 以下デバッグ用関数 ===
