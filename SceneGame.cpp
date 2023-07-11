@@ -855,11 +855,11 @@ void SceneGame::CollisionPlayerVsObs()
 							it2->GetHeight(),
 							outPosition))
 						{
-							//player->OnDead();
-							//DeathMoment();
-							//it2->IsHit = true;
-							//s_clash->Stop();			// SEÄ¶
-							//s_clash->Play(false);		// SEÄ¶
+							player->OnDead();
+							DeathMoment();
+							it2->IsHit = true;
+							s_clash->Stop();			// SEÄ¶
+							s_clash->Play(false);		// SEÄ¶
 						}
 					break;
 					case TYPE::CYLINDERS:// ’¼•û‘Ì
@@ -875,11 +875,11 @@ void SceneGame::CollisionPlayerVsObs()
 								it2->GetHeight(),
 								outPosition))
 							{
-								//player->OnDead();
-								//DeathMoment();
-								//it2->IsHit = true;
-								//s_clash->Stop();			// SEÄ¶
-								//s_clash->Play(false);		// SEÄ¶
+								player->OnDead();
+								DeathMoment();
+								it2->IsHit = true;
+								s_clash->Stop();			// SEÄ¶
+								s_clash->Play(false);		// SEÄ¶
 							}
 						}
 						break;
