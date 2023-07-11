@@ -314,8 +314,8 @@ public:
 class Marble_chocolate : public Obstacle
 {
 private:
-    static float constexpr MaxMoveDistance = 50.0f;     // 移動距離の最大値
-    static float constexpr MoveSpeed = 30.0f;           // 移動距離の最大値
+    static float constexpr MaxMoveDistance = 20.0f;     // 移動距離の最大値
+    static float constexpr MoveSpeed = 20.0f;           // 移動距離の最大値
 
 public:
     Marble_chocolate();

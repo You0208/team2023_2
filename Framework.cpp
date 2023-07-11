@@ -18,16 +18,6 @@ static const int syncInterval = 0;
 // 課題内容
 void DrawTaskGUI()
 {
-	ImGui::SetNextWindowPos(ImVec2(970, 10), ImGuiCond_Once);
-	ImGui::SetNextWindowSize(ImVec2(300, 150), ImGuiCond_Once);
-
-	if (ImGui::Begin("UNIT.01", nullptr, ImGuiWindowFlags_None))
-	{
-		bool check = true;
-		ImGui::Checkbox(u8"なにか表示する", &check);
-		ImGui::Checkbox(u8"マウス操作でカメラ操作", &check);
-	}
-	ImGui::End();
 }
 
 // コンストラクタ
@@ -83,7 +73,7 @@ void Framework::Render(float elapsedTime/*Elapsed seconds from last frame*/)
 	Camera& camera = Camera::Instance();
 
 	// IMGUIフレーム開始処理
-	graphics.GetImGuiRenderer()->NewFrame();
+	//graphics.GetImGuiRenderer()->NewFrame();
 
 	// シーン描画処理
 	SceneManager::Instance().Render();
@@ -91,11 +81,8 @@ void Framework::Render(float elapsedTime/*Elapsed seconds from last frame*/)
 	// 課題内容描画
 	//DrawTaskGUI();
 
-	// IMGUIデモウインドウ描画（IMGUI機能テスト用）
-	//ImGui::ShowDemoWindow();
-
 	// IMGUI描画
-	graphics.GetImGuiRenderer()->Render(dc);
+	//graphics.GetImGuiRenderer()->Render(dc);
 
 	// バックバッファに描画した画を画面に表示する。
 	graphics.GetSwapChain()->Present(syncInterval, 0);

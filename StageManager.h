@@ -57,7 +57,7 @@ private:
         3.0f,       // ステージ:3
         4.0f,       // ステージ:4
         5.0f,        // ステージ:5
-        1.0f        // エンドレスモード
+        5.0f        // エンドレスモード
     };
     // 各空腹レベルでのスコアの常時加算量の倍率
     static constexpr float MaxAlwaysAddScoreMagnification[3] =

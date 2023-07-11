@@ -25,39 +25,6 @@ StageManager::~StageManager()
 
 void StageManager::DrawDebugGUI()
 {
-    Stage::DrawDebugGUI_();
-
-    ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
-
-    if (ImGui::Begin("StageManager", nullptr, ImGuiWindowFlags_None))
-    {
-        ImGui::SliderFloat("scrollVelocityZ", &stageScrollVelocity.z, 0.0f, -300.0f);
-        ImGui::SliderFloat("terrainScrollVelocityZ", &terrainScrollVelocity.z, 0.0f, -300.0f);
-    }
-
-    ImGui::Text("DoneStageNum:%ld", doneStageNum);
-    ImGui::Text("stageNo:%ld", stageNo);
-    ImGui::Text("accelerationTimer:%d", static_cast<int>(accelerationTimer));
-
-    bool dummy = IsBreakTime;
-    ImGui::Checkbox("IsBreakTime", &dummy);
-    dummy = IsSpawnNone_Side;
-    ImGui::Checkbox("IsSpawnNone", &dummy);
-    dummy = Endless;
-    ImGui::Checkbox("Endless", &dummy);
-    dummy = stateInvincible;
-    ImGui::Checkbox("stateInvincible", &dummy);
-
-    // écÇËãxåeéûä‘
-    ImGui::Text("IsBreakTime:%lf", breakTimer);
-
-    ImGui::Text("[I][J][K][L] : camera");
-    ImGui::Text("[A][D] : player");
-    ImGui::Text("[X] : HitAnime");
-    ImGui::Text("[C] : pause");
-
-    ImGui::End();
 }
 
 // çXêVèàóù
