@@ -1344,7 +1344,7 @@ void SceneGame::UpdateHungerGage()
 	float dw_g = (dw_f - 9.15 * magnification) * (player->GetHungerPoint() / Player::MaxHungerPoint);
 	float x_g = 9.15 * magnification + margin;							// ゲージの描画位置(x)
 	float x_f = margin;											// ゲージの描画位置(x)	// ゲージの描画位置(x)
-	float y = 1080.0f - dh - margin;		// 描画位置(y)
+	float y = Graphics::Instance().GetScreenHeight() - dh - margin;		// 描画位置(y)
 
 	// ゲージの色
 	DirectX::XMFLOAT3 c[3] =
