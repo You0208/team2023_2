@@ -382,13 +382,6 @@ void SceneGame::Update(float elapsedTime)
 		0.0f,
 		1.0f, 1.0f, 1.0f, SelectTrans);
 
-	s_score->Update(1120.0f, 830.0f,
-		static_cast<float>(t_score->GetWidth()), static_cast<float>(t_score->GetHeight()),
-		0.0f, 0.0f,
-		static_cast<float>(t_score->GetWidth()), static_cast<float>(t_score->GetHeight()),
-		0.0f,
-		1.0f, 1.0f, 1.0f, SelectTrans);
-
 	s_restart->Update(iconPosX_p[PAUSE_RE], 755.0f,
 		static_cast<float>(t_restart->GetWidth()), static_cast<float>(t_restart->GetHeight()),
 		0.0f, 0.0f,
@@ -677,7 +670,14 @@ void SceneGame::Render()
 			shader->Draw(rc, s_play.get());
 			shader->Draw(rc, s_rulu.get());
 			shader->Draw(rc, s_select.get());
-			shader->Draw(rc, s_score.get());
+			
+			s_score->Render(rc, 1120.0f, 830.0f,
+				static_cast<float>(t_score->GetWidth()), static_cast<float>(t_score->GetHeight()),
+				0.0f, 0.0f,
+				static_cast<float>(t_score->GetWidth()), static_cast<float>(t_score->GetHeight()),
+				0.0f,
+				1.0f, 1.0f, 1.0f, SelectTrans);
+
 
 			// ハイスコア表示
 			text_number->textOut(rc
