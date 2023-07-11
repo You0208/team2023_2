@@ -631,11 +631,6 @@ void SceneGame::PausedUpdate(float elapsedTime)
 	cameraController->Update(elapsedTime);
 }
 
-// デバッグ用(削除する)
-DirectX::XMFLOAT2 HighScoreTextPos	= { 1510.0f, 857.0f };
-DirectX::XMFLOAT2 HighScoreTextPos2	= { 1510.0f, 850.0f };
-DirectX::XMFLOAT2 HighScoreTextSize = { 55.0f, 55.0f };
-
 // 描画処理
 void SceneGame::Render()
 {
@@ -705,15 +700,15 @@ void SceneGame::Render()
 			// ハイスコア表示
 			text_number->textOut(rc
 				, HighScore
-				, HighScoreTextPos.x, HighScoreTextPos.y
-				, HighScoreTextSize.x, HighScoreTextSize.y
+				, 1510.0f, 857.0f 
+				, 55.0f, 55.0f
 				, 1.0f, 1.0f, 1.0f, SelectTrans
 			);
 			// ポイント
 			text_number->textOut(rc
 				, Point
-				, HighScoreTextPos.x, HighScoreTextPos2.y + 100
-				, HighScoreTextSize.x, HighScoreTextSize.y
+				, 1510.0f, 945.0f
+				, 55.0f, 55.0f
 				, 1.0f, 1.0f, 1.0f, 1.0f
 			);
 
@@ -772,27 +767,6 @@ void SceneGame::Render()
 			player->DrawDebugGUI();
 			stageManager->DrawDebugGUI();
 			postprocessingRenderer->DrawDebugGUI();
-		}
-		// テキスト
-		{
-			if (ImGui::TreeNode("Text Score"))
-			{
-				ImGui::SliderInt("fontNo", &fontNo, 0, 6);
-				ImGui::SliderFloat("posX", &text_pos.x, 0.0f, 1920.0f);
-				ImGui::SliderFloat("posY", &text_pos.y, 0.0f, 1080.0f);
-				ImGui::SliderFloat("size", &text_size.x, 0.0f, 500.0f);
-				text_size.y = text_size.x;
-				ImGui::ColorPicker4("color", &text_color.x);
-				ImGui::TreePop();
-				ImGui::InputFloat("Point", &HighScoreTextPos2.y);
-			}
-			if (ImGui::TreeNode("Text HighScore"))
-			{
-				ImGui::InputFloat2("Pos", &HighScoreTextPos.x);
-				ImGui::InputFloat("Size", &HighScoreTextSize.x);
-				HighScoreTextSize.y = HighScoreTextSize.x;
-				ImGui::TreePop();
-			}
 		}
 		// スコア表示
 		{
