@@ -27,6 +27,9 @@ public:
     void Render()override;
 
 private:
+    bool AddPointPerform();
+
+private:
     // BGM
     std::unique_ptr<AudioSource> b_gameClear;
     // SE
@@ -60,6 +63,25 @@ private:
     std::unique_ptr<Sprite>	s_White;
     std::unique_ptr<Texture> t_White;
 
+    std::unique_ptr<Sprite>	s_HighScore;
+    std::unique_ptr<Texture> t_HighScore;
+
+    std::unique_ptr<Texture>	texture_fonts_number;		// フォントテクスチャ(数字のみ)
+    std::unique_ptr<Text>		text_number;				// フォント(数字のみ)
+
+    enum AddPointPerformState
+    {
+        begin = 0,      // 初期設定
+        FeadIn,         // 出現
+        FeadOut,        // 消滅
+        end,            // 終了
+    };
+    DirectX::XMFLOAT2 p_pos = { PointPositionX,PointPositionY };// ポイント表示位置
+    int addPoint = 0;                                           // 追加ポイント
+    DirectX::XMFLOAT2 ap_pos{ PointPositionX,PointPositionY };  // 追加ポイント表示位置
+    DirectX::XMFLOAT4 ap_color{ 0.741f, 0.435f, 0.435f, 0.0f };;       // 追加ポイント表示位置
+    int addPointPerformState = AddPointPerformState::begin;
+
     float Theta = 0.0f;
     float HamuY = 400.0f;
     float time = 0;
@@ -70,6 +92,10 @@ private:
     int selectNum = 0;
 
     bool IsNext = false;
+    float HighscoreTime = 0.0f;
+
+    DirectX::XMFLOAT4 HighScoreColor{ 0.0f,0.0f ,0.0f ,1.0f };
+    DirectX::XMFLOAT2 HighScorePoition{ 1160.0f ,520.0f};
 
     // UVスクロールデータ
     UVScrollData uvScrollData;
