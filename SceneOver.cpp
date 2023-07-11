@@ -392,20 +392,6 @@ void SceneOver::Render()
         );
         shader->End(rc);
 
-        // デバッグ
-        {
-            ImGui::Begin("ImGUI");
-
-            bool dummy = NotUseOVER_100;
-            ImGui::Checkbox("NotUseOVER_100", &dummy);
-            dummy = NotUseOVER_RE;
-            ImGui::Checkbox("NotUseOVER_RE", &dummy);
-            ImGui::InputInt("selectNum", &selectNum);
-
-            ImGui::End();
-
-        }
-
         rc.maskData.maskTexture = maskTexture->GetShaderResourceView().Get();
         rc.maskData.dissolveThreshold = dissolveThreshold;
         SpriteShader* shader_mask = graphics.GetShader(SpriteShaderId::Mask);
@@ -459,7 +445,6 @@ bool SceneOver::AddPointPerform()
                 || (StageManager::stageNo == 0)
                 || (Point < 100)
                 );
-            //selectNum = NotUseOVER_100 ? 1 : 0;
             addPointPerformState = AddPointPerformState::end;
         }
 
