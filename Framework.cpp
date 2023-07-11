@@ -73,7 +73,7 @@ void Framework::Render(float elapsedTime/*Elapsed seconds from last frame*/)
 	Camera& camera = Camera::Instance();
 
 	// IMGUIフレーム開始処理
-	//graphics.GetImGuiRenderer()->NewFrame();
+	graphics.GetImGuiRenderer()->NewFrame();
 
 	// シーン描画処理
 	SceneManager::Instance().Render();
@@ -82,7 +82,7 @@ void Framework::Render(float elapsedTime/*Elapsed seconds from last frame*/)
 	//DrawTaskGUI();
 
 	// IMGUI描画
-	//graphics.GetImGuiRenderer()->Render(dc);
+	graphics.GetImGuiRenderer()->Render(dc);
 
 	// バックバッファに描画した画を画面に表示する。
 	graphics.GetSwapChain()->Present(syncInterval, 0);

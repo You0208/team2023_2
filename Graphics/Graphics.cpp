@@ -54,7 +54,7 @@ Graphics::Graphics(HWND hWnd)
 		};
 
 			// フルスクリーンかどうか
-	bool isFullscreen = true;
+	bool isFullscreen = false;
 
 		// スワップチェーンを作成するための設定オプション
 		DXGI_SWAP_CHAIN_DESC swapchainDesc;

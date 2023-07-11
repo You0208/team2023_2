@@ -164,8 +164,14 @@ void SceneOver::Update(float elapsedTime)
     //int selectNumMin = 0;
     int selectNumMin = NotUseOVER_100 ? (NotUseOVER_RE ? 2 : 1) : 0;
 
-    if (selectNum > selectNumMax)selectNum = selectNumMin;
-    if (selectNum < selectNumMin)selectNum = selectNumMax;
+    if (selectNum > selectNumMax)
+    {
+        selectNum = selectNumMin;
+    }
+    if (selectNum < selectNumMin)
+    {
+        selectNum = selectNumMax;
+    }
     // selectNumの値に応じてiconPosXの要素を設定
     for (int i = 0; i < 3; i++)
     {
@@ -386,6 +392,20 @@ void SceneOver::Render()
         );
         shader->End(rc);
 
+        // デバッグ
+        {
+            ImGui::Begin("ImGUI");
+
+            bool dummy = NotUseOVER_100;
+            ImGui::Checkbox("NotUseOVER_100", &dummy);
+            dummy = NotUseOVER_RE;
+            ImGui::Checkbox("NotUseOVER_RE", &dummy);
+            ImGui::InputInt("selectNum", &selectNum);
+
+            ImGui::End();
+
+        }
+
         rc.maskData.maskTexture = maskTexture->GetShaderResourceView().Get();
         rc.maskData.dissolveThreshold = dissolveThreshold;
         SpriteShader* shader_mask = graphics.GetShader(SpriteShaderId::Mask);
@@ -439,7 +459,7 @@ bool SceneOver::AddPointPerform()
                 || (StageManager::stageNo == 0)
                 || (Point < 100)
                 );
-            selectNum = NotUseOVER_100 ? 1 : 0;
+            //selectNum = NotUseOVER_100 ? 1 : 0;
             addPointPerformState = AddPointPerformState::end;
         }
 

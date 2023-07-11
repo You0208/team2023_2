@@ -463,7 +463,7 @@ void SceneGame::Update(float elapsedTime)
 		if (cameraController->flag)
 		{
 			// カメラコントローラー更新処理化
-			cameraController->Shake(120, player->GetPosition().y + 0.5f);
+			cameraController->Shake(120, player->GetPosition().y + 2.5f);
 		}
 		else
 		{
