@@ -633,6 +633,7 @@ void SceneGame::PausedUpdate(float elapsedTime)
 
 // デバッグ用(削除する)
 DirectX::XMFLOAT2 HighScoreTextPos	= { 1510.0f, 857.0f };
+DirectX::XMFLOAT2 HighScoreTextPos2	= { 1510.0f, 850.0f };
 DirectX::XMFLOAT2 HighScoreTextSize = { 55.0f, 55.0f };
 
 // 描画処理
@@ -711,8 +712,8 @@ void SceneGame::Render()
 			// ポイント
 			text_number->textOut(rc
 				, Point
-				, text_pos.x, text_pos.y + 100
-				, 45.0f, 45.0f
+				, HighScoreTextPos.x, HighScoreTextPos2.y + 100
+				, HighScoreTextSize.x, HighScoreTextSize.y
 				, 1.0f, 1.0f, 1.0f, 1.0f
 			);
 
@@ -783,6 +784,7 @@ void SceneGame::Render()
 				text_size.y = text_size.x;
 				ImGui::ColorPicker4("color", &text_color.x);
 				ImGui::TreePop();
+				ImGui::InputFloat("Point", &HighScoreTextPos2.y);
 			}
 			if (ImGui::TreeNode("Text HighScore"))
 			{
