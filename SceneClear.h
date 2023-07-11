@@ -94,7 +94,7 @@ private:
     bool IsNext = false;
     float HighscoreTime = 0.0f;
 
-    DirectX::XMFLOAT4 HighScoreColor{ 0.0f,0.0f ,0.0f ,1.0f };
+    DirectX::XMFLOAT4 HighScoreColor{ 1.0f,1.0f ,1.0f ,1.0f };
     DirectX::XMFLOAT2 HighScorePoition{ 1160.0f ,520.0f};
 
     // UVスクロールデータ

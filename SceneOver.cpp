@@ -441,7 +441,6 @@ bool SceneOver::AddPointPerform()
                 || (StageManager::stageNo == 0)
                 || (Point < 100)
                 );
-            selectNum = NotUseOVER_100 ? 1 : 0;
             addPointPerformState = AddPointPerformState::end;
         }
 

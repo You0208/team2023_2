@@ -463,7 +463,6 @@ void SceneGame::Update(float elapsedTime)
 		// クリアしたかどうか
 		IsClear();
 
-
 		if (cameraController->flag)
 		{
 			// カメラコントローラー更新処理化
