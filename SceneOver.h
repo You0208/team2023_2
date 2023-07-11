@@ -109,6 +109,8 @@ private:
     // マスク画像
     std::unique_ptr<Texture> maskTexture;
 
+    bool start = false;
+
     bool isNext = false;
     float dissolveThreshold;
     float edgeThreshold; // 縁の閾値
