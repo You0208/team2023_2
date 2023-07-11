@@ -242,9 +242,7 @@ void SceneOver::Update(float elapsedTime)
         start = true;
     }
     if (isNext)dissolveThreshold += 1.0 * elapsedTime;
-    if (!start)return;
-    // 追加ポイント演出
-    AddPointPerform();
+    if (start) AddPointPerform();      // 追加ポイント演出
 
     GamePad& gamePad = Input::Instance().GetGamePad();
     // アイコン選択処理
