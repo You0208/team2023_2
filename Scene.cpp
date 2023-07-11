@@ -4,6 +4,7 @@
 
 int Scene::HighScore = 0;
 int Scene::Point = 0;
+bool Scene::scoreUpdate = false;
 
 float Scene::AddPointMoveAmount = 100.0f;
 
@@ -50,9 +51,14 @@ void Scene::OutputSave()
 }
 
 // ハイスコアの更新
-void Scene::UpdateHighScore(const int score)
+bool Scene::UpdateHighScore(const int score)
 {
-	HighScore = (std::max)(HighScore, score); 
+	if (HighScore < score)
+	{
+		HighScore = score;
+		return true;
+	}
+	return false;
 }
 
 // ハイスコアのリセット(書き込みも行う)

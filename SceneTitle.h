@@ -55,7 +55,7 @@ private:
     float Trans_A = 0.0f;
     float Theta = 0.0f;
     float HamuY = 260.0f;
-    float time = 0;
+    float time = 0.0f;
 
     bool next = false;
 

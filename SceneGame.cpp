@@ -292,7 +292,7 @@ void SceneGame::Initialize()
 void SceneGame::Finalize()
 {
 	// ハイスコアの更新
-	UpdateHighScore(player->GetScore());
+	scoreUpdate = UpdateHighScore(player->GetScore());
 
 	// ステージ終了
 	stageManager->Clear();
@@ -708,6 +708,14 @@ void SceneGame::Render()
 				, HighScoreTextSize.x, HighScoreTextSize.y
 				, 1.0f, 1.0f, 1.0f, SelectTrans
 			);
+			// ポイント
+			text_number->textOut(rc
+				, Point
+				, text_pos.x, text_pos.y + 100
+				, 45.0f, 45.0f
+				, 1.0f, 1.0f, 1.0f, 1.0f
+			);
+
 		}
 		else if(!TransClear)	// ゲーム時
 		{

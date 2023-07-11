@@ -105,6 +105,7 @@ void SceneClear::Initialize()
 // 終了化
 void SceneClear::Finalize()
 {
+    scoreUpdate = false;        // ハイスコア更新フラグを折る
 }
 
 // 更新処理
@@ -183,6 +184,22 @@ void SceneClear::Update(float elapsedTime)
         }
     }
 
+    if (scoreUpdate)HighscoreTime += 60.0f * elapsedTime;
+
+    if (HighscoreTime >= 60)
+    {
+        HighscoreTime = 0;
+    }
+
+    if (HighscoreTime <= 30)
+    {
+        HighScoreColor.w = 0.0f;
+    }
+    else
+    {
+        HighScoreColor.w = 1.0f;
+    }
+
     //-------------------------------------------------------------------------------------------------------
     // ↓　この下はシェーダー関連
     //-------------------------------------------------------------------------------------------------------
@@ -243,12 +260,12 @@ void SceneClear::Update(float elapsedTime)
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);    
     
-    s_HighScore->Update(1125.0f, 430.0f + static_cast<float>(t_score->GetHeight()),
+    s_HighScore->Update(HighScorePoition.x, HighScorePoition.y,
         static_cast<float>(t_HighScore->GetWidth()), static_cast<float>(t_HighScore->GetHeight()),
         0.0f, 0.0f,
         static_cast<float>(t_HighScore->GetWidth()), static_cast<float>(t_HighScore->GetHeight()),
         0.0f,
-        1.0f, 1.0f, 1.0f, 1.0f);
+        HighScoreColor.x, HighScoreColor.y, HighScoreColor.z, HighScoreColor.w);
 
     s_title->Update(iconPosX[1], 755.0f,
         static_cast<float>(t_title->GetWidth()), static_cast<float>(t_title->GetHeight()),
@@ -329,6 +346,16 @@ void SceneClear::Render()
         shader_mask->Draw(rc, s_black.get());
         if(IsWhite)shader_mask->Draw(rc, s_White.get());
         shader_mask->End(rc);
+    }
+    // デバッグ
+    {
+        if (ImGui::Begin("Text", nullptr, ImGuiWindowFlags_None))
+        {
+            ImGui::ColorPicker4("color", &HighScoreColor.x);
+            ImGui::InputFloat("posX", &HighScorePoition.x);
+            ImGui::InputFloat("posY", &HighScorePoition.y);
+        }
+        ImGui::End();
     }
 }
  

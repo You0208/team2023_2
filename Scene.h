@@ -37,7 +37,7 @@ protected:
 	static constexpr char* fileName = "Data/Save/Save.txt";	// 開くファイル名
 
 	// ハイスコアの更新
-	static void UpdateHighScore(const int score);
+	static bool UpdateHighScore(const int score);
 
 	// ハイスコアのリセット(書き込みも行う)
 	static void ResetHighScore();
@@ -50,4 +50,7 @@ public:
 
 private:
 	bool	ready = false;
+
+protected:
+	static bool scoreUpdate;       // ハイスコア更新フラグ
 };

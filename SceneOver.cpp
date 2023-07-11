@@ -74,6 +74,13 @@ void SceneOver::Initialize()
     s_high = std::make_unique<Sprite>();
     s_high->SetShaderResourceView(t_high->GetShaderResourceView(), t_high->GetWidth(), t_high->GetHeight());
 
+    // ハイスコア
+    // スプライト初期化
+    t_HighScore = std::make_unique<Texture>("Data/Texture/highscore.png");
+    // スプライト
+    s_HighScore = std::make_unique<Sprite>();
+    s_HighScore->SetShaderResourceView(t_HighScore->GetShaderResourceView(), t_HighScore->GetWidth(), t_HighScore->GetHeight());
+
     // 100ポイント
     // スプライト初期化
     t_100p = std::make_unique<Texture>("Data/Texture/GameOver/100point_use.png");
@@ -126,6 +133,7 @@ void SceneOver::Initialize()
 // 終了化
 void SceneOver::Finalize()
 {
+    scoreUpdate = false;    // ハイスコア更新フラグを折る
 }
 
 // 更新処理
@@ -204,6 +212,22 @@ void SceneOver::Update(float elapsedTime)
             SceneManager::Instance().ChangeScene(new SceneTitle);
             break;
         }
+    }
+
+    if (scoreUpdate)HighscoreTime += 60.0f * elapsedTime;
+
+    if (HighscoreTime >= 60)
+    {
+        HighscoreTime = 0;
+    }
+
+    if (HighscoreTime <= 30)
+    {
+        HighScoreColor.w = 0.0f;
+    }
+    else
+    {
+        HighScoreColor.w = 1.0f;
     }
 
     //-------------------------------------------------------------------------------------------------------
@@ -290,6 +314,13 @@ void SceneOver::Update(float elapsedTime)
         0.0f,
         1.0f, 1.0f, 1.0f, 1.0f);
 
+    s_HighScore->Update(HighScorePoition.x, HighScorePoition.y,
+        static_cast<float>(t_HighScore->GetWidth()), static_cast<float>(t_HighScore->GetHeight()),
+        0.0f, 0.0f,
+        static_cast<float>(t_HighScore->GetWidth()), static_cast<float>(t_HighScore->GetHeight()),
+        0.0f,
+        HighScoreColor.x, HighScoreColor.y, HighScoreColor.z, HighScoreColor.w);
+
 }
 
 // 描画処理
@@ -323,6 +354,8 @@ void SceneOver::Render()
         shader->Draw(rc, s_result.get());
         shader->Draw(rc, s_title.get());
         shader->Draw(rc, s_restart.get());
+        shader->Draw(rc, s_HighScore.get());
+
         // スコア
         text_number->textOut(rc
             , Player::GetScore()
