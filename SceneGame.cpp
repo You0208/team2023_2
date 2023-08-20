@@ -580,6 +580,14 @@ void SceneGame::PausedUpdate(float elapsedTime)
 		}
 		s_choice->Play(false);
 	}
+
+	// ESCキーを押すとタイトルに戻る
+	if (gamePad.GetButtonDown() & GamePad::BTN_BACK)
+	{
+		PauseTrans = true;
+		selectNum_p = PAUSE_TITLE;
+	}
+
 	if (PauseTrans)
 	{
 		dissolveThreshold += 1.0 * elapsedTime;
@@ -1496,4 +1504,7 @@ void SceneGame::Render3DScene()
 	{
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
+
+	// デバッグレンダラ描画実行
+	graphics.GetDebugRenderer()->Render(dc, camera.GetView(), camera.GetProjection());
 }

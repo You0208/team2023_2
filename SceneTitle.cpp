@@ -59,6 +59,10 @@ void SceneTitle::Initialize()
 
     s_choice = Audio::Instance().LoadAudioSource("Data/Audio/SE/Choice.wav");
     s_choice->SetVolume(0.3f);
+
+    // ハイスコアとポイントリセット
+    HighScore = 0;
+    Point = 0;
 }
 
 // 終了化
